@@ -5,9 +5,10 @@ using namespace std;
 //Authors: Daniel & Nico
 
 /*---------------- Map class ----------------*/ 
-Map::Map(int* nbTeritories){
-   
-    this->nbTeritories = nbTeritories;    
+Map::Map(int* nbTeritories){  
+    
+    this->nbTeritories = nbTeritories;      
+    this->counter = new int(0);
 
     //Making the adjacencyMtrix 2d array
     this->adjacencyMatrix = new int*[*nbTeritories];
@@ -16,18 +17,60 @@ Map::Map(int* nbTeritories){
     }
 }
 
+Map::Map(){
+    this->nbTeritories = NULL;
+    this->adjacencyMatrix = NULL;
+    this->counter = NULL;
+}
+
+Map::~Map(){
+    delete this->counter;
+    this->counter = NULL;
+
+    for(int i = 0; i < *nbTeritories; i++){
+        delete adjacencyMatrix[i];
+        adjacencyMatrix[i] = NULL;
+    }
+
+    delete this->adjacencyMatrix;
+    this->adjacencyMatrix = NULL;
+}
+
 void Map::addEdge(int x, int y){    
     this->adjacencyMatrix[x][y] = 1;
     this->adjacencyMatrix[y][x] = 1;
 }
 
-void Map::dfs(int x, int* visited){
-    //Implement DFS (DFS since its easy to do recursively - no need to make a stack)
+void Map::dfs(int node, bool* visited){
+  
+    visited[node] = true;
+    (*this->counter)++;     
+    
+    for(int i = 0; i < *this->nbTeritories; i++){
+       
+        if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){
+            dfs(i, visited);
+        }
+    }
 }
 
 bool Map::validate(){
-    //Implement DFS (DFS since its easy to do recursively - no need to make a stack)
-    return true;
+        
+    bool* visits = new bool[*nbTeritories];
+    dfs(0, visits);  
+
+    //Deleting visits array; we only need the array for dfs/ validation
+    delete visits;       
+
+    //Testing Graph conectivity (if all territories are connected)
+    if(*this->counter == *this->nbTeritories){
+        return true;
+
+    }else{
+        return false;
+    }
+
+    //TODO: Add validation for continents + Add validation for Countrt - Continent Relation; one country can have only one continent
 }
 
 void Map::toString(){
@@ -83,10 +126,9 @@ MapLoader::MapLoader(string fileName){
 
     readCountries(fileName);
     
-    //Everything works up until now! Yipee!
-
     readBorders(fileName);   
-    this->map->toString();    
+    //this->map->toString();                //For debug - DELTE AT THE END 
+    this->map->validate();
 }
 
 //TODO: Add error checking/ validation if file is a valid map based of teltale signs
@@ -209,13 +251,25 @@ Territory::Territory(){
 //Destructor
 Territory::~Territory(){
     delete this->posessor;
+    this->posessor = NULL;
+
     delete this->TerritoryName;
-    delete this->TerritoryId;    
+    this->TerritoryName = NULL;
+
+    delete this->TerritoryId; 
+    this->TerritoryId = NULL;
+
     delete this->isFree;
+    this->isFree = NULL;
+
     delete this->continentId;
+    this->continentId = NULL;
     
     //delete this->amntToInvade;
+    //this->amntToInvade = NULL;
+
     //delete this->numberOfSoldiers;
+    //this->numberOfSoldiers = NULL;
 }
 
 int* Territory:: getPosessor(){

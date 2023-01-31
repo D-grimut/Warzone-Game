@@ -45,17 +45,21 @@ public:
 class Map{
 private:
     int** adjacencyMatrix;      //2d array for the adjacency between all countries
-    int* nbTeritories;          //Number of teritories, passed by MapLoader
+    int* nbTeritories;          //Number of teritories, passed by MapLoader    
+    int* counter;               //Counter used to validate number of countries when calling validate()
     Territory* countries;       //Array of all countries
+
+    void dfs(int x, bool* visied);        //Helper Method for traversal - Depth's First Search
 
 public:
     Map(int* nbTeritories);
+    Map();
     ~Map();
 
-    void addEdge(int x, int y);     
-    void dfs(int x, int* visied);  
-    bool validate(); 
-    void toString();  
+    void addEdge(int x, int y);  
+    void toString();
+     
+    bool validate();   
 
     void setCountries(Territory arr[]);    
 };
@@ -68,6 +72,7 @@ private:
 
 public:
     MapLoader(string fielName);
+    MapLoader();
     ~MapLoader();
 
     Map* getMap();
