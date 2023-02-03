@@ -5,11 +5,12 @@ using namespace std;
 //Authors: Daniel & Nico
 
 /*---------------- Map class ----------------*/ 
-Map::Map(int* nbTeritories){  
+Map::Map(int* nbTeritories, int* nbContinents){  
     
-    this->nbTeritories = nbTeritories;      
-    this->counter = new int(0);
-
+    this->nbTeritories = nbTeritories;   
+    this->nbContinents = nbContinents;
+    this->counter = new int(0);   
+    
     //Making the adjacencyMtrix 2d array
     this->adjacencyMatrix = new int*[*nbTeritories];
     for(int i = 0; i < *nbTeritories; i++){
@@ -18,14 +19,18 @@ Map::Map(int* nbTeritories){
 }
 
 Map::Map(){
+    this->counter = 0;
     this->nbTeritories = NULL;
-    this->adjacencyMatrix = NULL;
-    this->counter = NULL;
+    this->nbContinents = NULL;
+    this->adjacencyMatrix = NULL;    
 }
 
 Map::~Map(){
-    delete this->counter;
-    this->counter = NULL;
+    delete this->nbContinents;
+    this->nbContinents = NULL;
+
+    delete this->nbTeritories;
+    this->nbTeritories = NULL;
 
     for(int i = 0; i < *nbTeritories; i++){
         delete adjacencyMatrix[i];
@@ -42,25 +47,30 @@ void Map::addEdge(int x, int y){
 }
 
 void Map::dfs(int node, bool* visited){
-  
+    
     visited[node] = true;
-    (*this->counter)++;     
+    (*this->counter)++;    
     
     for(int i = 0; i < *this->nbTeritories; i++){
        
         if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){
+            cout << *(this->countries[i].getTerritoryName()) << endl;
             dfs(i, visited);
         }
     }
 }
 
-bool Map::validate(){
-        
+//Validate validates if map object is a valid map
+//Note: the method checks for graph and continent connectivity in the same DFS sweep.
+bool Map::validate(){ 
+    
     bool* visits = new bool[*nbTeritories];
-    dfs(0, visits);  
+    dfs(0, visits);   
 
     //Deleting visits array; we only need the array for dfs/ validation
-    delete visits;       
+    delete visits; 
+
+    cout <<  *this->counter << endl;
 
     //Testing Graph conectivity (if all territories are connected)
     if(*this->counter == *this->nbTeritories){
@@ -100,35 +110,48 @@ void Map::setCountries(Territory arr[]){
 
 MapLoader::MapLoader(string fileName){   
 
-    ifstream mapFile(fileName);    
+    int nbCountries = countEntities(fileName, "[countries]");
+    int nbCont = countEntities(fileName, "[continents]");
+    
+    this->nbTeritories = &nbCountries; 
+    this->nbContinents = &nbCont;
+   
+    //Creating empty continent array   
+    string continentsArr[*this->nbContinents];
+    this->continents = continentsArr;
 
-    int counter = 0;    //Counter to count nb of files
+    //Creating empty teritorry array and empty map
+    Territory terArr[*nbTeritories];    
+    this->countries = terArr;     
+    this->map = new Map(nbTeritories, nbContinents);    
+    this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
 
-    string text;
+    readContinents(fileName);
+    readCountries(fileName);    
+    readBorders(fileName);     
+    //this->map->toString();                //For debug - DELTE AT THE END
+    
+    cout << this->map->validate() << endl;
+}
 
-    //Counting nb of countries
+//Helper method to count a certain type of entities in the .map file
+int MapLoader::countEntities(string fileName, string enityType){
+
+    ifstream mapFile(fileName); 
+    int counter = 0;    
+    string text;    
+
+    //Counting nb of entities
     while(getline(mapFile, text)){
-        if(text.compare("[countries]") == 0){
+        if(text.compare(enityType) == 0){
             while(text.compare("") != 0){
                 counter++;
                 getline(mapFile, text);
             }
         }
     }
-    counter -= 1;
-    this->nbTeritories = &counter;
-    mapFile.close(); 
-
-    Territory terArr[*nbTeritories];    
-    this->countries = terArr;     
-    this->map = new Map(nbTeritories);
-    this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
-
-    readCountries(fileName);
-    
-    readBorders(fileName);   
-    //this->map->toString();                //For debug - DELTE AT THE END 
-    this->map->validate();
+    mapFile.close();
+    return (counter - 1);
 }
 
 //TODO: Add error checking/ validation if file is a valid map based of teltale signs
@@ -144,7 +167,7 @@ void MapLoader::readCountries(string fileName){
     while (getline(file, text)){
         if(text.compare("[countries]") == 0){
 
-            while(text.compare("") != 0){
+            while(text.compare("") != 0 || text.compare("[borders]") != 0){
                 
                 getline(file, text);
                 
@@ -154,16 +177,15 @@ void MapLoader::readCountries(string fileName){
 
                 //Spliting the string by tokens to create teritory object
                 for(int i = 0, f = 0; i < text.length() && f < 3; i++, f++){
-                                        
-                    string token = "";
 
-                    while(text[i] != ' ' && i < text.length()){
+                    string token = "";
+                    while (text[i] != ' ' && i < text.length())
+                    {
                         token += text[i];
                         i++;
                     }
-
-                    propArr[f] = token;  
-                                     
+                    propArr[f] = token;
+                    //propArr[f] = splitString(text, i);
                 }                  
 
                 //We do -1 since the values read start from 1, and we want 
@@ -177,10 +199,10 @@ void MapLoader::readCountries(string fileName){
                     break;
                 }                             
             }
+            file.close();
             break;       
         }
-    }
-    file.close();
+    }    
 }
 
 void MapLoader::readBorders(string fileName){
@@ -197,16 +219,17 @@ void MapLoader::readBorders(string fileName){
             while(text.compare("") != 0){
                 
                 getline(file, text); 
-
-                //Spliting the string by tokens to create teritory object
+                
                 for(int i = 0; i < text.length(); i++){
                                         
+                    //string token = splitString(text, i);
                     string token = "";
-                    while(text[i] != ' ' && i < text.length()){
+                    while (text[i] != ' ' && i < text.length())
+                    {
                         token += text[i];
                         i++;
                     }
-                    
+
                     if(firstToken){                        
                         firstToken = false;
                         currCountry = (stoi(token) - 1);
@@ -217,10 +240,65 @@ void MapLoader::readBorders(string fileName){
                 }
                 firstToken = true;                                                            
             }
+            file.close();
             break;       
         }        
+    }    
+}
+
+void MapLoader::readContinents(string fileName){
+    
+    ifstream file(fileName);  
+    string text; 
+    int counter = 0; 
+
+    //Reading countries only
+    while (getline(file, text)){       
+        if(text.compare("[continents]") == 0){
+
+            while(text.compare("") != 0 || text.compare("[countries]") != 0){
+                
+                getline(file, text); 
+
+                //Array to store the continent properties to be parsed from the file
+                //We may need to modify it later on if we will use the other .map info (color in this case)
+                string propArr[2];
+
+                //Spliting the string by tokens to create teritory object
+                for(int i = 0, f = 0; i < text.length() && f < 2; i++, f++){
+
+                    string token = "";
+                    while (text[i] != ' ' && i < text.length())
+                    {
+                        token += text[i];
+                        i++;
+                    }
+                    //propArr[f] = splitString(text, i);
+                    propArr[f] = token;                   
+                }
+            
+                if(counter < *this->nbContinents){
+                    this->continents[counter] = propArr[0];
+                    counter++;
+                }else{                                      
+                    break;
+                }                
+            }
+            file.close();
+            break; 
+        }       
+    }   
+}
+
+//Helper method to split the string by tokens
+string MapLoader::splitString(string text, int &i){
+
+    string token = "";
+    while (text[i] != ' ' && i < text.length()){
+        token += text[i];
+        i++;
     }
-    file.close();
+    return token;
 }
 
 /*---------------- Teritory Class ----------------*/

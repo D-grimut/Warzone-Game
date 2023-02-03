@@ -45,14 +45,16 @@ public:
 class Map{
 private:
     int** adjacencyMatrix;      //2d array for the adjacency between all countries
-    int* nbTeritories;          //Number of teritories, passed by MapLoader    
-    int* counter;               //Counter used to validate number of countries when calling validate()
+    int* nbTeritories;          //Number of teritories, passed by MapLoader
+    int* nbContinents;          //Number of teritories, passed by MapLoader   
+    int* counter;               //Counter used to validate number of countries when calling validate() 
+    string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
     Territory* countries;       //Array of all countries
 
-    void dfs(int x, bool* visied);        //Helper Method for traversal - Depth's First Search
+    void dfs(int x, bool* visiedTerritory);        //Helper Method for traversal - Depth's First Search
 
 public:
-    Map(int* nbTeritories);
+    Map(int* nbTeritories, int* nbContinents);
     Map();
     ~Map();
 
@@ -68,7 +70,13 @@ class MapLoader{
 private:
     Map* map;                           //Map object to store the map   
     Territory* countries;               //Array of all countries  
+    string* continents;                 //Array of all continents, where the index of the continent corresponds to its ID
+    int* nbContinents;
     int* nbTeritories;                  //Number of teritories, passed by MapLoader
+
+    string splitString(string token, int& index);                           //Helper method to split string by token when reading .map files
+    int countEntities(string fileName, string entityType);                  //Helper method to count number of entities (countries or continents)
+
 
 public:
     MapLoader(string fielName);
@@ -76,6 +84,7 @@ public:
     ~MapLoader();
 
     Map* getMap();
+    void readContinents(string fileName);
     void readCountries(string fileName);
     void readBorders(string fileName);
 };
