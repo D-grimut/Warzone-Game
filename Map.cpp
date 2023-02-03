@@ -108,29 +108,39 @@ void Map::setCountries(Territory arr[]){
 /*---------------- Map Loader class ----------------*/ 
 
 MapLoader::MapLoader(string fileName){   
-
-    int nbCountries = countEntities(fileName, "[countries]");
-    int nbCont = countEntities(fileName, "[continents]");
     
-    this->nbTeritories = &nbCountries; 
-    this->nbContinents = &nbCont;
+    this->nbTeritories = new int(countEntities(fileName, "[countries]"));
+    this->nbContinents = new int(countEntities(fileName, "[continents]"));
    
     //Creating empty continent array   
     string continentsArr[*this->nbContinents];
     this->continents = continentsArr;
 
-    //Creating empty teritorry array and empty map
-    Territory terArr[*nbTeritories];    
-    this->countries = terArr;     
+    //Creating empty teritorry array and empty map    
+    this->countries = new Territory[*this->nbTeritories];     
     this->map = new Map(nbTeritories, nbContinents);    
     this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
 
     readContinents(fileName);
     readCountries(fileName);    
     readBorders(fileName);     
-    //this->map->toString();                //For debug - DELTE AT THE END
-    
-    cout << this->map->validate() << endl;
+    //this->map->toString();                        //For debug - DELTE AT THE END 
+
+    this->map->validate();
+}
+
+MapLoader::~MapLoader(){
+    delete this->nbContinents;
+    this->nbContinents = NULL;
+
+    delete this->nbTeritories;
+    this->nbTeritories = NULL;
+
+    delete this->map;
+    this->map = NULL;
+
+    delete this->countries;
+    this->countries = NULL;
 }
 
 //Helper method to count a certain type of entities in the .map file
@@ -238,7 +248,6 @@ void MapLoader::readContinents(string fileName){
     string text; 
     int counter = 0; 
 
-    //Reading countries only
     while (getline(file, text)){       
         if(text.compare("[continents]") == 0){
 
