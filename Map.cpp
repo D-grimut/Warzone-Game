@@ -53,8 +53,7 @@ void Map::dfs(int node, bool* visited){
     
     for(int i = 0; i < *this->nbTeritories; i++){
        
-        if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){
-            cout << *(this->countries[i].getTerritoryName()) << endl;
+        if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){            
             dfs(i, visited);
         }
     }
@@ -178,14 +177,7 @@ void MapLoader::readCountries(string fileName){
                 //Spliting the string by tokens to create teritory object
                 for(int i = 0, f = 0; i < text.length() && f < 3; i++, f++){
 
-                    string token = "";
-                    while (text[i] != ' ' && i < text.length())
-                    {
-                        token += text[i];
-                        i++;
-                    }
-                    propArr[f] = token;
-                    //propArr[f] = splitString(text, i);
+                    propArr[f] = splitString(text, i);
                 }                  
 
                 //We do -1 since the values read start from 1, and we want 
@@ -209,7 +201,7 @@ void MapLoader::readBorders(string fileName){
 
     ifstream file(fileName);  
     string text; 
-    int currCountry;     //Current country to which we are attributing the borders.  
+    int currCountry;            //Current country to which we are attributing the borders.  
     bool firstToken = true; 
 
     //Reading countries only
@@ -222,13 +214,7 @@ void MapLoader::readBorders(string fileName){
                 
                 for(int i = 0; i < text.length(); i++){
                                         
-                    //string token = splitString(text, i);
-                    string token = "";
-                    while (text[i] != ' ' && i < text.length())
-                    {
-                        token += text[i];
-                        i++;
-                    }
+                    string token = splitString(text, i);
 
                     if(firstToken){                        
                         firstToken = false;
@@ -267,14 +253,7 @@ void MapLoader::readContinents(string fileName){
                 //Spliting the string by tokens to create teritory object
                 for(int i = 0, f = 0; i < text.length() && f < 2; i++, f++){
 
-                    string token = "";
-                    while (text[i] != ' ' && i < text.length())
-                    {
-                        token += text[i];
-                        i++;
-                    }
-                    //propArr[f] = splitString(text, i);
-                    propArr[f] = token;                   
+                    propArr[f] = splitString(text, i);                                      
                 }
             
                 if(counter < *this->nbContinents){
