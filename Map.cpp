@@ -8,8 +8,7 @@ using namespace std;
 Map::Map(int* nbTeritories, int* nbContinents){  
     
     this->nbTeritories = nbTeritories;   
-    this->nbContinents = nbContinents;
-    this->counter = new int(0);   
+    this->nbContinents = nbContinents;   
     
     //Making the adjacencyMtrix 2d array
     this->adjacencyMatrix = new int*[*nbTeritories];
@@ -18,8 +17,7 @@ Map::Map(int* nbTeritories, int* nbContinents){
     }
 }
 
-Map::Map(){
-    this->counter = 0;
+Map::Map(){    
     this->nbTeritories = NULL;
     this->nbContinents = NULL;
     this->adjacencyMatrix = NULL;    
@@ -46,15 +44,21 @@ void Map::addEdge(int x, int y){
     this->adjacencyMatrix[y][x] = 1;
 }
 
-void Map::dfs(int node, bool* visited){
+void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
     
     visited[node] = true;
-    (*this->counter)++;    
+    ct++;    
+
+    //Counting number of continents - for continent connectivity
+    if(!visitedCon[*this->countries[node].getContinentId()]){
+        visitedCon[*this->countries[node].getContinentId()] = true;
+        cc++;
+    }
     
     for(int i = 0; i < *this->nbTeritories; i++){
        
         if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){            
-            dfs(i, visited);
+            dfs(i, visited, visitedCon, ct, cc);
         }
     }
 }
@@ -64,15 +68,38 @@ void Map::dfs(int node, bool* visited){
 bool Map::validate(){ 
     
     bool* visits = new bool[*nbTeritories];
-    dfs(0, visits);   
+    bool* continentVisits = new bool[*nbContinents];
+    bool isUnique = true;
+
+    unordered_map<string, int> hashmap;
+    //Teritory counter
+    int counterT = 0;
+
+    //Continent counter
+    int counterC = 0;    
+
+    dfs(0, visits, continentVisits, counterT, counterC);   
 
     //Deleting visits array; we only need the array for dfs/ validation
-    delete visits; 
+    delete visits;
+    delete continentVisits;  
 
-    cout <<  *this->counter << endl;
+    cout <<  counterT << ", " << counterC << endl;
+
+    //Only way we can have a country that has 2 continents, is to have a duplicate country, in which case it is an invalid map
+    for(int i = 0; i < *this->nbTeritories; i++){       
+
+        if((++hashmap[*this->countries[i].getTerritoryName()]) > 1){
+            isUnique = false;
+            break;
+        }
+    }
+
+    //DEBUG - DELETE AFTER
+    //cout << isUnique << endl;
 
     //Testing Graph conectivity (if all territories are connected)
-    if(*this->counter == *this->nbTeritories){
+    if(counterT == *this->nbTeritories && counterC == *this->nbTeritories && isUnique){
         return true;
 
     }else{

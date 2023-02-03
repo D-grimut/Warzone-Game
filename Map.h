@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 using namespace std;
 
 // Author: Daniel
@@ -46,12 +47,11 @@ class Map{
 private:
     int** adjacencyMatrix;      //2d array for the adjacency between all countries
     int* nbTeritories;          //Number of teritories, passed by MapLoader
-    int* nbContinents;          //Number of teritories, passed by MapLoader   
-    int* counter;               //Counter used to validate number of countries when calling validate() 
+    int* nbContinents;          //Number of teritories, passed by MapLoader       
     string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
     Territory* countries;       //Array of all countries
 
-    void dfs(int x, bool* visiedTerritory);        //Helper Method for traversal - Depth's First Search
+    void dfs(int, bool*, bool*, int&, int&);        //Helper Method for traversal - Depth's First Search
 
 public:
     Map(int* nbTeritories, int* nbContinents);
