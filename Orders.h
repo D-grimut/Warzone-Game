@@ -5,6 +5,18 @@
 
 using namespace std;
 
+class OrdersList{
+    public:
+        OrdersList();
+        OrdersList( int* size);
+        void move(int* position1, int* position2);
+        void remove(int* position);
+        void resize();
+        bool needResize();
+    private:
+        int* size;
+};
+
 class Orders{ //parent class
     public:
         //default
@@ -14,12 +26,12 @@ class Orders{ //parent class
     
 
         //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
 
@@ -34,12 +46,12 @@ class Deploy : public Orders{
         Deploy();
         Deploy(string name);
                 //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
     private:
@@ -51,12 +63,12 @@ class Advance : public Orders{
         Advance();
         Advance(string name);
                 //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
    private:
@@ -68,12 +80,12 @@ class Bomb : public Orders{
         Bomb();
         Bomb(string name);
                 //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
     private:
@@ -85,12 +97,12 @@ class Blockade : public Orders{
         Blockade();
         Blockade(string name);
                 //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
     private:
@@ -103,12 +115,12 @@ class Airlift : public Orders{
         Airlift();
         Airlift(string name);
                 //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
     private:
@@ -121,12 +133,12 @@ class Negotiate : public Orders{
         Negotiate();
         Negotiate(string name);
         //Accessor Functions
-        string getName() const;
+        string getName();
             //get name
             //@return - name of action
         
         //Mutators
-        void setName(string); 
+        void setName(string name); 
             //setName
             //@param string - name of action
     private:
