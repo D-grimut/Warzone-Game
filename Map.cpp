@@ -3,6 +3,7 @@
 using namespace std;
 
 //Authors: Daniel & Nico
+//hello
 
 /*---------------- Map class ----------------*/ 
 Map::Map(int* nbTeritories, int* nbContinents){  
