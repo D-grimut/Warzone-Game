@@ -5,24 +5,36 @@
 // Author: Alessio
 
 int main(){
-    // cout << "Hello world" << endl;
+    // Territory* territories = new Territory[3];
+    // territories[0].setPosessor(1);
+    // territories[1].setPosessor(2);
+    // territories[2].setPosessor(2);
 
-    Territory* territories[3] = {new Territory(1, "Canada", 1, false, 1), 
-                                new Territory(2, "USA", 2, false, 1),
-                                new Territory(2, "UK", 3, false, 2)};
+    // territories[0].setName("Canada");
+    // territories[1].setName("USA");
+    // territories[2].setName("UK");
 
-    //Territory(int posessor, string TerritoryName, 
-                                        //int TerritoryId, bool isFree, int continentId);
-    // territories[0] = new Territory(1, "Canada", 1, false, 1);
-    // territories[1] = new Territory(2, "USA", 2, false, 1);
-    // territories[2] = new Territory(2, "UK", 3, false, 2);
+    MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
+    Map *map = ml->map;
+    Territory* territories = map->getCountries();
 
     Player *p1 = new Player(1, territories);
+    territories[0].setPosessor(p1->getPlayerID());
 
+    cout << "Player's ID: " << p1->getPlayerID() << "\n" << endl;
+
+    cout << "All territories: " << endl;
     p1->allTerritories();
+
+    cout << "\n" << endl;
+
+    cout << "Territories to defend: " << endl;
+    p1->toDefend();
+
+    cout << "\n" << endl;
+
+    cout << "Territories to attack: " << endl;
+    p1->toAttack();
 
     return 0;
 }
-
-//Make 1 boolean array, size of max amount of territories, possession array
-//

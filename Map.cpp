@@ -394,6 +394,10 @@ string* Territory::getTerritoryName(){
     return this->TerritoryName;
 }
 
+Territory* Map::getCountries(){
+    return this->countries;
+}
+
 //Setters
 void Territory::setPosessor(int id){
     *this->posessor = id;

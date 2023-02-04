@@ -63,12 +63,12 @@ public:
      
     bool validate();   
 
-    void setCountries(Territory arr[]);    
+    void setCountries(Territory arr[]);  
+    Territory* getCountries();
 };
 
 class MapLoader{
 private:
-    Map* map;                           //Map object to store the map   
     Territory* countries;               //Array of all countries  
     string* continents;                 //Array of all continents, where the index of the continent corresponds to its ID
     int* nbContinents;
@@ -82,7 +82,8 @@ public:
     MapLoader(string fielName);
     MapLoader();
     ~MapLoader();
-
+    Map* map;                           //Map object to store the map 
+     
     Map* getMap();
     void readContinents(string fileName);
     void readCountries(string fileName);

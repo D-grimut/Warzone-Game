@@ -51,6 +51,7 @@ class Player{
         ~Player(); // Destruct Player object
 
         void setPlayerID(int playerID);
+        int getPlayerID();
         void allTerritories(); // Show all territories
         Territory* toDefend(); // Show territories to attack
         Territory* toAttack(); // Show territories to defend

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "Player.h"
 #include "Map.h"
 using namespace std;
@@ -26,13 +27,35 @@ Player::~Player(){
 }
 
 void Player::allTerritories(){
-    for(int i = 0; i < 3; i++){
-        cout << territories[i].getPosessor() << endl;
+    for(int i = 0; i < 24; i++){
+        cout << "Possesor ID: " << *territories[i].getPosessor() << ", Territory name: ";
+        cout << *territories[i].getTerritoryName() << endl;        
     }
 }
 
 Territory* Player::toDefend(){
+    for(int i = 0; i < 24; i++){
+        if(*territories[i].getPosessor() == *this->playerID){
+            cout << "Possesor ID: " << *territories[i].getPosessor() << ", Territory name: ";
+            cout << *territories[i].getTerritoryName() << endl;  
+        }     
+    }
+}
 
+// Make static variable with amount of territories and change the value 3
+// to that static variable
+
+Territory* Player::toAttack(){
+    for(int i = 0; i < 24; i++){
+        if(*territories[i].getPosessor() != *this->playerID){
+            cout << "Possesor ID: " << *territories[i].getPosessor() << ", Territory name: ";
+            cout << *territories[i].getTerritoryName() << endl;  
+        }     
+    }
+}
+
+int Player::getPlayerID(){
+    return *this->playerID;
 }
 
 void Player::setPlayerID(int playerID){
