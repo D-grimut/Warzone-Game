@@ -80,14 +80,15 @@ bool Map::validate(){
 
     dfs(0, visits, continentVisits, counterT, counterC);   
 
+    // cout <<  counterT << ", " << counterC << endl;
+    // cout << *this->nbTeritories << ", " << *this->nbContinents << endl;
+
     //Deleting visits array; we only need the array for dfs/ validation
     delete visits;
-    delete continentVisits;  
-
-    cout <<  counterT << ", " << counterC << endl;
+    delete continentVisits;      
 
     //Only way we can have a country that has 2 continents, is to have a duplicate country, in which case it is an invalid map
-    for(int i = 0; i < *this->nbTeritories; i++){       
+    for(int i = 0; i < *this->nbTeritories; i++){      
 
         if((++hashmap[*this->countries[i].getTerritoryName()]) > 1){
             isUnique = false;
@@ -95,18 +96,13 @@ bool Map::validate(){
         }
     }
 
-    //DEBUG - DELETE AFTER
-    //cout << isUnique << endl;
-
     //Testing Graph conectivity (if all territories are connected)
-    if(counterT == *this->nbTeritories && counterC == *this->nbTeritories && isUnique){
+    if(counterT == *this->nbTeritories && counterC == *this->nbContinents && isUnique){
         return true;
 
     }else{
         return false;
-    }
-
-    //TODO: Add validation for continents + Add validation for Countrt - Continent Relation; one country can have only one continent
+    }   
 }
 
 void Map::toString(){
@@ -134,26 +130,35 @@ void Map::setCountries(Territory arr[]){
 
 /*---------------- Map Loader class ----------------*/ 
 
-MapLoader::MapLoader(string fileName){   
+MapLoader::MapLoader(string fileName){  
     
     this->nbTeritories = new int(countEntities(fileName, "[countries]"));
-    this->nbContinents = new int(countEntities(fileName, "[continents]"));
-   
-    //Creating empty continent array   
-    string continentsArr[*this->nbContinents];
-    this->continents = continentsArr;
+    this->nbContinents = new int(countEntities(fileName, "[continents]"));    
 
-    //Creating empty teritorry array and empty map    
-    this->countries = new Territory[*this->nbTeritories];     
-    this->map = new Map(nbTeritories, nbContinents);    
-    this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
+    if(*this->nbTeritories <= 0 || *this->nbContinents <=0){
+        cout << "Map is in an invalid format, rejecting map" << endl;
 
-    readContinents(fileName);
-    readCountries(fileName);    
-    readBorders(fileName);     
-    //this->map->toString();                        //For debug - DELTE AT THE END 
+    }else{
+        //Creating empty continent array   
+        string continentsArr[*this->nbContinents];
+        this->continents = continentsArr;
 
-    this->map->validate();
+        //Creating empty teritorry array and empty map    
+        this->countries = new Territory[*this->nbTeritories];     
+        this->map = new Map(nbTeritories, nbContinents);    
+        this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
+
+        readContinents(fileName);
+        readCountries(fileName);    
+        readBorders(fileName);
+
+        if(!this->map->validate()){
+           cout << "Map is invalid; failed validation() method - rejecting map" << endl;
+           
+        }else{
+            cout << "Map is valid!" << endl;
+        }
+    }  
 }
 
 MapLoader::~MapLoader(){
@@ -326,10 +331,6 @@ Territory::Territory(int posessor, string TerritoryName, int TerritoryId, bool i
     this->TerritoryId = new int(TerritoryId);    
     this->isFree = new bool(isFree);
     this->continentId = new int(continentId);
-
-    //These properties do not figure on the .map file so we comment them out for now
-    //this->amntToInvade = new int(amntToInvade);
-    //this->numberOfSoldiers = new int(numberOfSoldiers);
 }
 
 //Default Consructor
@@ -356,13 +357,7 @@ Territory::~Territory(){
     this->isFree = NULL;
 
     delete this->continentId;
-    this->continentId = NULL;
-    
-    //delete this->amntToInvade;
-    //this->amntToInvade = NULL;
-
-    //delete this->numberOfSoldiers;
-    //this->numberOfSoldiers = NULL;
+    this->continentId = NULL;  
 }
 
 int* Territory:: getPosessor(){
@@ -376,14 +371,6 @@ int* Territory::getTerritoryId(){
 int* Territory::getContinentId(){
     return this->continentId;
 }
-
-// int* Territory::getAmntToInvade(){
-//     return this->amntToInvade;
-// }
-
-// int* Territory::getNumberOfSoldiers(){
-//     return this->numberOfSoldiers;
-// }
 
 bool* Territory::getIsFree(){
     return this->isFree;

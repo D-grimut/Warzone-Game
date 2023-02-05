@@ -10,8 +10,6 @@ using namespace std;
 
 class Territory{
 private:
-    //TODO: Replace posser by the actual player object that poses this teritory or keep
-    //Player ID (Discuss with tho ever is doing player class).
     
     int* posessor;              //Player object (todo), who posese the teritory
     string* TerritoryName;      //name of territory
@@ -39,8 +37,6 @@ public:
     void setStatus(bool stat);
     void setName(string name);
 
-    // int* getAmntToInvade();
-    // int* getNumberOfSoldiers();
 };
 
 class Map{
@@ -76,13 +72,13 @@ private:
 
     string splitString(string token, int& index);                           //Helper method to split string by token when reading .map files
     int countEntities(string fileName, string entityType);                  //Helper method to count number of entities (countries or continents)
-
-
+   
+   
 public:
     MapLoader(string fielName);
     MapLoader();
     ~MapLoader();
-
+    
     Map* getMap();
     void readContinents(string fileName);
     void readCountries(string fileName);
