@@ -5,15 +5,15 @@ using namespace std;
 //Authors: Daniel & Nico
 
 /*---------------- Map class ----------------*/ 
-Map::Map(int* nbTeritories, int* nbContinents){  
+Map::Map(int nbTeritories, int nbContinents){  
     
-    this->nbTeritories = nbTeritories;   
-    this->nbContinents = nbContinents;   
-    
+    this->nbTeritories = new int(nbTeritories);   
+    this->nbContinents = new int(nbContinents);  
+       
     //Making the adjacencyMtrix 2d array
-    this->adjacencyMatrix = new int*[*nbTeritories];
-    for(int i = 0; i < *nbTeritories; i++){
-        adjacencyMatrix[i] = new int[*nbTeritories];
+    this->adjacencyMatrix = new int*[nbTeritories];
+    for(int i = 0; i < nbTeritories; i++){
+        adjacencyMatrix[i] = new int[nbTeritories];
     }
 }
 
@@ -72,14 +72,23 @@ bool Map::validate(){
     bool isUnique = true;
 
     unordered_map<string, int> hashmap;
+
+    //Assuring that visited array is created properly - that is the array has only false values at the start
+    for (int i = 0; i < *this->nbTeritories; i++){
+        visits[i] = false;
+    }
+
+    //Assuring that continentVisits array is created properly - that is the array has only false values at the start
+    for (int i = 0; i < *this->nbContinents; i++){
+        continentVisits[i] = false;
+    }
     //Teritory counter
     int counterT = 0;
 
     //Continent counter
     int counterC = 0;    
 
-    dfs(0, visits, continentVisits, counterT, counterC);   
-
+    dfs(0, visits, continentVisits, counterT, counterC);     
     // cout <<  counterT << ", " << counterC << endl;
     // cout << *this->nbTeritories << ", " << *this->nbContinents << endl;
 
@@ -145,12 +154,12 @@ MapLoader::MapLoader(string fileName){
 
         //Creating empty teritorry array and empty map    
         this->countries = new Territory[*this->nbTeritories];     
-        this->map = new Map(nbTeritories, nbContinents);    
+        this->map = new Map(*nbTeritories, *nbContinents);    
         this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
 
         readContinents(fileName);
         readCountries(fileName);    
-        readBorders(fileName);
+        readBorders(fileName);       
 
         if(!this->map->validate()){
            cout << "Map is invalid; failed validation() method - rejecting map" << endl;

@@ -45,12 +45,12 @@ private:
     int* nbTeritories;          //Number of teritories, passed by MapLoader
     int* nbContinents;          //Number of teritories, passed by MapLoader       
     string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
-    Territory* countries;       //Array of all countries
+    Territory* countries;       //Array of all countries 
 
     void dfs(int, bool*, bool*, int&, int&);        //Helper Method for traversal - Depth's First Search
 
 public:
-    Map(int* nbTeritories, int* nbContinents);
+    Map(int nbTeritories, int nbContinents);
     Map();
     ~Map();
 
