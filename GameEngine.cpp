@@ -3,7 +3,7 @@
 
 GameEngine::GameEngine()
 {
-    current_state = 0; // default: every user starts at current state 0 aka. "Start"
+    current_state = new int(0); // default: every user starts at current state 0 aka. "Start"
 }
 
 void GameEngine::Play()
@@ -20,50 +20,50 @@ void GameEngine::Play()
     WinState *win_state = new WinState(Engine);
 
     // loop that keeps the game running, ends when the state is 5 aka. "end"
-    while (Engine->getState() != 8)
+    while (*Engine->getState() != 8)
     {
         Engine->Commands();
         std::cout << "Your move: ";
         std::string input;
         std::cin >> input;
-        if (Engine->getState() == 0)
+        if (*Engine->getState() == 0)
         {
             start_state->StartInput(input);
         }
-        else if (Engine->getState() == 1)
+        else if (*Engine->getState() == 1)
         {
             map_loaded_state->MapLoadedInput(input);
         }
-        else if (Engine->getState() == 2)
+        else if (*Engine->getState() == 2)
         {
             map_validated_state->ValidateInput(input);
         }
-        else if (Engine->getState() == 3)
+        else if (*Engine->getState() == 3)
         {
             players_added_state->PlayersAddedInput(input);
         }
-        else if (Engine->getState() == 4)
+        else if (*Engine->getState() == 4)
         {
             assign_reinforcement_state->AssignReinforcementsInput(input);
         }
-        else if (Engine->getState() == 5)
+        else if (*Engine->getState() == 5)
         {
             issue_order_state->IssueOrderInput(input);
         }
-        else if (Engine->getState() == 6)
+        else if (*Engine->getState() == 6)
         {
             execute_order_state->ExecuteOrderInput(input);
         }
-        else if (Engine->getState() == 7)
+        else if (*Engine->getState() == 7)
         {
             win_state->WinInput(input);
         }
     }
 }
 
-int GameEngine::getState()
+int *GameEngine::getState()
 {
-    return current_state;
+    return this->current_state;
 }
 
 /*
@@ -75,47 +75,47 @@ int GameEngine::getState()
 // Function that will change the state of the game
 void GameEngine::TransitionTo(int state)
 {
-    current_state = state;
+    current_state = new int(state);
 }
 
 //  shows valid game engine commands for each state
 void GameEngine::Commands()
 {
     std::cout << "Valid commands: ";
-    if (current_state == 0)
+    if (*current_state == 0)
     {
         std::cout << "\n1. loadmap" << std::endl;
     }
-    else if (current_state == 1)
+    else if (*current_state == 1)
     {
         std::cout << "\n1. loadmap" << std::endl;
         std::cout << "2. validatemap" << std::endl;
     }
-    else if (current_state == 2)
+    else if (*current_state == 2)
     {
         std::cout << "\n1. addplayer" << std::endl;
     }
-    else if (current_state == 3)
+    else if (*current_state == 3)
     {
         std::cout << "\n1. addplayer" << std::endl;
         std::cout << "2. assigncountries" << std::endl;
     }
-    else if (current_state == 4)
+    else if (*current_state == 4)
     {
         std::cout << "\n1. issueorder" << std::endl;
     }
-    else if (current_state == 5)
+    else if (*current_state == 5)
     {
         std::cout << "\n1. issueorder" << std::endl;
         std::cout << "2. endissueorders" << std::endl;
     }
-    else if (current_state == 6)
+    else if (*current_state == 6)
     {
         std::cout << "\n1. win" << std::endl;
         std::cout << "2. execorder" << std::endl;
         std::cout << "3. endexecorders" << std::endl;
     }
-    else if (current_state == 7)
+    else if (*current_state == 7)
     {
         std::cout << "\n1. end" << std::endl;
         std::cout << "2. play" << std::endl;

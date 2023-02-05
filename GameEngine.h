@@ -7,10 +7,10 @@ public:
     void Play();                  // general run method
     void Commands();              // print the valid commands
     void TransitionTo(int state); // transition function
-    int getState();
+    int *getState();
 
 private:
-    int current_state; // current state : int or string?
+    int *current_state; // current state : int or string?
 };
 
 // start state
