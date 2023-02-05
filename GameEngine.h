@@ -4,9 +4,10 @@ class GameEngine
 {
 public:
     GameEngine();                 // default constructor
-    void Run();                   // general run method
+    void Play();                  // general run method
     void Commands();              // print the valid commands
     void TransitionTo(int state); // transition function
+    int getState();
 
 private:
     int current_state; // current state : int or string?
@@ -17,13 +18,12 @@ class StartState
 {
 public:
     StartState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
     void StartInput(const std::string &input); // to change
-    void Commands();
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // map loaded
@@ -32,13 +32,12 @@ class MapLoadedState
 public:
     // constructor
     MapLoadedState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void MapLoadedInput(const std::string &input); // to change
-    void Commands();
+    void MapLoadedInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // map validate
@@ -46,13 +45,12 @@ class MapValidatedState
 {
 public:
     MapValidatedState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void ValidateInput(const std::string &input); // to change
-    void Commands();
+    void ValidateInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // players added state
@@ -60,13 +58,12 @@ class PlayersAddedState
 {
 public:
     PlayersAddedState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void PlayersAddedInput(const std::string &input); // to change
-    void Commands();
+    void PlayersAddedInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // assign reinforcement
@@ -74,13 +71,12 @@ class AssignReinforcementState
 {
 public:
     AssignReinforcementState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void Input(const std::string &input); // to change
-    void Commands();
+    void AssignReinforcementsInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // issue order
@@ -88,13 +84,12 @@ class IssueOrderState
 {
 public:
     IssueOrderState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void Input(const std::string &input); // to change
-    void Commands();
+    void IssueOrderInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // exec orders
@@ -102,13 +97,12 @@ class ExecuteOrderState
 {
 public:
     ExecuteOrderState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void Input(const std::string &input); // to change
-    void Commands();
+    void ExecuteOrderInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
 
 // win state
@@ -116,11 +110,10 @@ class WinState
 {
 public:
     WinState(GameEngine *engine)
-        : engine_(engine) {}
+        : engine(engine) {}
 
-    void WinInput(const std::string &input); // to change
-    void Commands();
+    void WinInput(const std::string &input);
 
 private:
-    GameEngine *engine_;
+    GameEngine *engine;
 };
