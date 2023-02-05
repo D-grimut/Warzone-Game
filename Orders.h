@@ -1,21 +1,8 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <string>
 
 using namespace std;
-
-class OrdersList{
-    public:
-        OrdersList();
-        OrdersList( int* size);
-        void move(int* position1, int* position2);
-        void remove(int* position);
-        void resize();
-        bool needResize();
-    private:
-        int* size;
-};
 
 class Orders{ //parent class
     public:
@@ -36,7 +23,7 @@ class Orders{ //parent class
             //@param string - name of action
 
         bool validate();
-        void execute();
+        bool execute();
     private:
         string name;
 };
@@ -143,4 +130,22 @@ class Negotiate : public Orders{
             //@param string - name of action
     private:
         string name;
+};
+
+class OrdersList{
+    public:
+        OrdersList();
+        OrdersList( int* const size);
+        void move(int* position1, int* position2);
+        void remove(int* position);
+        void resize();
+        bool needResize(int count);
+        int getsize();
+        void setSize(int* newSize);
+        void add(Orders* a1);
+        Orders getArray(int i);
+    private:
+        int* size;
+        Orders* orderList[];
+     
 };

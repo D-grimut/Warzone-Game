@@ -1,23 +1,7 @@
 #include "Orders.h"
 #include <iostream>
-#include<string>
+#include <string>
 using namespace std;
-
-
-OrdersList::OrdersList(){};
-
-OrdersList::OrdersList(int* size ){
-    Orders* orderList[*size];
-}
-
-void OrdersList::move(int* position1, int* position2){
-
-}
-
-void OrdersList::remove(int* position){
-
-}
-
 
 
 
@@ -41,12 +25,14 @@ void Orders::setName(string newName){
     name = newName;
 }
 
-void Orders::execute(){
+bool Orders::execute(){
     cout << "Executing " << getName();
+    return true;
 }
 
 bool Orders::validate(){
-    cout << "Validating ";
+    cout << "Validating " << getName();
+    return true;
 }
 
 
@@ -156,4 +142,72 @@ string Negotiate::getName() {
 //Mutator
 void Negotiate::setName(string newName){
     name = newName;
+}
+
+OrdersList::OrdersList(){};
+
+OrdersList::OrdersList(int* const size ){
+    Orders* orderList[*size];
+}
+
+void OrdersList::add(Orders* a1){
+    int i = 0;
+    while(orderList[i]){
+        i++;
+    }
+    orderList[i] = a1;
+}
+
+Orders OrdersList::getArray(int i){
+    return *orderList[i];
+}
+
+void OrdersList::move(int* position1, int* position2){
+    if(*position2 < getsize() && *position1 != *position2){
+        if(*position1 < *position2){
+            int temp = *position1;
+            for(int i = *position1; i < *position2; i++){
+                this[i] = this[i + 1];
+            }
+            *position2 = temp;
+        }
+        if(*position1 > *position2){
+            int temp = *position1;
+            for(int i = *position1; i > *position2; i--){
+                this[i] = this[i - 1];
+            }
+            *position2 = temp;
+        }
+    }
+}
+
+void OrdersList::remove(int* position){
+    this[*position] = NULL;
+    for(int i = 0; i < getsize(); i++){
+        this[i] = this[i + 1];
+        int* newSize;
+        *newSize = getsize()-1;
+        setSize(newSize);
+    }
+}
+
+void OrdersList::resize(){
+    int* newSize;
+    *newSize = getsize() * 2;
+    OrdersList newOrderList(newSize);
+}
+
+bool OrdersList::needResize(int count){
+    if(count > getsize()){
+        return true;
+    }
+    return false;
+}
+
+int OrdersList::getsize(){
+    return *size;
+}
+
+void OrdersList::setSize(int* newSize){
+    this->size = newSize;
 }
