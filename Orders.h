@@ -1,151 +1,104 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include <string>
-
 using namespace std;
 
-class Orders{ //parent class
+//Order class (PARENT)
+class Order {
     public:
-        //default
-        Orders(); 
-        //overload
-        Orders(string name); 
-    
-
-        //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
-
-        bool validate();
-        bool execute();
+        Order();
+        ~Order();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-        string name;
+        string* name; //used for description
 };
 
-class Deploy : public Orders{
+//Deploy class
+class Deploy : public Order {
     public:
         Deploy();
-        Deploy(string name);
-                //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
+        ~Deploy();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-        string name;
+        string* name; //used for description
 };
 
-class Advance : public Orders{
-     public:
+//Advance class
+class Advance : public Order {
+    public:
         Advance();
-        Advance(string name);
-                //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
-   private:
-        string name;
+        ~Advance();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
+    private:
+        string* name; //used for description
 };
 
-class Bomb : public Orders{
+//Bomb class
+class Bomb : public Order {
     public:
         Bomb();
-        Bomb(string name);
-                //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
+        ~Bomb();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-        string name;
+        string* name; //used for description
 };
 
-class Blockade : public Orders{
+//Blockade class
+class Blockade : public Order {
     public:
         Blockade();
-        Blockade(string name);
-                //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
+        ~Blockade();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-        string name;
-    
+        string* name; //used for description
 };
 
-class Airlift : public Orders{
+//Airlift class
+class Airlift : public Order {
     public:
         Airlift();
-        Airlift(string name);
-                //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
+        ~Airlift();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-
-        string name;
+        string* name; //used for description
 };
 
-class Negotiate : public Orders{
+//Negotiate class
+class Negotiate : public Order {
     public:
         Negotiate();
-        Negotiate(string name);
-        //Accessor Functions
-        string getName();
-            //get name
-            //@return - name of action
-        
-        //Mutators
-        void setName(string name); 
-            //setName
-            //@param string - name of action
+        ~Negotiate();
+        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual void execute(); //Execute
+        virtual string* description(); //Shows which order it is
     private:
-        string name;
+        string* name; //used for description
 };
 
-class OrdersList{
-    public:
-        OrdersList();
-        OrdersList( int* const size);
-        void move(int* position1, int* position2);
-        void remove(int* position);
-        void resize();
-        bool needResize(int count);
-        int getsize();
-        void setSize(int* newSize);
-        void add(Orders* a1);
-        Orders getArray(int i);
-    private:
-        int* size;
-        Orders* orderList[];
-     
+//OrdersList class (creates the vector to store orders)
+class OrdersList {
+public:
+    OrdersList();
+    ~OrdersList();
+    vector<Order*> orders; //vecotr created
+    void addOrder(Order* order); //add orders to the vector
+    void moveOrder(int* position1, int* position2); //move from position1 to position2
+    void removeOrder(int* position); //remove order from position
+    void showList(); //prints all contents in the vector
+    int getSize(); //returns size of the vector
+    void validate(); //not implemented, prints that it is being called
+    void execute(); //not implemented, prints that it is being called
 };

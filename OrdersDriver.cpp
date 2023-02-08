@@ -1,71 +1,55 @@
 #include <iostream>
+#include <vector>
 #include <string>
 #include "Orders.h"
 using namespace std;
 
 int main(){
-    Deploy* dep;
-    Deploy d1("deploy");
-    *dep = d1;
+    //Creating orders
+    Deploy* dep = new Deploy();
+    Advance* ad = new Advance();
+    Bomb* bo1 = new Bomb();
+    Blockade* blo1 = new Blockade();
+    Airlift* ar = new Airlift();
+    Negotiate* ne = new Negotiate();
 
-    Advance* ad;
-    Advance a1("advance");
-    *ad = a1;
-    
-    Bomb* bo1;
-    Bomb b1("bomb");
-    *bo1 = b1;
+    //Creating object OrderList to store orders, then adding them
+    OrdersList newList;
+    newList.addOrder(dep);
+    newList.addOrder(ad);
+    newList.addOrder(bo1);
+    newList.addOrder(blo1);
+    newList.addOrder(ar);
+    newList.addOrder(ne);
 
-    Blockade* blo1;
-    Blockade bl1("blockade");
-    *blo1 = bl1;
+    //Show full list
+    cout << "\nFirst list\n" << endl;
+        newList.showList();
 
-    Airlift* ar;
-    Airlift ar1("airlift");
-    *ar = ar1;
+    //Call validate function (not implemented)
+    cout <<"\nChecking validate \n" <<endl;
+        newList.validate();
 
-    Negotiate* ne;
-    Negotiate n1("negotiate");
-    *ne = n1;
+    //call execute fn (not implemented)
+    cout <<"\nChecking execute \n" <<endl;
+        newList.execute();
 
-    int* size;
-    *size = 6;
-    OrdersList newList(size);
-    newList.add(dep);
-    newList.add(ad);
-    newList.add(bo1);
-    newList.add(blo1);
-    newList.add(ar);
-    newList.add(ne);
-    cout << newList.getsize();
-    cout << "Full List of Orders: \n";
-     for(int i = 0; i < newList.getsize(); i++){
-        cout << newList.getArray(i).getName();
-     }
+    //test moving positions
+    cout <<"\nMoving from position 2 to position 5\n" << endl; 
+        int* position1 = new int(1);
+        int* position2 = new int(4);
+        newList.moveOrder(position1, position2);
+        newList.showList();
 
-    int* position1; 
-    int* position2;
-    *position1 = 0;
-    *position2 = 3;
-    newList.move(position1, position2);
-    cout << "Full list of orders after moving position 1 to position 4: \n";
-    for(int i = 0; i < newList.getsize(); i++){
-        cout << newList.getArray(i).getName();
-    }
-    cout << "Full list of orders after removing position: \n";
-    newList.remove(position2);
-    for(int i = 0; i < newList.getsize(); i++){
-        cout << newList.getArray(i).getName();
-    }
+    //test removing
+    cout<<"\nRemoving position 3\n" << endl;
+        int* position = new int(2);
+        newList.removeOrder(position);
+        newList.showList();
 
-    cout << "Validating: \n";
-    for(int i = 0; i < newList.getsize(); i++){
-        cout << newList.getArray(i).validate();
-    }
-    cout << "Executing: \n";
-    for(int i = 0; i < newList.getsize(); i++){
-        cout << newList.getArray(i).execute();
-    }
-
+  
     return 0;
+
+
+
 }

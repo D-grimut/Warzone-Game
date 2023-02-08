@@ -1,213 +1,201 @@
 #include "Orders.h"
 #include <iostream>
+#include <vector>
 #include <string>
 using namespace std;
 
+//Order Class (PARENT)
 
+Order::Order(){} //default constructor
 
-//PARENT: ORDERS
-//default
-Orders::Orders(){
-    name = "No action";
-}
-//overload
-Orders::Orders(string name1){
-    name = name1;
+bool* Order::validate(){
+    cout << "Validating class: Order";
+    bool* ptr = new bool(true);
+    return ptr;
 }
 
-//Accessor
-string Orders::getName() {
-    return name;
+void Order::execute(){
+    cout << "Executing class: Order";
 }
 
-//Mutator
-void Orders::setName(string newName){
-    name = newName;
+string* Order::description(){
+    name = new string("Order - Parent");
+    return this->name;
 }
 
-bool Orders::execute(){
-    cout << "Executing " << getName();
-    return true;
+Order::~Order(){} //destructor
+
+//Deploy Class
+
+Deploy::Deploy(){} //default constructor
+
+bool* Deploy::validate(){
+    cout << "Validating class: Deploy";
+     bool* ptr = new bool(true);
+    return ptr;
 }
 
-bool Orders::validate(){
-    cout << "Validating " << getName();
-    return true;
+void Deploy::execute(){
+    cout << "Executing class: Deploy\n";
 }
 
-
-//DEPLOY
-//default
-Deploy::Deploy() : Orders(){
-}
-//overload
-Deploy::Deploy(string name1) : Orders() {
-    name = name1;
+string* Deploy::description(){
+    name = new string("Deploy");
+    return this->name;
 }
 
-//Accessor
-string Deploy::getName() {
-    return name;
+Deploy::~Deploy(){} //destructor
+
+//Advance Class
+
+Advance::Advance(){} //default constructor
+
+bool* Advance::validate(){
+    cout << "Validating class: Advance";
+    bool* ptr = new bool(true);
+    return ptr;
 }
 
-//Mutator
-void Deploy::setName(string newName){
-    name = newName;
+void Advance::execute(){
+    cout << "Executing class: Advance\n";
 }
 
-//ADVANCE
-Advance::Advance() : Orders(){
+string* Advance::description(){
+    name = new string("Advance");
+    return this->name;
 }
 
-Advance::Advance(string newName) : Orders(){
-    name = newName;
+Advance::~Advance(){} //destructor
+
+//Bomb Class
+
+Bomb::Bomb(){} //default constructor
+
+bool* Bomb::validate(){
+    cout << "Validating class: Bomb";
+    bool* ptr = new bool(true);
+    return ptr;
 }
 
-//Accessor
-string Advance::getName() {
-    return name;
+void Bomb::execute(){
+    cout << "Executing class: Bomb\n";
 }
 
-//Mutator
-void Advance::setName(string newName){
-    name = newName;
+string* Bomb::description(){
+    name = new string("Bomb");
+    return this->name;
 }
 
-//BOMB
-Bomb::Bomb() : Orders(){
+Bomb::~Bomb(){} //destructor
+
+//Blockade Class
+
+Blockade::Blockade(){} //default constructor
+
+bool* Blockade::validate(){
+    cout << "Validating class: Blockade";
+     bool* ptr = new bool(true);
+    return ptr;
 }
 
-Bomb::Bomb(string newName) : Orders(){
-    name = newName;
-}
-//Accessor
-string Bomb::getName() {
-    return name;
+void Blockade::execute(){
+    cout << "Executing class: Blockade\n";
 }
 
-//Mutator
-void Bomb::setName(string newName){
-    name = newName;
+string* Blockade::description(){
+    name = new string("Blockade");
+    return this->name;
 }
 
-//BLOCKADE
-Blockade::Blockade() : Orders(){
+Blockade::~Blockade(){} //destructor
+
+
+//Airlift Class
+
+Airlift::Airlift(){} //default constructor
+
+bool* Airlift::validate(){
+    cout << "Validating class: Airlift";
+     bool* ptr = new bool(true);
+    return ptr;
 }
 
-Blockade::Blockade(string newName) : Orders(){
-    name = newName;
+void Airlift::execute(){
+    cout << "Executing class: Airlift\n";
 }
 
-//Accessor
-string Blockade::getName() {
-    return name;
+string* Airlift::description(){
+    name = new string("Airlift");
+    return this->name;
 }
 
-//Mutator
-void Blockade::setName(string newName){
-    name = newName;
+Airlift::~Airlift(){} //destructor
+
+//Negotiate Class
+
+Negotiate::Negotiate(){} //default constructor
+
+bool* Negotiate::validate(){
+    cout << "Validating class: Negotiate";
+    bool* ptr = new bool(true);
+    return ptr;
 }
 
-//AIRLIFT
-Airlift::Airlift() : Orders(){
+void Negotiate::execute(){
+    cout << "Executing class: Negotiate\n";
 }
 
-Airlift::Airlift(string newName) : Orders(){
-    name = newName;
+string* Negotiate::description(){
+    name = new string("Negotiate");
+    return this->name;
 }
 
-//Accessor
-string Airlift::getName() {
-    return name;
+Negotiate::~Negotiate(){} //destructor
+
+//OrdersList Class
+
+OrdersList::OrdersList(){} //default constructor
+
+
+void OrdersList::addOrder(Order* order){
+   orders.push_back(order); 
 }
 
-//Mutator
-void Airlift::setName(string newName){
-    name = newName;
-}
-
-//NEGOTIATE
-Negotiate::Negotiate() : Orders(){
-}
-
-Negotiate::Negotiate(string newName) : Orders(){
-    name = newName;
-}
-
-//Accessor
-string Negotiate::getName() {
-    return name;
-}
-
-//Mutator
-void Negotiate::setName(string newName){
-    name = newName;
-}
-
-OrdersList::OrdersList(){};
-
-OrdersList::OrdersList(int* const size ){
-    Orders* orderList[*size];
-}
-
-void OrdersList::add(Orders* a1){
-    int i = 0;
-    while(orderList[i]){
-        i++;
-    }
-    orderList[i] = a1;
-}
-
-Orders OrdersList::getArray(int i){
-    return *orderList[i];
-}
-
-void OrdersList::move(int* position1, int* position2){
-    if(*position2 < getsize() && *position1 != *position2){
-        if(*position1 < *position2){
-            int temp = *position1;
-            for(int i = *position1; i < *position2; i++){
-                this[i] = this[i + 1];
-            }
-            *position2 = temp;
+void OrdersList::moveOrder(int* position1, int* position2){
+    if(*position1 > orders.size() || *position2 > orders.size()){
+            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
         }
-        if(*position1 > *position2){
-            int temp = *position1;
-            for(int i = *position1; i > *position2; i--){
-                this[i] = this[i - 1];
-            }
-            *position2 = temp;
+    Order* temp = orders[*position1];
+    orders.erase(orders.begin() + *position1);
+    orders.insert(orders.begin() + *position2, temp);
+}
+
+void OrdersList::removeOrder(int* position){
+        if(*position > orders.size()){
+            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
         }
+        orders.erase(orders.begin() + *position);
+}
+
+void OrdersList::showList(){
+    for(int i = 0; i < orders.size(); i++){
+            cout << *orders.at(i)->description()  << endl;
+        }
+}
+
+int OrdersList::getSize(){
+    return orders.size();
+}
+
+void OrdersList::validate(){
+    for(int i = 0; i < orders.size(); i++){
+        cout << *orders.at(i)->validate() << endl;
     }
 }
 
-void OrdersList::remove(int* position){
-    this[*position] = NULL;
-    for(int i = 0; i < getsize(); i++){
-        this[i] = this[i + 1];
-        int* newSize;
-        *newSize = getsize()-1;
-        setSize(newSize);
+void OrdersList::execute(){
+    for(int i = 0; i < orders.size(); i++){
+        orders.at(i)->execute();
     }
 }
-
-void OrdersList::resize(){
-    int* newSize;
-    *newSize = getsize() * 2;
-    OrdersList newOrderList(newSize);
-}
-
-bool OrdersList::needResize(int count){
-    if(count > getsize()){
-        return true;
-    }
-    return false;
-}
-
-int OrdersList::getsize(){
-    return *size;
-}
-
-void OrdersList::setSize(int* newSize){
-    this->size = newSize;
-}
+OrdersList::~OrdersList(){} //destructor
