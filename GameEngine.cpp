@@ -1,11 +1,182 @@
 // GameEngine.cpp
 #include "GameEngine.h"
 
+/*
+This section is for all the constructors used for each class
+*/
+
+// Constructor for game engine
 GameEngine::GameEngine()
 {
     current_state = new int(0); // default: every user starts at current state 0 aka. "Start"
 }
 
+// Destructor for game engine
+GameEngine::~GameEngine()
+{
+    delete current_state;
+    current_state = nullptr;
+}
+
+// Copy constructor for game engine
+GameEngine::GameEngine(const GameEngine &copy)
+{
+    current_state = new int(*(copy.current_state));
+}
+
+// Constructor for start state
+StartState::StartState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for start state
+StartState::StartState(const StartState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for start state
+StartState::~StartState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor for Map loaded state
+MapLoadedState::MapLoadedState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for map loaded state
+MapLoadedState::MapLoadedState(const MapLoadedState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for map loaded state
+MapLoadedState::~MapLoadedState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor for map validated state
+MapValidatedState::MapValidatedState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for map validated state
+MapValidatedState::MapValidatedState(const MapValidatedState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for map validated state
+MapValidatedState::~MapValidatedState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor for players added state
+PlayersAddedState::PlayersAddedState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for players added state
+PlayersAddedState::PlayersAddedState(const PlayersAddedState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for players added state
+PlayersAddedState::~PlayersAddedState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor assign reinforcement state
+AssignReinforcementState::AssignReinforcementState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy consturctor for assign reinforcement state
+AssignReinforcementState::AssignReinforcementState(const AssignReinforcementState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for assingn reinforcement state
+AssignReinforcementState::~AssignReinforcementState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor for issue order state
+IssueOrderState::IssueOrderState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for issue order state
+IssueOrderState::IssueOrderState(const IssueOrderState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for issue order state
+IssueOrderState::~IssueOrderState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Constructor for execute order state
+ExecuteOrderState::ExecuteOrderState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for execute order state
+ExecuteOrderState::ExecuteOrderState(const ExecuteOrderState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for execute order state
+ExecuteOrderState::~ExecuteOrderState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Construct for win state
+WinState::WinState(GameEngine *engine)
+{
+    this->engine = engine;
+}
+
+// Copy constructor for win state
+WinState::WinState(const WinState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
+
+// Destructor for win state
+WinState::~WinState()
+{
+    delete engine;
+    engine = nullptr;
+}
+
+// Play method: this method runs a continuous loop and plays the game
 void GameEngine::Play()
 {
     // create the states
@@ -19,7 +190,7 @@ void GameEngine::Play()
     ExecuteOrderState *execute_order_state = new ExecuteOrderState(Engine);
     WinState *win_state = new WinState(Engine);
 
-    // loop that keeps the game running, ends when the state is 5 aka. "end"
+    // loop that keeps the game running, ends when the state is 8 aka. "End"
     while (*Engine->getState() != 8)
     {
         Engine->Commands();
@@ -61,6 +232,7 @@ void GameEngine::Play()
     }
 }
 
+// Getter for the private attribute state
 int *GameEngine::getState()
 {
     return this->current_state;
@@ -336,12 +508,4 @@ void WinState::WinInput(const std::string &input)
         std::cin >> temp;
         WinInput(temp);
     }
-}
-
-// test main method
-int main()
-{
-    GameEngine *g = new GameEngine();
-    g->Play();
-    return 0;
 }

@@ -3,50 +3,61 @@
 class GameEngine
 {
 public:
-    GameEngine();                 // default constructor
-    void Play();                  // general run method
-    void Commands();              // print the valid commands
-    void TransitionTo(int state); // transition function
-    int *getState();
+    GameEngine();                       // default constructor
+    ~GameEngine();                      // destructor
+    GameEngine(const GameEngine &copy); // copy constructor
+    void Play();                        // general run method
+    void Commands();                    // print the valid commands
+    void TransitionTo(int state);       // transition function
+    int *getState();                    // getter
 
 private:
     int *current_state; // current state : int or string?
 };
 
+/*
+Starting now, all of the classes will be seperate states. Each state will have
+-A constructor with parameter
+-A copy constructor
+-A destructor
+-An input method
+-A private attribute for engine
+*/
+
 // start state
 class StartState
 {
 public:
-    StartState(GameEngine *engine)
-        : engine(engine) {}
-
-    void StartInput(const std::string &input); // to change
+    StartState(GameEngine *engine);
+    ~StartState();
+    StartState(const StartState &copy);
+    void StartInput(const std::string &input);
 
 private:
     GameEngine *engine;
 };
 
-// map loaded
+// map loaded state
 class MapLoadedState
 {
 public:
     // constructor
-    MapLoadedState(GameEngine *engine)
-        : engine(engine) {}
-
+    MapLoadedState(GameEngine *engine);
+    ~MapLoadedState();
+    MapLoadedState(const MapLoadedState &copy);
     void MapLoadedInput(const std::string &input);
 
 private:
     GameEngine *engine;
 };
 
-// map validate
+// map validate state
 class MapValidatedState
 {
 public:
-    MapValidatedState(GameEngine *engine)
-        : engine(engine) {}
-
+    MapValidatedState(GameEngine *engine);
+    ~MapValidatedState();
+    MapValidatedState(const MapValidatedState &copy);
     void ValidateInput(const std::string &input);
 
 private:
@@ -57,48 +68,48 @@ private:
 class PlayersAddedState
 {
 public:
-    PlayersAddedState(GameEngine *engine)
-        : engine(engine) {}
-
+    PlayersAddedState(GameEngine *engine);
+    ~PlayersAddedState();
+    PlayersAddedState(const PlayersAddedState &copy);
     void PlayersAddedInput(const std::string &input);
 
 private:
     GameEngine *engine;
 };
 
-// assign reinforcement
+// assign reinforcement state
 class AssignReinforcementState
 {
 public:
-    AssignReinforcementState(GameEngine *engine)
-        : engine(engine) {}
-
+    AssignReinforcementState(GameEngine *engine);
+    ~AssignReinforcementState();
+    AssignReinforcementState(const AssignReinforcementState &copy);
     void AssignReinforcementsInput(const std::string &input);
 
 private:
     GameEngine *engine;
 };
 
-// issue order
+// issue order state
 class IssueOrderState
 {
 public:
-    IssueOrderState(GameEngine *engine)
-        : engine(engine) {}
-
+    IssueOrderState(GameEngine *engine);
+    ~IssueOrderState();
+    IssueOrderState(const IssueOrderState &copy);
     void IssueOrderInput(const std::string &input);
 
 private:
     GameEngine *engine;
 };
 
-// exec orders
+// exec orders state
 class ExecuteOrderState
 {
 public:
-    ExecuteOrderState(GameEngine *engine)
-        : engine(engine) {}
-
+    ExecuteOrderState(GameEngine *engine);
+    ~ExecuteOrderState();
+    ExecuteOrderState(const ExecuteOrderState &copy);
     void ExecuteOrderInput(const std::string &input);
 
 private:
@@ -109,9 +120,9 @@ private:
 class WinState
 {
 public:
-    WinState(GameEngine *engine)
-        : engine(engine) {}
-
+    WinState(GameEngine *engine);
+    ~WinState();
+    WinState(const WinState &copy);
     void WinInput(const std::string &input);
 
 private:
