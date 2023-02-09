@@ -163,8 +163,10 @@ OrdersList::OrdersList(int* size){
 
 void OrdersList::addOrder(Order* newOrder, int position){
     if(position > *getSize()){
+        int* oldSize = getSize();
         resize();
-        orders[*getSize()] = newOrder;
+        orders[*oldSize] = newOrder;
+        showList();
         
     }
     else
@@ -173,11 +175,10 @@ void OrdersList::addOrder(Order* newOrder, int position){
 }
 
 void OrdersList::resize(){
-    int* newSize = new int(*getSize() * 2);
+    int* newSize = new int(*getSize() + 1);
     Order** newArr = new Order*[*newSize];
     for(int i = 0; i <= *getSize(); i++){
         newArr[i] = orders[i];
-     cout << "gets to resize"<< i <<endl;
     }
 
     setSize(newSize);
