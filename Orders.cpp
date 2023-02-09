@@ -7,6 +7,18 @@ using namespace std;
 
 Order::Order(){} //default constructor
 
+Order::Order(const Order& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+Order& Order::operator=(const Order& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Order &a){ //insertion operator
+    return strm << "Order(" << a.name << ")";
+}
+
 bool* Order::validate(){
     cout << "Validating class: Order\n";
     bool* ptr = new bool(true);
@@ -28,6 +40,19 @@ Order::~Order(){} //destructor
 
 Deploy::Deploy(){} //default constructor
 
+Deploy::Deploy(const Deploy& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Deploy& Deploy::operator=(const Deploy& e){ //assignment operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Deploy &a){ //instertion operator
+    return strm << "Deploy(" << a.name << ")";
+}
+
 bool* Deploy::validate(){
     cout << "Validating class: Deploy\n";
      bool* ptr = new bool(true);
@@ -37,6 +62,7 @@ bool* Deploy::validate(){
 void Deploy::execute(){
     cout << "Executing class: Deploy\n";
 }
+
 
 string* Deploy::description(){
     name = new string("Deploy");
@@ -48,6 +74,19 @@ Deploy::~Deploy(){} //destructor
 //Advance Class
 
 Advance::Advance(){} //default constructor
+
+Advance::Advance(const Advance& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Advance& Advance::operator=(const Advance& e){ //assignment operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Advance &a){ //instertion operator
+    return strm << "Advance(" << a.name << ")";
+}
 
 bool* Advance::validate(){
     cout << "Validating class: Advance\n";
@@ -70,6 +109,19 @@ Advance::~Advance(){} //destructor
 
 Bomb::Bomb(){} //default constructor
 
+Bomb::Bomb(const Bomb& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Bomb& Bomb::operator=(const Bomb& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Bomb &a){ //instertion operator
+    return strm << "Bomb(" << a.name << ")";
+}
+
 bool* Bomb::validate(){
     cout << "Validating class: Bomb\n";
     bool* ptr = new bool(true);
@@ -90,6 +142,19 @@ Bomb::~Bomb(){} //destructor
 //Blockade Class
 
 Blockade::Blockade(){} //default constructor
+
+Blockade::Blockade(const Blockade& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Blockade& Blockade::operator=(const Blockade& e){//assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Blockade &a){ //instertion operator
+    return strm << "Blockade(" << a.name << ")";
+}
 
 bool* Blockade::validate(){
     cout << "Validating class: Blockade\n";
@@ -113,6 +178,19 @@ Blockade::~Blockade(){} //destructor
 
 Airlift::Airlift(){} //default constructor
 
+Airlift::Airlift(const Airlift& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Airlift& Airlift::operator=(const Airlift& e){//assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Airlift &a){ //instertion operator
+    return strm << "Airlift(" << a.name << ")";
+}
+
 bool* Airlift::validate(){
     cout << "Validating class: Airlift\n";
      bool* ptr = new bool(true);
@@ -133,6 +211,19 @@ Airlift::~Airlift(){} //destructor
 //Negotiate Class
 
 Negotiate::Negotiate(){} //default constructor
+
+Negotiate::Negotiate(const Negotiate& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Negotiate& Negotiate::operator=(const Negotiate& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Negotiate &a){ //instertion operator
+    return strm << "Negotiate(" << a.name << ")";
+}
 
 bool* Negotiate::validate(){
     cout << "Validating class: Negotiate\n";
@@ -161,6 +252,21 @@ OrdersList::OrdersList(int* size){
     orders = new Order* [*size];
 }
 
+OrdersList::OrdersList(const OrdersList& e){ //copy constructor
+    this->size = new int(*(e.size));
+    this->orders = new Order*();
+}
+
+OrdersList& OrdersList::operator=(const OrdersList& e){ //assignmnet operator
+    this->size = new int(*(e.size));
+    this->orders = new Order*();
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const OrdersList &a){ //instertion operator
+    return strm << "OrdersList(" << a.orders << ")";
+}
+
 void OrdersList::addOrder(Order* newOrder, int position){
     if(position > *getSize()){
         int* oldSize = getSize();
@@ -184,7 +290,6 @@ void OrdersList::resize(){
     setSize(newSize);
     delete [] orders;
     orders = newArr;
-    //showList();
 }
 
 
