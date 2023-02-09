@@ -1,38 +1,40 @@
 #include <iostream>
-#include <vector>
 #include <string>
 #include "Orders.h"
 using namespace std;
 
 int main(){
     //Creating orders
-    Deploy* dep = new Deploy();
-    Advance* ad = new Advance();
-    Bomb* bo1 = new Bomb();
-    Blockade* blo1 = new Blockade();
-    Airlift* ar = new Airlift();
-    Negotiate* ne = new Negotiate();
-
+    Order* dep = new Deploy();
+    Order* ad = new Advance();
+    Order* bo1 = new Bomb();
+    Order* blo1 = new Blockade();
+    Order* ar = new Airlift();
+    Order* ne = new Negotiate();
+    cout << 1 << endl;
     //Creating object OrderList to store orders, then adding them
-    OrdersList newList;
-    newList.addOrder(dep);
-    newList.addOrder(ad);
-    newList.addOrder(bo1);
-    newList.addOrder(blo1);
-    newList.addOrder(ar);
-    newList.addOrder(ne);
-
+    int* size = new int(6);
+    OrdersList newList(size);
+    cout << 1 << endl;
+    newList.addOrder(dep, 0);
+    //cout << 1 << endl;
+    newList.addOrder(ad, 1);
+    newList.addOrder(bo1, 2);
+    newList.addOrder(blo1, 3);
+    newList.addOrder(ar, 4);
+    newList.addOrder(ne, 5);
+    cout << 1 << endl;
     //Show full list
-    cout << "\nFirst list\n" << endl;
+    cout << "\nFirst list" << endl;
         newList.showList();
 
     //Call validate function (not implemented)
     cout <<"\nChecking validate \n" <<endl;
-        newList.validate();
+    newList.validate();
 
     //call execute fn (not implemented)
     cout <<"\nChecking execute \n" <<endl;
-        newList.execute();
+    newList.execute();
 
     //test moving positions
     cout <<"\nMoving from position 2 to position 5\n" << endl; 
@@ -46,6 +48,12 @@ int main(){
         int* position = new int(2);
         newList.removeOrder(position);
         newList.showList();
+
+    //testing resize
+    cout <<"\nTesting resize"<<endl;
+    Order* newOrder = new Deploy();
+    newList.addOrder(newOrder, 7);
+    newList.showList();
 
   
     return 0;

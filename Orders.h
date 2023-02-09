@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <string>
 using namespace std;
 
@@ -92,13 +91,18 @@ class Negotiate : public Order {
 class OrdersList {
 public:
     OrdersList();
+    OrdersList(int* size);
     ~OrdersList();
-    vector<Order*> orders; //vecotr created
-    void addOrder(Order* order); //add orders to the vector
+    void addOrder(Order* order, int position); //add orders to the vector
     void moveOrder(int* position1, int* position2); //move from position1 to position2
     void removeOrder(int* position); //remove order from position
     void showList(); //prints all contents in the vector
-    int getSize(); //returns size of the vector
+    int* getSize(); //returns size of the vector
+    void setSize(int* size);
     void validate(); //not implemented, prints that it is being called
     void execute(); //not implemented, prints that it is being called
+    void resize();
+private:
+    Order** orders; //vecotr created
+    int* size;
 };

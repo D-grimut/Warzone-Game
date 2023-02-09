@@ -1,6 +1,5 @@
 #include "Orders.h"
 #include <iostream>
-#include <vector>
 #include <string>
 using namespace std;
 
@@ -9,13 +8,13 @@ using namespace std;
 Order::Order(){} //default constructor
 
 bool* Order::validate(){
-    cout << "Validating class: Order";
+    cout << "Validating class: Order\n";
     bool* ptr = new bool(true);
     return ptr;
 }
 
 void Order::execute(){
-    cout << "Executing class: Order";
+    cout << "Executing class: Order\n";
 }
 
 string* Order::description(){
@@ -30,7 +29,7 @@ Order::~Order(){} //destructor
 Deploy::Deploy(){} //default constructor
 
 bool* Deploy::validate(){
-    cout << "Validating class: Deploy";
+    cout << "Validating class: Deploy\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -51,7 +50,7 @@ Deploy::~Deploy(){} //destructor
 Advance::Advance(){} //default constructor
 
 bool* Advance::validate(){
-    cout << "Validating class: Advance";
+    cout << "Validating class: Advance\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -72,7 +71,7 @@ Advance::~Advance(){} //destructor
 Bomb::Bomb(){} //default constructor
 
 bool* Bomb::validate(){
-    cout << "Validating class: Bomb";
+    cout << "Validating class: Bomb\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -93,7 +92,7 @@ Bomb::~Bomb(){} //destructor
 Blockade::Blockade(){} //default constructor
 
 bool* Blockade::validate(){
-    cout << "Validating class: Blockade";
+    cout << "Validating class: Blockade\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -115,7 +114,7 @@ Blockade::~Blockade(){} //destructor
 Airlift::Airlift(){} //default constructor
 
 bool* Airlift::validate(){
-    cout << "Validating class: Airlift";
+    cout << "Validating class: Airlift\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -136,7 +135,7 @@ Airlift::~Airlift(){} //destructor
 Negotiate::Negotiate(){} //default constructor
 
 bool* Negotiate::validate(){
-    cout << "Validating class: Negotiate";
+    cout << "Validating class: Negotiate\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -152,50 +151,96 @@ string* Negotiate::description(){
 
 Negotiate::~Negotiate(){} //destructor
 
+
 //OrdersList Class
 
 OrdersList::OrdersList(){} //default constructor
 
-
-void OrdersList::addOrder(Order* order){
-   orders.push_back(order); 
+OrdersList::OrdersList(int* size){
+    setSize(size);
+    orders = new Order* [*size];
 }
 
+void OrdersList::addOrder(Order* newOrder, int position){
+    if(position > *getSize()){
+        resize();
+        orders[*getSize()] = newOrder;
+        
+    }
+    else
+        orders[position] = newOrder;
+   
+}
+
+void OrdersList::resize(){
+    int* newSize = new int(*getSize() * 2);
+    Order** newArr = new Order*[*newSize];
+    for(int i = 0; i <= *getSize(); i++){
+        newArr[i] = orders[i];
+     cout << "gets to resize"<< i <<endl;
+    }
+
+    setSize(newSize);
+    delete [] orders;
+    orders = newArr;
+    //showList();
+}
+
+
 void OrdersList::moveOrder(int* position1, int* position2){
-    if(*position1 > orders.size() || *position2 > orders.size()){
-            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
+    if(*position1 > *getSize() || *position2 > *getSize()){
+            cout << "Invalid remove, please enter a number less than: " << *getSize() <<endl;
         }
     Order* temp = orders[*position1];
-    orders.erase(orders.begin() + *position1);
-    orders.insert(orders.begin() + *position2, temp);
+    if(*position1 > *position2){
+        for(int i = *position2; i < *position1; i++){
+            orders[i] = orders[i+1]; 
+        }
+        (orders[*position2]) = temp;
+    }
+    if(*position1 < *position2){
+        for(int i = *position1; i < *position2; i++){
+            orders[i] = orders[i+1]; 
+        }
+        (orders[*position2]) = temp;
+    }
 }
 
 void OrdersList::removeOrder(int* position){
-        if(*position > orders.size()){
-            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
+        if(*position > *getSize()){
+            cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
         }
-        orders.erase(orders.begin() + *position);
+        for(int i = *position; i<*getSize(); i++){
+            orders[i] = orders[i+1];
+        }
+        int* newSize = new int(*getSize() - 1);
+        setSize(newSize);
 }
 
 void OrdersList::showList(){
-    for(int i = 0; i < orders.size(); i++){
-            cout << *orders.at(i)->description()  << endl;
+    for(int i = 0; i < *getSize(); i++){
+            cout << *orders[i]->description() << endl;
         }
 }
 
-int OrdersList::getSize(){
-    return orders.size();
+int* OrdersList::getSize(){
+    return this->size;
+}
+
+void OrdersList::setSize(int* size){
+    this->size = size;
 }
 
 void OrdersList::validate(){
-    for(int i = 0; i < orders.size(); i++){
-        cout << *orders.at(i)->validate() << endl;
+    for(int i = 0; i < *getSize(); i++){
+        orders[i]->validate();
     }
 }
 
 void OrdersList::execute(){
-    for(int i = 0; i < orders.size(); i++){
-        orders.at(i)->execute();
+    for(int i = 0; i < *getSize(); i++){
+        orders[i]->execute();
     }
 }
-OrdersList::~OrdersList(){} //destructor
+OrdersList::~OrdersList(){
+} //destructor
