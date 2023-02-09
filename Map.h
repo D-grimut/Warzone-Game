@@ -10,8 +10,6 @@ using namespace std;
 
 class Territory{
 private:
-    //TODO: Replace posser by the actual player object that poses this teritory or keep
-    //Player ID (Discuss with tho ever is doing player class).
     
     int* posessor;              //Player object (todo), who posese the teritory
     string* TerritoryName;      //name of territory
@@ -39,8 +37,6 @@ public:
     void setStatus(bool stat);
     void setName(string name);
 
-    // int* getAmntToInvade();
-    // int* getNumberOfSoldiers();
 };
 
 class Map{
@@ -49,12 +45,12 @@ private:
     int* nbTeritories;          //Number of teritories, passed by MapLoader
     int* nbContinents;          //Number of teritories, passed by MapLoader       
     string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
-    Territory* countries;       //Array of all countries
+    Territory* countries;       //Array of all countries 
 
     void dfs(int, bool*, bool*, int&, int&);        //Helper Method for traversal - Depth's First Search
 
 public:
-    Map(int* nbTeritories, int* nbContinents);
+    Map(int nbTeritories, int nbContinents);
     Map();
     ~Map();
 
@@ -63,12 +59,12 @@ public:
      
     bool validate();   
 
-    void setCountries(Territory arr[]);  
-    Territory* getCountries();
+    void setCountries(Territory arr[]);    
 };
 
 class MapLoader{
 private:
+    Map* map;                           //Map object to store the map   
     Territory* countries;               //Array of all countries  
     string* continents;                 //Array of all continents, where the index of the continent corresponds to its ID
     int* nbContinents;
@@ -76,14 +72,13 @@ private:
 
     string splitString(string token, int& index);                           //Helper method to split string by token when reading .map files
     int countEntities(string fileName, string entityType);                  //Helper method to count number of entities (countries or continents)
-
-
+   
+   
 public:
     MapLoader(string fielName);
     MapLoader();
     ~MapLoader();
-    Map* map;                           //Map object to store the map 
-     
+    
     Map* getMap();
     void readContinents(string fileName);
     void readCountries(string fileName);
