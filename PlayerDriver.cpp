@@ -1,40 +1,43 @@
 #include "Player.h"
 #include "Map.h"
+#include "Orders.h"
 #include <iostream>
 
 // Author: Alessio
 
 int main(){
-    // Territory* territories = new Territory[3];
-    // territories[0].setPosessor(1);
-    // territories[1].setPosessor(2);
-    // territories[2].setPosessor(2);
-
-    // territories[0].setName("Canada");
-    // territories[1].setName("USA");
-    // territories[2].setName("UK");
-
     MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
-    Map *map = ml->map;
+    Map *map = ml->getMap();
+    int nbTerritories = *ml->getMap()->getNbTerritories();
     Territory* territories = map->getCountries();
+    // Order* orders = new Order();
+    int* size = new int(10);
+    OrdersList* ol = new OrdersList(size);
 
-    Player *p1 = new Player(1, territories);
+    Player *p1 = new Player(1, territories, ol, nbTerritories);
     territories[0].setPosessor(p1->getPlayerID());
 
-    cout << "Player's ID: " << p1->getPlayerID() << "\n" << endl;
+    cout << *p1 << endl;
 
-    cout << "All territories: " << endl;
-    p1->allTerritories();
+    p1->ownedTerritories();
 
-    cout << "\n" << endl;
+    cout << endl;
 
-    cout << "Territories to defend: " << endl;
-    p1->toDefend();
+    p1->issueOrder();
 
-    cout << "\n" << endl;
+    cout << endl;
 
-    cout << "Territories to attack: " << endl;
-    p1->toAttack();
+    ol->showList();
+
+    // cout << "\n" << endl;
+
+    // cout << "Territories to defend: " << endl;
+    // p1->toDefend();
+
+    // cout << "\n" << endl;
+
+    // cout << "Territories to attack: " << endl;
+    // p1->toAttack();
 
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "Map.h"
+#include "Orders.h"
 using namespace std;
 
 // Author: Alessio
@@ -18,44 +19,35 @@ using namespace std;
 
 /*
 TODO:
-- Add Card and Order to the Player constructor
+- Add Card to the Player constructor
 - Do issueOrder
+- All classes implement a correct copy constructor, assignment operator, and stream insertion operator.
 */
 
 class Player{
     private:
-         // [Territory(1, "Canada", 0, 1 = "NA", false), Territory(2, "USA", 1, 1 = "NA", false)] I'm Player(1, Territory[], Card[], Order[])
-        /*
-        toDefend -> go through array of ALL territories
-        check if the id of the possesor of the territory matches the player
-        if yes -> add to an array then return array
-
-        toAttack -> go through array of ALL territories
-        check if the id of the possesor of the territory matches the player
-        if yes -> add to an array then return array
-        
-        */
-
-
-
         int* playerID; // Gives the player an ID
         Territory* territories; // Creates an array of Territories
+        // Order* orders;
+        OrdersList* ol;
+        int* nbOfTerritories;
+        friend std::ostream& operator<<(std::ostream &strm, const Player &p);
         /*
         Card *cards;
-        Order *orders;
         */
     
     public:
-        Player(int playerID, Territory* territories /*, Card *cards, Order *orders*/);
+        // Player(int playerID, Territory* territories /*, Card *cards*/, Order* orders, int nbTerritories);
+        Player(int playerID, Territory* territories /*, Card *cards*/, OrdersList* ol, int nbTerritories);
         Player();
         ~Player(); // Destruct Player object
 
         void setPlayerID(int playerID);
         int getPlayerID();
-        void allTerritories(); // Show all territories
+        void ownedTerritories(); // Show all territories
         Territory* toDefend(); // Show territories to attack
         Territory* toAttack(); // Show territories to defend
-        // Order* issueOrder();
+        void issueOrder(); // Create order and add it to array of orders
 };
 
 class PlayerDriver{

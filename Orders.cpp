@@ -1,6 +1,5 @@
 #include "Orders.h"
 #include <iostream>
-#include <vector>
 #include <string>
 using namespace std;
 
@@ -8,14 +7,26 @@ using namespace std;
 
 Order::Order(){} //default constructor
 
+Order::Order(const Order& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+Order& Order::operator=(const Order& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Order &a){ //insertion operator
+    return strm << "Order(" << a.name << ")";
+}
+
 bool* Order::validate(){
-    cout << "Validating class: Order";
+    cout << "Validating class: Order\n";
     bool* ptr = new bool(true);
     return ptr;
 }
 
 void Order::execute(){
-    cout << "Executing class: Order";
+    cout << "Executing class: Order\n";
 }
 
 string* Order::description(){
@@ -29,8 +40,21 @@ Order::~Order(){} //destructor
 
 Deploy::Deploy(){} //default constructor
 
+Deploy::Deploy(const Deploy& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Deploy& Deploy::operator=(const Deploy& e){ //assignment operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Deploy &a){ //instertion operator
+    return strm << "Deploy(" << a.name << ")";
+}
+
 bool* Deploy::validate(){
-    cout << "Validating class: Deploy";
+    cout << "Validating class: Deploy\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -38,6 +62,7 @@ bool* Deploy::validate(){
 void Deploy::execute(){
     cout << "Executing class: Deploy\n";
 }
+
 
 string* Deploy::description(){
     name = new string("Deploy");
@@ -50,8 +75,21 @@ Deploy::~Deploy(){} //destructor
 
 Advance::Advance(){} //default constructor
 
+Advance::Advance(const Advance& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Advance& Advance::operator=(const Advance& e){ //assignment operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Advance &a){ //instertion operator
+    return strm << "Advance(" << a.name << ")";
+}
+
 bool* Advance::validate(){
-    cout << "Validating class: Advance";
+    cout << "Validating class: Advance\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -71,8 +109,21 @@ Advance::~Advance(){} //destructor
 
 Bomb::Bomb(){} //default constructor
 
+Bomb::Bomb(const Bomb& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Bomb& Bomb::operator=(const Bomb& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Bomb &a){ //instertion operator
+    return strm << "Bomb(" << a.name << ")";
+}
+
 bool* Bomb::validate(){
-    cout << "Validating class: Bomb";
+    cout << "Validating class: Bomb\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -92,8 +143,21 @@ Bomb::~Bomb(){} //destructor
 
 Blockade::Blockade(){} //default constructor
 
+Blockade::Blockade(const Blockade& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Blockade& Blockade::operator=(const Blockade& e){//assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Blockade &a){ //instertion operator
+    return strm << "Blockade(" << a.name << ")";
+}
+
 bool* Blockade::validate(){
-    cout << "Validating class: Blockade";
+    cout << "Validating class: Blockade\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -114,8 +178,21 @@ Blockade::~Blockade(){} //destructor
 
 Airlift::Airlift(){} //default constructor
 
+Airlift::Airlift(const Airlift& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Airlift& Airlift::operator=(const Airlift& e){//assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Airlift &a){ //instertion operator
+    return strm << "Airlift(" << a.name << ")";
+}
+
 bool* Airlift::validate(){
-    cout << "Validating class: Airlift";
+    cout << "Validating class: Airlift\n";
      bool* ptr = new bool(true);
     return ptr;
 }
@@ -135,8 +212,21 @@ Airlift::~Airlift(){} //destructor
 
 Negotiate::Negotiate(){} //default constructor
 
+Negotiate::Negotiate(const Negotiate& e){ //copy constructor
+    this->name = new string(*(e.name));
+}
+
+Negotiate& Negotiate::operator=(const Negotiate& e){ //assignmnet operator
+    this->name = new string(*(e.name));
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Negotiate &a){ //instertion operator
+    return strm << "Negotiate(" << a.name << ")";
+}
+
 bool* Negotiate::validate(){
-    cout << "Validating class: Negotiate";
+    cout << "Validating class: Negotiate\n";
     bool* ptr = new bool(true);
     return ptr;
 }
@@ -152,50 +242,111 @@ string* Negotiate::description(){
 
 Negotiate::~Negotiate(){} //destructor
 
+
 //OrdersList Class
 
 OrdersList::OrdersList(){} //default constructor
 
-
-void OrdersList::addOrder(Order* order){
-   orders.push_back(order); 
+OrdersList::OrdersList(int* size){
+    setSize(size);
+    orders = new Order* [*size];
 }
 
+OrdersList::OrdersList(const OrdersList& e){ //copy constructor
+    this->size = new int(*(e.size));
+    this->orders = new Order*();
+}
+
+OrdersList& OrdersList::operator=(const OrdersList& e){ //assignmnet operator
+    this->size = new int(*(e.size));
+    this->orders = new Order*();
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const OrdersList &a){ //instertion operator
+    return strm << "OrdersList(" << a.orders << ")";
+}
+
+void OrdersList::addOrder(Order* newOrder, int position){
+    if(position > *getSize()){
+        int* oldSize = getSize();
+        resize();
+        orders[*oldSize] = newOrder;
+        showList();
+        
+    }
+    else
+        orders[position] = newOrder;
+   
+}
+
+void OrdersList::resize(){
+    int* newSize = new int(*getSize() + 1);
+    Order** newArr = new Order*[*newSize];
+    for(int i = 0; i <= *getSize(); i++){
+        newArr[i] = orders[i];
+    }
+
+    setSize(newSize);
+    delete [] orders;
+    orders = newArr;
+}
+
+
 void OrdersList::moveOrder(int* position1, int* position2){
-    if(*position1 > orders.size() || *position2 > orders.size()){
-            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
+    if(*position1 > *getSize() || *position2 > *getSize()){
+            cout << "Invalid remove, please enter a number less than: " << *getSize() <<endl;
         }
     Order* temp = orders[*position1];
-    orders.erase(orders.begin() + *position1);
-    orders.insert(orders.begin() + *position2, temp);
+    if(*position1 > *position2){
+        for(int i = *position2; i < *position1; i++){
+            orders[i] = orders[i+1]; 
+        }
+        (orders[*position2]) = temp;
+    }
+    if(*position1 < *position2){
+        for(int i = *position1; i < *position2; i++){
+            orders[i] = orders[i+1]; 
+        }
+        (orders[*position2]) = temp;
+    }
 }
 
 void OrdersList::removeOrder(int* position){
-        if(*position > orders.size()){
-            cout << "Invalid remove, please enter a number less than: " << orders.size() <<endl;
+        if(*position > *getSize()){
+            cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
         }
-        orders.erase(orders.begin() + *position);
+        for(int i = *position; i<*getSize(); i++){
+            orders[i] = orders[i+1];
+        }
+        int* newSize = new int(*getSize() - 1);
+        setSize(newSize);
 }
 
 void OrdersList::showList(){
-    for(int i = 0; i < orders.size(); i++){
-            cout << *orders.at(i)->description()  << endl;
+    for(int i = 0; i < *getSize(); i++){
+            cout << *orders[i]->description() << endl;
         }
 }
 
-int OrdersList::getSize(){
-    return orders.size();
+int* OrdersList::getSize(){
+    return this->size;
+}
+
+void OrdersList::setSize(int* size){
+    this->size = size;
 }
 
 void OrdersList::validate(){
-    for(int i = 0; i < orders.size(); i++){
-        cout << *orders.at(i)->validate() << endl;
+    for(int i = 0; i < *getSize(); i++){
+        orders[i]->validate();
     }
 }
 
 void OrdersList::execute(){
-    for(int i = 0; i < orders.size(); i++){
-        orders.at(i)->execute();
+    for(int i = 0; i < *getSize(); i++){
+        orders[i]->execute();
     }
 }
-OrdersList::~OrdersList(){} //destructor
+OrdersList::~OrdersList(){
+} //destructor

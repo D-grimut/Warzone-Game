@@ -133,6 +133,14 @@ void Map::toString(){
     }
 }
 
+int* Map::getNbTerritories(){
+    return this->nbTeritories;
+}
+
+Territory* Map::getCountries(){
+    return this->countries;
+}
+
 void Map::setCountries(Territory arr[]){
     this->countries = arr;
 }
@@ -328,6 +336,10 @@ string MapLoader::splitString(string text, int &i){
         i++;
     }
     return token;
+}
+
+Map* MapLoader::getMap(){
+    return this->map;
 }
 
 /*---------------- Teritory Class ----------------*/

@@ -60,6 +60,8 @@ public:
     bool validate();   
 
     void setCountries(Territory arr[]);    
+    int* getNbTerritories();
+    Territory* getCountries();
 };
 
 class MapLoader{
