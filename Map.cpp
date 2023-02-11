@@ -11,9 +11,9 @@ Map::Map(int nbTeritories, int nbContinents){
     this->nbContinents = new int(nbContinents);  
        
     //Making the adjacencyMtrix 2d array
-    this->adjacencyMatrix = new int*[nbTeritories];
+    this->adjacencyMatrix = new Territory**[nbTeritories];
     for(int i = 0; i < nbTeritories; i++){
-        adjacencyMatrix[i] = new int[nbTeritories];
+        adjacencyMatrix[i] = new Territory*[nbTeritories];
     }
 }
 
@@ -28,13 +28,13 @@ Map::Map(){
 Map::Map(const Map& og){    
     this->nbTeritories = new int(*og.nbTeritories);
     this->nbContinents = new int(*og.nbContinents);
-    this->adjacencyMatrix = new int*[*nbTeritories];
+    this->adjacencyMatrix = new Territory**[*nbTeritories];
     this->continents = new string[*nbContinents];
     this->countries = new Territory[*nbTeritories];
     
     //Creating new adjacency matrix
     for(int i = 0; i < *nbTeritories; i++){
-        adjacencyMatrix[i] = new int[*nbTeritories];
+        adjacencyMatrix[i] = new Territory*[*nbTeritories];
 
         //Copying elemnts from old map adjacency matrix to this one
         for(int s = 0; s < *nbTeritories; s++){
@@ -71,9 +71,9 @@ Map::~Map(){
 }
 
 //Adds edge between two nodes
-void Map::addEdge(int x, int y){    
-    this->adjacencyMatrix[x][y] = 1;
-    this->adjacencyMatrix[y][x] = 1;
+void Map::addEdge(int x, int y, Territory* tx, Territory* ty){    
+    this->adjacencyMatrix[x][y] = ty;
+    this->adjacencyMatrix[y][x] = tx;
 }
 
 //Helper method to traverse the graph (DFS)
@@ -90,7 +90,7 @@ void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
     
     for(int i = 0; i < *this->nbTeritories; i++){
        
-        if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){            
+        if(this->adjacencyMatrix[node][i] != nullptr && !visited[i]){            
             dfs(i, visited, visitedCon, ct, cc);
         }
     }
@@ -155,11 +155,11 @@ Map& Map::operator=(const Map& og){
 
     this->nbTeritories = new int(*og.nbTeritories);
     this->nbContinents = new int(*og.nbContinents);
-    this->adjacencyMatrix = new int*[*og.nbTeritories];
+    this->adjacencyMatrix = new Territory**[*og.nbTeritories];
 
     //Creating new adjacency matrix
     for(int i = 0; i < *nbTeritories; i++){
-        this->adjacencyMatrix[i] = new int[*nbTeritories];
+        this->adjacencyMatrix[i] = new Territory*[*nbTeritories];
 
         //Copying elemnts from old map adjacency matrix to this one
         for(int s = 0; s < *nbTeritories; s++){
@@ -185,12 +185,12 @@ std::ostream& operator<<(std::ostream &strm, const Map &m){
                 continue;
             }
 
-            if (m.adjacencyMatrix[i][s] != 1)
+            if (m.adjacencyMatrix[i][s] == nullptr)
             {
                 continue;
             }
 
-            res += *m.countries[s].getTerritoryName();             
+            res += ("\n" + *m.countries[s].getTerritoryName());             
         }
          
         res += "\n\n";
@@ -338,7 +338,8 @@ void MapLoader::readBorders(string fileName){
                         currCountry = (stoi(token) - 1);
                     }else{                        
                         //Creating edge (border) between the current country we are possesing and its neighbhor.
-                        this->map->addEdge(currCountry, (stoi(token) - 1));
+                        int index = (stoi(token) - 1);
+                        this->map->addEdge(currCountry, index, &this->countries[currCountry], &this->countries[index]);
                     }
                 }
                 firstToken = true;                                                            

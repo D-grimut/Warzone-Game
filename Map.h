@@ -52,7 +52,7 @@ public:
 
 class Map{
 private:
-    int** adjacencyMatrix;      //2d array for the adjacency between all countries
+    Territory*** adjacencyMatrix;      //2d array for the adjacency between all countries
     int* nbTeritories;          //Number of teritories, passed by MapLoader
     int* nbContinents;          //Number of teritories, passed by MapLoader        
     string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
@@ -67,7 +67,7 @@ public:
     Map(const Map& og);
     ~Map();
 
-    void addEdge(int x, int y);  
+    void addEdge(int x, int y, Territory*, Territory*);  
     void toString();     
     bool validate();
     void setCountries(Territory arr[]); 
