@@ -54,8 +54,7 @@ class Map{
 private:
     Territory*** adjacencyMatrix;      //2d array for the adjacency between all countries
     int* nbTeritories;          //Number of teritories, passed by MapLoader
-    int* nbContinents;          //Number of teritories, passed by MapLoader        
-    string* continents;         //Array of all continents, where the index of the continent corresponds to its ID
+    int* nbContinents;          //Number of teritories, passed by MapLoader 
     Territory* countries;       //Array of all countries 
 
     void dfs(int, bool*, bool*, int&, int&);        //Helper Method for traversal - Depth's First Search

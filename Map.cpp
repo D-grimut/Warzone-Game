@@ -28,8 +28,7 @@ Map::Map(){
 Map::Map(const Map& og){    
     this->nbTeritories = new int(*og.nbTeritories);
     this->nbContinents = new int(*og.nbContinents);
-    this->adjacencyMatrix = new Territory**[*nbTeritories];
-    this->continents = new string[*nbContinents];
+    this->adjacencyMatrix = new Territory**[*nbTeritories];    
     this->countries = new Territory[*nbTeritories];
     
     //Creating new adjacency matrix
@@ -46,27 +45,32 @@ Map::Map(const Map& og){
     for(int s = 0; s < *nbTeritories; s++){
         countries[s] = og.countries[s];
     }
-
-    //Copying the continents array
-    for(int s = 0; s < *nbContinents; s++){
-        continents[s] = og.continents[s];
-    }   
 }
 
 //Destructor
 Map::~Map(){
+ 
+    for(int i = 0; i < *nbTeritories; i++){        
+        for(int s = 0; s < *nbTeritories; s++){
+            //We are not deleting the items at adjacencyMatrix[i][s] as those
+            //are shared territory objects that can cause issues as we can attemp to delet them again later on
+            //So we simply remove the pointer reference.           
+            adjacencyMatrix[i][s] = NULL;            
+        }
+        delete [] adjacencyMatrix[i];
+        adjacencyMatrix[i] = NULL;
+    }       
+    
     delete this->nbContinents;
     this->nbContinents = NULL;
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
 
-    for(int i = 0; i < *nbTeritories; i++){
-        delete adjacencyMatrix[i];
-        adjacencyMatrix[i] = NULL;
-    }
-
-    delete this->adjacencyMatrix;
+    delete [] this->countries;
+    this->countries = NULL;    
+ 
+    delete [] this->adjacencyMatrix;
     this->adjacencyMatrix = NULL;
 }
 
@@ -132,6 +136,7 @@ bool Map::validate(){
 
         if((++hashmap[*this->countries[i].getTerritoryName()]) > 1){
             isUnique = false;
+            cout << "\nRejecting Map - country in 2 continents" << endl;
             break;
         }
     }
@@ -139,8 +144,14 @@ bool Map::validate(){
     //Testing Graph conectivity (if all territories are connected)
     if(counterT == *this->nbTeritories && counterC == *this->nbContinents && isUnique){
         return true;
-
     }else{
+
+        if(counterT == *this->nbTeritories){
+            cout << "\nCountries not conected - rejecting map" << endl;
+        }
+        if(counterC == *this->nbContinents){
+            cout << "\nContinents not connected - rejecting map" << endl;
+        }
         return false;
     }   
 }
@@ -242,12 +253,9 @@ MapLoader::~MapLoader(){
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
-
+  
     delete this->map;
     this->map = NULL;
-
-    delete this->countries;
-    this->countries = NULL;
 }
 
 //Helper method to count a certain type of entities in the .map file
@@ -481,7 +489,7 @@ std::ostream& operator<<(std::ostream &strm, const Territory &t){
                 << ", amount to invade: " << t.amntToInvade << ", id of player possesing it: " << t.posessor << endl;
 }
 
-
+//Getters
 int* Territory:: getPosessor(){
     return this->posessor;    
 }
