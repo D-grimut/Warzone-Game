@@ -33,5 +33,8 @@ int main(int argc, char const *argv[]){
     MapLoader* validMap2 = new MapLoader("C:\\Users\\user1\\Desktop\\GTA_SAN_AN.map");
     cout << "---------------------------------------\n" << endl;
 
+    //Demonstrating use of valid map print function
+    cout << *validMap2->getMap() << endl;    
+    
     return 0;
 }
