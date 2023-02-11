@@ -53,7 +53,8 @@ int main(){
     cout <<"\nTesting resize:"<<endl;
     Order* newOrder = new Deploy();
     newList.addOrder(newOrder, 7);
-    //newList.showList();
+
+    newList.~OrdersList();
 
     return 0;
 }

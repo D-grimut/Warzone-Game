@@ -420,14 +420,14 @@ void OrdersList::moveOrder(int* position1, int* position2){
 * Moves index over, reduces size
 */
 void OrdersList::removeOrder(int* position){
-        if(*position > *getSize()){
-            cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
-        }
-        for(int i = *position; i<*getSize(); i++){
-            orders[i] = orders[i+1];
-        }
-        int* newSize = new int(*getSize() - 1);
-        setSize(newSize);
+    if(*position > *getSize()){
+        cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
+    }
+    for(int i = *position; i<*getSize(); i++){
+        orders[i] = orders[i+1];
+    }
+    int* newSize = new int(*getSize() - 1);
+    setSize(newSize);
 }
 
 /*Iterates through the array, printing description (name) of each order in the array*/
