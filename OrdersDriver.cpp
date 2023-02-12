@@ -26,7 +26,7 @@ int main(){
  
     //Show full list
     cout << "\nList of orders:" << endl;
-        newList.showList();
+        newList.showList(*newList.getSize());
 
     //Call validate function (not implemented)
     cout <<"\nChecking validate: \n" <<endl;
@@ -41,13 +41,13 @@ int main(){
         int* position1 = new int(1);
         int* position2 = new int(4);
         newList.moveOrder(position1, position2);
-        newList.showList();
+        newList.showList(*newList.getSize());
 
     //test removing
     cout<<"\nRemoving position 3:\n" << endl;
         int* position = new int(2);
         newList.removeOrder(position);
-        newList.showList();
+        newList.showList(*newList.getSize());
 
     //testing resize
     cout <<"\nTesting resize:"<<endl;

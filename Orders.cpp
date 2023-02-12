@@ -7,7 +7,7 @@ using namespace std;
 
 /*Default Constructor*/
 Order::Order(){
-    name = new string("Order - Parent");
+    name = new string("0");
 } 
 
 /*Copy Constructor*/
@@ -48,6 +48,9 @@ string* Order::description(){
     return this->name;
 }
 
+string Order::getName(){
+    return *this->name;
+}
 
 //DEPLOY Class
 
@@ -372,8 +375,7 @@ void OrdersList::addOrder(Order* newOrder, int position){
     if(position > *getSize()){
         int* oldSize = getSize();
         resize();
-        orders[*oldSize] = newOrder;
-        showList();
+        orders[*oldSize] = newOrder;        
     }
     else
         orders[position] = newOrder;
@@ -431,10 +433,14 @@ void OrdersList::removeOrder(int* position){
 }
 
 /*Iterates through the array, printing description (name) of each order in the array*/
-void OrdersList::showList(){
-    for(int i = 0; i < *getSize(); i++){
-            cout << *orders[i]->description() << endl;
+void OrdersList::showList(int x){
+    for(int i = 0; i < x; i++){
+        string s = orders[i]->getName();
+        if(s.compare("0") == 1){
+            break;
         }
+        cout << *orders[i]->description() << endl;
+    }
 }
 
 /*Returns int* of the size of the array*/
