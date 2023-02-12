@@ -10,16 +10,26 @@ Please forgive my sins (They will be explained in detail other comments)
 //default
 Deck::Deck()
 {
-	Card deck[100];
-	int inHand[100];
-	currentDeckSize = 100;
+	this->deck = new Card[100];
+	this->inHand = new int[100]; //This checks if a card is being used or not
+	this->currentDeckSize = new int((int)100);
 }
 //overload, custom amount of cards (unused for demo and unfinished)
 Deck::Deck(int deckSize)
 {
-	Card deck[deckSize];
-	int inHand[deckSize];//I want to change this to a different data structure, maybe a list?
-	currentDeckSize = deckSize;
+	this->deck = new Card[deckSize];
+	this->inHand = new int[deckSize];//I want to change this to bool
+	this->currentDeckSize = new int((int)deckSize);
+}
+
+//copy constructor
+Deck::Deck(const Deck& e){
+	
+}
+
+//assignment constructor
+Deck& Deck::operator=(const Deck& e){
+
 }
 
 //gets a card in the deck
@@ -34,64 +44,93 @@ void Deck::setDeck(int x, Card card)
 	deck[x] = card;
 }
 
+int Deck::getCurrentDeckSize(){
+	return *currentDeckSize;
+}
+
+//deconstructor
+Deck::~Deck(){}
+
+std::ostream& operator<<(std::ostream &strm, const Deck &a){ //instertion operator
+    return strm << "Deploy(" << a.name << ")";
+}
 
 
-
-//this function isn't efficient if we have most of the cards drawn
 Card Deck::draw()
 {
-	random = rand() % currentDeckSize; //chooses a random card in the deck
-	while (inHand[random] == 1) //if the card is taken it will choose another random card
+	this->random = new int();
+	*random = rand() % getCurrentDeckSize(); //chooses a random card in the deck
+	while (inHand[*random] == 1) //if the card is taken it will choose another random card
 	{
-		random = rand() % currentDeckSize;
+		*random = rand() % getCurrentDeckSize();
 	}
-	inHand[random] = 1; // sets the card as taken
-	return deck[random]; // returns the card
+	inHand[*random] = 1; // sets the card as taken
+	return deck[*random]; // returns the card
 }
 
 //Parent: Card
 //default constructor
 Card::Card()
 {
-	Type type;
+	Type *type = new Type();
 }
 //overload, changes the type of the card
 Card::Card(Type type1)
 {
-	type = type1;
+	this->type = new Type(type1);
+}
+
+Card::Card(const Card& e){
+
+}
+
+Card& Card::operator =(const Card& e){
+
 }
 
 //returns the type of the card
 Type Card::getType()
 {
-	return type;
+	return *type;
 }
 
 //sets the type of the card
 void Card::setType(Type newType)
 {
-	type = newType;
+	this->type = new Type(newType);
 }
 
 //plays the card by making it a order and removing it from hand
 void Card::play() //I need Doms help for this
 {
 	//Adds the order
-	orderCounter++;
-	newList.addOrder();
-
+	
 }
+
+//deconstructor
+Card::~Card(){}
 
 //Parent: Hand
 //default
 Hand::Hand()
 {
-	Card hand[5];
+	this->hand = new Card[5];
 }
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
-	Card hand[handSize];
+	this->hand = new Card[handSize];
 }
 
+Hand::Hand(const Hand& e) {}
+
+Hand& Hand::operator =(const Hand& e){}
+
 //void Hand::addCard() {}
+
+std::ostream& operator<<(std::ostream &strm, const Hand &a){ //instertion operator
+    return strm << "This card really do be" << a.hand;
+}
+
+//Deconstructor
+Hand::~Hand(){}

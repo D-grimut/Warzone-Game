@@ -1,5 +1,6 @@
 #include "Cards.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 int main() {
@@ -27,7 +28,7 @@ int main() {
     }
 
     //creates a new players hand
-    Hand *handA = new Hand(5);
+    Hand *handA = new Hand();
     
     //draws cards for the hand
     for (int i = 0; i < 5; i++)
@@ -35,9 +36,17 @@ int main() {
         handA->hand[i] = deckA->draw();
     }
 
-    //plays the cards in hand by creating a new order 
+    //creating a new order? Should this be in the .h file or should I make it here
+    //Order specialOrder;
+    //OrderList newList(5);
 
 
-    cout << "Printing stuff :)" << endl;
+    //for loop through entire hand to play all of the cards
+        //plays the cards in hand by putting them in the OrderList
+        //
+        //removes the card from hand
+
+    //cout << handA << endl;
+    cout << "Printing stuff :) " << endl;
     return 0;
 }

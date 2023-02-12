@@ -1,16 +1,12 @@
-#ifndef CARDS_H
-#define CARDS_H
-//#include "Orders.h"
-#include <random>
+#pragma once
+#include <iostream>
+#include <string>
+using namespace std;
 
-//Order specialOrder;
-//OrderList newList(5)
-int orderCounter = 0;
-Card deck[];
-int inHand[];
+//#include "Orders.h"
 
 //all card types
-enum class Type{
+enum class Type {
 	bomb,
 	reinforcement, 
 	blockade,
@@ -18,32 +14,45 @@ enum class Type{
 	diplomacy
 };
 
-//Deck class
-class Deck 
-{
-	public:
-		Deck();
-		Deck(int deckSize);
-		Card draw();
-		Card getDeck(int x);
-		void setDeck(int x, Card card);
-	private:
-		//many might need to be friend to access within play()
-		int currentDeckSize;
-		int random;
-};
-
 //Card class
 class Card //: public Order
 {
 	public:
 		Card();
+		~Card();
+		Card(const Card& e);//copy constructor
+		Card& operator =(const Card& e);//assignment operator
 		Card(Type type);
 		Type getType();
 		void setType(Type newType);
 		void play();
 	private:
-		Type type;
+		Type *type;
+		string* name;
+		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
+};
+
+//Deck class
+class Deck 
+{
+	public:
+		Deck();
+		~Deck();
+		Deck(const Deck& e);//copy constructor
+		Deck& operator =(const Deck& e);//assignment constructor
+		Deck(int deckSize);
+		Card draw();
+		Card getDeck(int x);
+		void setDeck(int x, Card card);
+		int getCurrentDeckSize();
+		string* name;
+	private:
+		int *currentDeckSize;
+		int *random;
+		int *inHand;
+		Card *deck;
+		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
+
 };
 
 //Hand class
@@ -51,13 +60,16 @@ class Hand
 {
 	public:
 		Hand();
+		~Hand();
+		Hand(const Hand& e);//copy contructor
+		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
 		//void addCard();
-		Card hand[5];
+		Card *hand;
 	private:
+		string* name;
+		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);
 		
 
 };
 
-
-#endif
