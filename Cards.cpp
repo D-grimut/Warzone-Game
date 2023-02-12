@@ -95,17 +95,22 @@ Card Deck::draw()
 //default constructor
 Card::Card()
 {
-	cout << "1 " << endl;
 	this->type = new Type();
-	cout << "2 " << endl;
-	this->number = new int(-1);
-	cout << "3 " << endl;
+	this->number = new int();
+
+	int* size = new int(10);
+
+    this->ol = new OrdersList(size);
+	this->ordersIndex = new int(0);
 }
 //overload, changes the type of the card
 Card::Card(Type type1)
 {
 	this->type = new Type(type1);
 	this->number = new int();
+	int* size = new int(10);
+    this->ol = new OrdersList(size);
+	this->ordersIndex = new int(0);
 }
 
 //copy constructor
@@ -113,6 +118,8 @@ Card::Card(const Card& e)
 {
 	type = e.type;
 	number = e.number;
+	ol = e.ol;
+	ordersIndex = e.ordersIndex;
 }	
 
 //insertion operator
@@ -120,6 +127,8 @@ Card& Card::operator =(const Card& e)
 {
 	this->type = e.type;
 	this->number = e.number;
+	this->ol = e.ol;
+	this->ordersIndex = e.ordersIndex;
     return *this;
 }
 
@@ -148,16 +157,20 @@ void Card::setType(Type newType)
 }
 
 //plays the card by making it a order and removing it from hand
-Order Card::play(Card card)
+void Card::play(Card card)
 {
 	//Adds the order
-	this->specialOrder = new Order();
-    *specialOrder = card;
+	Order *bomb = new Bomb();
+    this->ol->addOrder(bomb, *ordersIndex); //error
+    (*ordersIndex)++;
+    ol->showList();
 	//puts card back in the deck
 	int temp = card.getNumber();
 	card = Card();
-	//returns the order to be added to the Orderlist
-	return *specialOrder;
+}
+
+OrdersList Card::getOrdersList(){
+    return *this->ol;
 }
 
 //deconstructor
@@ -168,7 +181,6 @@ std::ostream& operator<<(std::ostream &strm, const Card &a)
 { 
     return strm << "Card: " << a.type;
 }
-
 
 //Parent: Hand
 //default

@@ -6,7 +6,6 @@
 using namespace std;
 
 int main() {
-    cout << "this runs A" << endl;
     //creates obj of each type to give to the cards in the deck
     Type a = Type::airlift;
     Type b = Type::blockade;
@@ -15,8 +14,7 @@ int main() {
     Type e = Type::reinforcement;
 
     //creates the deck and fills it with cards of each type
-    Deck *deckA = new Deck(10);
-    cout << "this runs B" << endl;
+    Deck *deckA = new Deck();
     for (int i = (0); i < 10; i++){
         if (i < 21){
             deckA->setDeck(i, a);
@@ -31,28 +29,34 @@ int main() {
         }
     }
 
-    cout << "this runs" << endl;
     //creates a new players hand
     Hand *handA = new Hand();
     
-    cout << "this runs" << endl;
     //draws cards for the hand
     for (int i = 0; i < 5; i++)
     {
         handA->hand[i] = deckA->draw();
     }
 
-    cout << "this runs" << endl;
     cout << "Showing cards in hand: "<< endl;
     for (int i = 0; i < 5; i++)
     {
-        cout << "Card " << i << ": " << handA->hand[i] << endl;
+        cout << handA->hand[i] << endl;
     }
+
+    for (int i = 0; i < 5; i++)
+    {
+        handA->hand->play(handA->hand[i]);
+    }
+
+
+/*
     //creating a new orders and assigning cards to them
     int* size = new int(5);
     OrdersList newList(size);
     cout << "Showing newly filled list:" << endl;
     newList.showList();
+
 
     Order *orderA = new Order();
     Order *orderB = new Order();
@@ -72,11 +76,7 @@ int main() {
     newList.addOrder(orderC, 2);
     newList.addOrder(orderD, 3);
     newList.addOrder(orderE, 4);
-
-    //outputting the list
-    cout << "Showing newly filled list:" << endl;
-    newList.showList();
-    
+*/  
     //showing the cards in hand (they should be blank)
     cout << "Showing cards in hand: "<< endl;
     for (int i = 0; i < 5; i++)

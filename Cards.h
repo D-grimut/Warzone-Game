@@ -15,7 +15,7 @@ enum class Type {
 };
 
 //Card class
-class Card : public Order
+class Card
 {
 	public:
 		Card();
@@ -27,17 +27,19 @@ class Card : public Order
 		void setNumber(int newNumber);
 		Type getType();
 		void setType(Type newType);
-		Order play(Card card);
+		void play(Card card);
+		OrdersList getOrdersList();
 	private:
 		Type *type;
 		string* name;
-		Order *specialOrder = new Card();
+		OrdersList *ol;// list of orders
+		int *ordersIndex;// Index of Orders
 		int *number = new int();
 		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
 };
 
 //Deck class
-class Deck : public Order
+class Deck
 {
 	public:
 		Deck();//default
