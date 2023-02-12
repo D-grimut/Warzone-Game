@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Orders.h"
+#include "Cards.h"
 #include <iostream>
 
 int main(){
@@ -37,20 +38,25 @@ int main(){
 
     cout << endl;
 
+    // Prints Player's ID
     cout << *p2 << endl;
+
     // Prints all owned territories of player 2
     p2->ownedTerritories();
 
     cout << endl;
 
+    // Creates order
     p1->issueOrder();
 
     cout << endl;
 
+    // Creates order
     p1->issueOrder();
 
     cout << endl;
 
+    // ToDefend()
     Territory* toDef = p1->toDefend();
 
     for(int i = 0; i < nbTerritories; i++){
@@ -60,6 +66,7 @@ int main(){
         cout << toDef[i] << endl;
     }
 
+    // ToAttack()
     Territory* toAtt = p1->toAttack();
 
     for(int i = 0; i < nbTerritories; i++){
@@ -68,6 +75,9 @@ int main(){
         }
         cout << toAtt[i] << endl;
     }
+
+    // Print out hands of players
+    p1->printCards();
 
     return 0;
 }

@@ -32,7 +32,6 @@ void Order::execute(){
 }
 
 string* Order::description(){
-    // name = new string("Order - Parent");
     return this->name;
 }
 
@@ -274,7 +273,6 @@ void OrdersList::addOrder(Order* newOrder, int position){
         int* oldSize = getSize();
         resize();
         orders[*oldSize] = newOrder;
-        // showList();
     }
     else
         orders[position] = newOrder;

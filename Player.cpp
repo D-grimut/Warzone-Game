@@ -2,10 +2,11 @@
 #include <string>
 #include "Player.h"
 #include "Map.h"
+#include "Cards.h"
 using namespace std;
 
 // Constructor of Player to initialize values
-Player::Player(int playerID, Territory* territories, /*Card cards,*/ int nbTerritories, Territory*** adjacencyMatrix, Map* map){ 
+Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map){ 
     this->nbOfTerritories = new int(nbTerritories);
     this->playerID = new int(playerID);
     this->territories = territories;
@@ -21,7 +22,8 @@ Player::Player(int playerID, Territory* territories, /*Card cards,*/ int nbTerri
     this->adjacencyMatrix = adjacencyMatrix;
     this->map = map;
 
-    // this->cards = cards;
+    this->sizeOfHand = new int(6);
+    this->cards = new Hand(*sizeOfHand);
 }
 
 // Default Constructor
@@ -41,7 +43,7 @@ Player::Player(){
     this->adjacencyMatrix = NULL;
     this->map = NULL;
 
-    //this->cards = NULL;
+    this->cards = NULL;
 }
 
 // Copy Constructor
@@ -55,6 +57,7 @@ Player::Player(const Player& p){
     this->toAttArr = p.toAttArr;
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
+    this->cards = p.cards;
 }
 
 // Destructor
@@ -86,8 +89,8 @@ Player::~Player(){
     delete this->map;
     this->map = NULL;
 
-    //delete this->cards;
-    //this->cards = NULL;
+    delete this->cards;
+    this->cards = NULL;
 }
 
 // Method to show owned Territories that the player owns
@@ -219,6 +222,14 @@ Territory* Player::toAttack(){
     return toAttArr;
 }
 
+// Print cards that the player owns
+void Player::printCards(){
+    cout << "Printing out hand of cards for Player " << *playerID << endl;
+    for(int i = 0; i < *sizeOfHand; i++){
+        cout << cards->hand[i] << endl;
+    }
+}
+
 // Setters
 void Player::setPlayerID(int playerID){
     *this->playerID = playerID;
@@ -256,6 +267,10 @@ void Player::setMap(Map map){
     *this->map = map;
 }
 
+void Player::setCards(Hand cards){
+    *this->cards = cards;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
@@ -263,6 +278,14 @@ int Player::getPlayerID(){
 
 OrdersList Player::getOrdersList(){
     return *this->ol;
+}
+
+Hand Player::getCards(){
+    return *this->cards;
+}
+
+int Player::getSizeOfHand(){
+    return *this->sizeOfHand;
 }
 
 // Stream insertion operator
@@ -281,4 +304,7 @@ Player& Player::operator=(const Player& p){
     this->setToAttArr(*p.toAttArr);
     this->setAdjacencyMatrix(*p.adjacencyMatrix);
     this->setMap(*p.map);
+    this->setCards(*p.cards);
+
+    return *this;
 }
