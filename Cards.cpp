@@ -29,8 +29,12 @@ Deck::Deck(const Deck& e)
 }
 
 //assignment constructor
-Deck& Deck::operator=(const Deck& e){
-
+Deck& Deck::operator=(const Deck& e)
+{
+	this->deck = e.deck;
+	this->inHand = e.inHand;
+	this->currentDeckSize = e.currentDeckSize;
+    return *this;
 }
 
 //gets a card in the deck
@@ -45,6 +49,7 @@ void Deck::setDeck(int x, Card card)
 	deck[x] = card;
 }
 
+//inHand getter
 int Deck::getInHand()
 {
 	return *inHand;
@@ -56,19 +61,22 @@ void Deck::setInHand(int newInHand)
 	this->inHand = new int(newInHand);
 }
 
-
-int Deck::getCurrentDeckSize(){
+//currentDeckSize getter
+int Deck::getCurrentDeckSize()
+{
 	return *currentDeckSize;
 }
 
 //deconstructor
 Deck::~Deck(){}
 
-std::ostream& operator<<(std::ostream &strm, const Deck &a){ //instertion operator
-    return strm << "Deploy(" << a.name << ")";
+//instertion operator
+std::ostream& operator<<(std::ostream &strm, const Deck &a)
+{ 
+    return strm << "Deck:" << a.deck;
 }
 
-
+//the draw method
 Card Deck::draw()
 {
 	this->random = new int();
@@ -98,16 +106,22 @@ Card::Card(Type type1)
 	this->number = new int();
 }
 
+//copy constructor
 Card::Card(const Card& e)
 {
 	type = e.type;
 	number = e.number;
 }	
 
-Card& Card::operator =(const Card& e){
-
+//insertion operator
+Card& Card::operator =(const Card& e)
+{
+	this->type = e.type;
+	this->number = e.number;
+    return *this;
 }
 
+//returns number
 int Card::getNumber()
 {
 	return *number;
@@ -139,7 +153,7 @@ Order Card::play(Card card)
     *specialOrder = card;
 	//puts card back in the deck
 	int temp = card.getNumber();
-	
+	card = Card();
 	//returns the order to be added to the Orderlist
 	return *specialOrder;
 }
@@ -153,23 +167,30 @@ Hand::Hand()
 {
 	this->hand = new Card[5];
 }
+
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
 	this->hand = new Card[handSize];
 }
 
+//copy constructor
 Hand::Hand(const Hand& e) 
 {
 	hand = e.hand;
 }
 
-Hand& Hand::operator =(const Hand& e){}
+//assignment constructor
+Hand& Hand::operator =(const Hand& e)
+{
+	this->hand = e.hand;
+    return *this;
+}
 
-//void Hand::addCard() {}
-
-std::ostream& operator<<(std::ostream &strm, const Hand &a){ //instertion operator
-    return strm << "This card really do be" << a.hand;
+//instertion operator
+std::ostream& operator<<(std::ostream &strm, const Hand &a)
+{ 
+    return strm << "Hand: " << a.hand;
 }
 
 //Deconstructor

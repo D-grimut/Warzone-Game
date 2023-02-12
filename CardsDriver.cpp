@@ -38,9 +38,15 @@ int main() {
         handA->hand[i] = deckA->draw();
     }
 
-    //creating a new order
+    cout << "Showing cards in hand: "<< endl;
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Card " << i << ": " << handA->hand[i] << endl;
+    }
+    //creating a new orders and assigning cards to them
     int* size = new int(5);
     OrdersList newList(size);
+    cout << "Showing newly filled list:" << endl;
     newList.showList();
 
     Order *orderA = new Order();
@@ -55,13 +61,24 @@ int main() {
     *orderD = handA->hand[3].play(handA->hand[3]);
     *orderE = handA->hand[4].play(handA->hand[4]);
 
+    //adding the orders to the OrderList
     newList.addOrder(orderA, 0);
     newList.addOrder(orderB, 1);
     newList.addOrder(orderC, 2);
     newList.addOrder(orderD, 3);
     newList.addOrder(orderE, 4);
 
+    //outputting the list
+    cout << "Showing newly filled list:" << endl;
     newList.showList();
-    cout << "Printing stuff :) " << endl;
+    
+    //showing the cards in hand (they should be blank)
+    cout << "Showing cards in hand: "<< endl;
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Card " << i << ": " << handA->hand[i] << endl;
+    }
+
+    cout << "Thank you for using this program!" << endl;
     return 0;
 }

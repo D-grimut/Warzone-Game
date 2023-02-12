@@ -58,7 +58,7 @@ class Deck : public Order
 		int *random;
 		int *inHand;
 		Card *deck;
-		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
+		friend std::ostream& operator<<(std::ostream &strm, const Deck &a);
 
 };
 
@@ -71,7 +71,6 @@ class Hand
 		Hand(const Hand& e);//copy contructor
 		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
-		//void addCard();
 		Card *hand;
 	private:
 		string* name;
