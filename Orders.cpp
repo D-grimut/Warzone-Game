@@ -5,7 +5,9 @@ using namespace std;
 
 //Order Class (PARENT)
 
-Order::Order(){} //default constructor
+Order::Order(){
+    this->name = new string("0");
+} //default constructor
 
 Order::Order(const Order& e){ //copy constructor
     this->name = new string(*(e.name));
@@ -30,7 +32,7 @@ void Order::execute(){
 }
 
 string* Order::description(){
-    name = new string("Order - Parent");
+    // name = new string("Order - Parent");
     return this->name;
 }
 
@@ -272,12 +274,10 @@ void OrdersList::addOrder(Order* newOrder, int position){
         int* oldSize = getSize();
         resize();
         orders[*oldSize] = newOrder;
-        showList();
-        
+        // showList();
     }
     else
         orders[position] = newOrder;
-   
 }
 
 void OrdersList::resize(){
@@ -323,10 +323,18 @@ void OrdersList::removeOrder(int* position){
         setSize(newSize);
 }
 
-void OrdersList::showList(){
-    for(int i = 0; i < *getSize(); i++){
-            cout << *orders[i]->description() << endl;
+void OrdersList::showList(int x){
+    for(int i = 0; i < x; i++){
+        string s = *orders[i]->getName();
+        if(s.compare("0") == 1){
+            break;
         }
+         cout << *orders[i]->description() << endl;
+    }
+}
+
+string* Order::getName(){
+    return this->name;
 }
 
 int* OrdersList::getSize(){

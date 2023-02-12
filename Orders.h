@@ -13,6 +13,7 @@ class Order {
         virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
+        string* getName();
     private:
         string* name; //used for description
         friend std::ostream& operator<<(std::ostream &strm, const Order &a);
@@ -119,7 +120,7 @@ public:
     void addOrder(Order* order, int position); //add orders to the vector
     void moveOrder(int* position1, int* position2); //move from position1 to position2
     void removeOrder(int* position); //remove order from position
-    void showList(); //prints all contents in the vector
+    void showList(int x); //prints all contents in the vector
     int* getSize(); //returns size of the vector
     void setSize(int* size);
     void validate(); //not implemented, prints that it is being called

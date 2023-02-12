@@ -158,6 +158,10 @@ Territory* Map::getCountries(){
     return this->countries;
 }
 
+Territory*** Map::getAdjacencyMatrix(){
+    return this->adjacencyMatrix;
+}
+
 //Operator overloading for a map
 Map& Map::operator=(const Map& og){
 
@@ -485,8 +489,8 @@ Territory& Territory::operator=(const Territory& t) {
 
 std::ostream& operator<<(std::ostream &strm, const Territory &t){
 
-    return strm << "The territorie name: " << t.TerritoryName << " , is occupied: " << t.isFree << ", amnt of soldiers: " << t.numberOfSoldiers
-                << ", amount to invade: " << t.amntToInvade << ", id of player possesing it: " << t.posessor << endl;
+    return strm << "The territorie name: " << *t.TerritoryName << " , is occupied: " << *t.isFree << ", amnt of soldiers: " << *t.numberOfSoldiers
+                << ", amount to invade: " << *t.amntToInvade << ", id of player possesing it: " << *t.posessor << endl;
 }
 
 

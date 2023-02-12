@@ -74,6 +74,7 @@ public:
     int* getNbTerritories();
     Territory* getCountries();
     Map& operator=(const Map&);   
+    Territory*** getAdjacencyMatrix();
 };
 
 class MapLoader{

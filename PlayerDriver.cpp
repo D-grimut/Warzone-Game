@@ -3,41 +3,70 @@
 #include "Orders.h"
 #include <iostream>
 
-// Author: Alessio
-
 int main(){
+    // Load map, store map, store all territories, get number of territories
     MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
+
     Map *map = ml->getMap();
-    int nbTerritories = *ml->getMap()->getNbTerritories();
+
     Territory* territories = map->getCountries();
-    // Order* orders = new Order();
-    int* size = new int(10);
-    OrdersList* ol = new OrdersList(size);
 
-    Player *p1 = new Player(1, territories, ol, nbTerritories);
-    territories[0].setPosessor(p1->getPlayerID());
+    Territory*** adjacencyMatrix = map->getAdjacencyMatrix();
 
-    cout << *p1 << endl;
+    int nbTerritories = *ml->getMap()->getNbTerritories();
+    
+    // Create a new player with playerID = 1 and playerID = 2 and territories
+    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map);
+    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map);
 
-    p1->ownedTerritories();
+    // Set first half of territories so that Player 1 owns it
+    for(int i = 0; i < nbTerritories/2; i++){
+        territories[i].setPosessor(p1->getPlayerID());
+    }
 
-    cout << endl;
+    // Set second half of territories so that Player 2 owns it
+    for(int i = nbTerritories/2; i < nbTerritories; i++){
+        territories[i].setPosessor(p2->getPlayerID());
+    }
 
-    p1->issueOrder();
+    // // Prints Player's ID
+    // cout << *p1 << endl;
 
-    cout << endl;
+    // // Prints all owned territories of player 1
+    // p1->ownedTerritories();
 
-    ol->showList();
+    // cout << endl;
 
-    // cout << "\n" << endl;
+    // cout << *p2 << endl;
+    // // Prints all owned territories of player 2
+    // p2->ownedTerritories();
 
-    // cout << "Territories to defend: " << endl;
-    // p1->toDefend();
+    // cout << endl;
 
-    // cout << "\n" << endl;
+    // p1->issueOrder();
 
-    // cout << "Territories to attack: " << endl;
-    // p1->toAttack();
+    // cout << endl;
+
+    // p1->issueOrder();
+
+    // cout << endl;
+
+    // Territory* toDef = p1->toDefend();
+
+    // for(int i = 0; i < nbTerritories; i++){
+    //     if(*toDef[i].getPosessor() == -1){
+    //         break;
+    //     }
+    //     cout << toDef[i] << endl;
+    // }
+
+    p1->toAttack();
+
+    // Territory* toAtt = p1->toAttack();
+
+    // for(int i = 0; i < nbTerritories; i++){
+    //     cout << toAtt[i] << endl;
+    // }
 
     return 0;
 }

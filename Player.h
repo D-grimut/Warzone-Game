@@ -7,55 +7,54 @@
 #include "Orders.h"
 using namespace std;
 
-// Author: Alessio
-
-// Player owns collection of Territories, owns a hand of Cards, owns a list of Orders
-// Implement methods
-// toDefend() -> returns list of territories to defend
-// toAttack() -> returns list of territories to attack
-// Both of the methods is to show a list, that's all
-// issueOrder() -> creates Order object, puts it in list of Orders
-// Create PlayerDriver to create players and show the functions
-
 /*
 TODO:
-- Add Card to the Player constructor
-- Do issueOrder
 - All classes implement a correct copy constructor, assignment operator, and stream insertion operator.
 */
 
 class Player{
     private:
-        int* playerID; // Gives the player an ID
-        Territory* territories; // Creates an array of Territories
-        // Order* orders;
-        OrdersList* ol;
-        int* nbOfTerritories;
-        friend std::ostream& operator<<(std::ostream &strm, const Player &p);
+        int* playerID;          // The player's ID
+        Territory* territories; // Array of Territories
+        OrdersList* ol;         // List of Orders
+        int* nbOfTerritories;   // Number of Territories
+        int* ordersIndex;       // Index of Orders
+        Territory* toDefArr;    // Array of Territories to defend
+        Territory* toAttArr;    // Array of Territories to attack
+        Territory*** adjacencyMatrix; //2D-array of territories
+        Map* map;
+
+        friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion op
         /*
         Card *cards;
         */
-    
     public:
-        // Player(int playerID, Territory* territories /*, Card *cards*/, Order* orders, int nbTerritories);
-        Player(int playerID, Territory* territories /*, Card *cards*/, OrdersList* ol, int nbTerritories);
+        // Constructor with parameters, default constructor, and destructor
+        Player(int playerID, Territory* territories /*, Card *cards*/, int nbTerritories, Territory*** adjacencyMatrix, Map* map);
         Player();
-        ~Player(); // Destruct Player object
+        ~Player();
 
+        // Methods
+        void ownedTerritories();    // Show all owned territories
+        void issueOrder();          // Create order and add it to array of orders
+        Territory* toDefend();      // Show territories to defend
+        Territory* toAttack();      // Show territories to attack
+
+        // Setters
         void setPlayerID(int playerID);
+        
+        // Getters
         int getPlayerID();
-        void ownedTerritories(); // Show all territories
-        Territory* toDefend(); // Show territories to attack
-        Territory* toAttack(); // Show territories to defend
-        void issueOrder(); // Create order and add it to array of orders
+        OrdersList getOrdersList();
 };
 
 class PlayerDriver{
     private:
-        Player* player; // Player object
+        Player* player;         // Player object
         Territory* territories; // Array of territories
 
     public:
+        // Constructor with parameters, default constructor, and destructor
         PlayerDriver(Player player);
         PlayerDriver();
         ~PlayerDriver();
