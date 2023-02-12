@@ -1,6 +1,8 @@
 #include "Cards.h"
+#include "Orders.h"
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 int main() {
@@ -36,17 +38,30 @@ int main() {
         handA->hand[i] = deckA->draw();
     }
 
-    //creating a new order? Should this be in the .h file or should I make it here
-    //Order specialOrder;
-    //OrderList newList(5);
+    //creating a new order
+    int* size = new int(5);
+    OrdersList newList(size);
+    newList.showList();
 
+    Order *orderA = new Order();
+    Order *orderB = new Order();
+    Order *orderC = new Order();
+    Order *orderD = new Order();
+    Order *orderE = new Order();
 
-    //for loop through entire hand to play all of the cards
-        //plays the cards in hand by putting them in the OrderList
-        //
-        //removes the card from hand
+    *orderA = handA->hand[0].play(handA->hand[0]);
+    *orderB = handA->hand[1].play(handA->hand[1]);
+    *orderC = handA->hand[2].play(handA->hand[2]);
+    *orderD = handA->hand[3].play(handA->hand[3]);
+    *orderE = handA->hand[4].play(handA->hand[4]);
 
-    //cout << handA << endl;
+    newList.addOrder(orderA, 0);
+    newList.addOrder(orderB, 1);
+    newList.addOrder(orderC, 2);
+    newList.addOrder(orderD, 3);
+    newList.addOrder(orderE, 4);
+
+    newList.showList();
     cout << "Printing stuff :) " << endl;
     return 0;
 }

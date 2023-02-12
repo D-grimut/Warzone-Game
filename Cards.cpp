@@ -1,11 +1,8 @@
 #include <iostream>
 #include <random> 
 #include "Cards.h"
+#include "Orders.h"
 
-/*
-The way this currently checks for in use cards is inefficient and jank. I understand how to optimise it but I'm pressed on time
-Please forgive my sins (They will be explained in detail other comments)
-*/
 //Parent: Deck
 //default
 Deck::Deck()
@@ -14,17 +11,21 @@ Deck::Deck()
 	this->inHand = new int[100]; //This checks if a card is being used or not
 	this->currentDeckSize = new int((int)100);
 }
+
 //overload, custom amount of cards (unused for demo and unfinished)
 Deck::Deck(int deckSize)
 {
 	this->deck = new Card[deckSize];
-	this->inHand = new int[deckSize];//I want to change this to bool
+	this->inHand = new int[deckSize];
 	this->currentDeckSize = new int((int)deckSize);
 }
 
 //copy constructor
-Deck::Deck(const Deck& e){
-	
+Deck::Deck(const Deck& e)
+{
+	deck = e.deck;
+	inHand = e.inHand;
+	currentDeckSize = e.currentDeckSize;	
 }
 
 //assignment constructor
@@ -33,9 +34,9 @@ Deck& Deck::operator=(const Deck& e){
 }
 
 //gets a card in the deck
-Card Deck::getDeck(int x)
+Card Deck::getDeck()
 {
-	return deck[x];
+	return *deck;
 }
 
 //sets a card in the deck, used for initializing the deck
@@ -43,6 +44,18 @@ void Deck::setDeck(int x, Card card)
 {
 	deck[x] = card;
 }
+
+int Deck::getInHand()
+{
+	return *inHand;
+}
+
+//sets the type of the card
+void Deck::setInHand(int newInHand)
+{
+	this->inHand = new int(newInHand);
+}
+
 
 int Deck::getCurrentDeckSize(){
 	return *currentDeckSize;
@@ -65,27 +78,45 @@ Card Deck::draw()
 		*random = rand() % getCurrentDeckSize();
 	}
 	inHand[*random] = 1; // sets the card as taken
-	return deck[*random]; // returns the card
+	Card *a = new Card(deck[*random]);
+	a->setNumber(*random);
+	return *a; // returns the card
 }
 
 //Parent: Card
 //default constructor
 Card::Card()
 {
-	Type *type = new Type();
+	this->type = new Type();
+	this->number = new int();
+
 }
 //overload, changes the type of the card
 Card::Card(Type type1)
 {
 	this->type = new Type(type1);
+	this->number = new int();
 }
 
-Card::Card(const Card& e){
-
-}
+Card::Card(const Card& e)
+{
+	type = e.type;
+	number = e.number;
+}	
 
 Card& Card::operator =(const Card& e){
 
+}
+
+int Card::getNumber()
+{
+	return *number;
+}
+
+//sets the type of the card
+void Card::setNumber(int newNumber)
+{
+	this->number = new int(newNumber);
 }
 
 //returns the type of the card
@@ -101,10 +132,16 @@ void Card::setType(Type newType)
 }
 
 //plays the card by making it a order and removing it from hand
-void Card::play() //I need Doms help for this
+Order Card::play(Card card)
 {
 	//Adds the order
+	this->specialOrder = new Order();
+    *specialOrder = card;
+	//puts card back in the deck
+	int temp = card.getNumber();
 	
+	//returns the order to be added to the Orderlist
+	return *specialOrder;
 }
 
 //deconstructor
@@ -122,7 +159,10 @@ Hand::Hand(int handSize)
 	this->hand = new Card[handSize];
 }
 
-Hand::Hand(const Hand& e) {}
+Hand::Hand(const Hand& e) 
+{
+	hand = e.hand;
+}
 
 Hand& Hand::operator =(const Hand& e){}
 
