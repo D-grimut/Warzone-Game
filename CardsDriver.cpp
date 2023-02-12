@@ -49,34 +49,6 @@ int main() {
         handA->hand->play(handA->hand[i]);
     }
 
-
-/*
-    //creating a new orders and assigning cards to them
-    int* size = new int(5);
-    OrdersList newList(size);
-    cout << "Showing newly filled list:" << endl;
-    newList.showList();
-
-
-    Order *orderA = new Order();
-    Order *orderB = new Order();
-    Order *orderC = new Order();
-    Order *orderD = new Order();
-    Order *orderE = new Order();
-
-    *orderA = handA->hand[0].play(handA->hand[0]);
-    *orderB = handA->hand[1].play(handA->hand[1]);
-    *orderC = handA->hand[2].play(handA->hand[2]);
-    *orderD = handA->hand[3].play(handA->hand[3]);
-    *orderE = handA->hand[4].play(handA->hand[4]);
-
-    //adding the orders to the OrderList
-    newList.addOrder(orderA, 0);
-    newList.addOrder(orderB, 1);
-    newList.addOrder(orderC, 2);
-    newList.addOrder(orderD, 3);
-    newList.addOrder(orderE, 4);
-*/  
     //showing the cards in hand (they should be blank)
     cout << "Showing cards in hand: "<< endl;
     for (int i = 0; i < 5; i++)
