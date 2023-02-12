@@ -95,7 +95,7 @@ Card Deck::draw()
 //default constructor
 Card::Card()
 {
-	this->type = new Type();
+	this->type = new Type(Type::blockade);	
 	this->number = new int();
 
 	int* size = new int(10);
@@ -160,10 +160,9 @@ void Card::setType(Type newType)
 void Card::play(Card card)
 {
 	//Adds the order
-	Order *bomb = new Bomb();
-    this->ol->addOrder(bomb, *ordersIndex); //error
-    (*ordersIndex)++;
-    ol->showList();
+	Order *bomb = new Bomb();	
+    this->ol->addOrder(bomb, *ordersIndex); 	
+    (*ordersIndex)++;    
 	//puts card back in the deck
 	int temp = card.getNumber();
 	card = Card();
@@ -176,10 +175,47 @@ OrdersList Card::getOrdersList(){
 //deconstructor
 Card::~Card(){}
 
-//instertion operator
-std::ostream& operator<<(std::ostream &strm, const Card &a)
-{ 
-    return strm << "Card: " << a.type;
+// instertion operator
+std::ostream &operator<<(std::ostream &strm, const Card &a)
+{
+	string type = "";
+	switch (*a.type)
+	{
+	case Type::bomb:
+	{
+		type = "bomb";
+		break;
+	}
+
+	case Type::reinforcement:
+	{
+		type = "reinforcement";
+		break;
+	}
+
+	case Type::blockade:
+	{
+		type = "blockade";
+		break;
+	}
+
+	case Type::airlift:
+	{
+		type = "airlift";
+		break;
+	}
+
+	case Type::diplomacy:
+	{
+		type = "diplomacy";
+		break;
+	}
+
+	default:
+		type = "no type";		
+	}
+
+	return strm << "Card: " << type << endl;
 }
 
 //Parent: Hand

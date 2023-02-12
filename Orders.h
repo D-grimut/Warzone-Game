@@ -20,6 +20,8 @@ class Order {
         virtual void execute();
     /*Description (shows order name)*/
         virtual string* description();
+
+        string getName();
     private:
     /*Name of order*/
         string* name;
@@ -191,7 +193,7 @@ class OrdersList {
     /*Remove order from position*/
         void removeOrder(int* position);
     /*Print list of all the orders in the array*/
-        void showList();
+        void showList(int);
     /*Returns size of the array*/
         int* getSize();
     /*Sets size of the array*/
