@@ -29,44 +29,45 @@ int main(){
         territories[i].setPosessor(p2->getPlayerID());
     }
 
-    // // Prints Player's ID
-    // cout << *p1 << endl;
+    // Prints Player's ID
+    cout << *p1 << endl;
 
-    // // Prints all owned territories of player 1
-    // p1->ownedTerritories();
+    // Prints all owned territories of player 1
+    p1->ownedTerritories();
 
-    // cout << endl;
+    cout << endl;
 
-    // cout << *p2 << endl;
-    // // Prints all owned territories of player 2
-    // p2->ownedTerritories();
+    cout << *p2 << endl;
+    // Prints all owned territories of player 2
+    p2->ownedTerritories();
 
-    // cout << endl;
+    cout << endl;
 
-    // p1->issueOrder();
+    p1->issueOrder();
 
-    // cout << endl;
+    cout << endl;
 
-    // p1->issueOrder();
+    p1->issueOrder();
 
-    // cout << endl;
+    cout << endl;
 
-    // Territory* toDef = p1->toDefend();
+    Territory* toDef = p1->toDefend();
 
-    // for(int i = 0; i < nbTerritories; i++){
-    //     if(*toDef[i].getPosessor() == -1){
-    //         break;
-    //     }
-    //     cout << toDef[i] << endl;
-    // }
+    for(int i = 0; i < nbTerritories; i++){
+        if(*toDef[i].getPosessor() == -1){
+            break;
+        }
+        cout << toDef[i] << endl;
+    }
 
-    p1->toAttack();
+    Territory* toAtt = p1->toAttack();
 
-    // Territory* toAtt = p1->toAttack();
-
-    // for(int i = 0; i < nbTerritories; i++){
-    //     cout << toAtt[i] << endl;
-    // }
+    for(int i = 0; i < nbTerritories; i++){
+        if(*toAtt[i].getPosessor() == -1){
+            break;
+        }
+        cout << toAtt[i] << endl;
+    }
 
     return 0;
 }
