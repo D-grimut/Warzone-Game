@@ -9,12 +9,17 @@ Map::Map(int nbTeritories, int nbContinents){
     
     this->nbTeritories = new int(nbTeritories);   
     this->nbContinents = new int(nbContinents);  
+    this->countries = new Territory[nbTeritories];
        
     //Making the adjacencyMtrix 2d array
     this->adjacencyMatrix = new Territory**[nbTeritories];
     for(int i = 0; i < nbTeritories; i++){
         adjacencyMatrix[i] = new Territory*[nbTeritories];
-    }
+
+        for(int s = 0; s<nbTeritories; s++){
+            adjacencyMatrix[i][s] = nullptr;
+        }
+    }  
 }
 
 //Default constructor
@@ -75,7 +80,13 @@ Map::~Map(){
 }
 
 //Adds edge between two nodes
-void Map::addEdge(int x, int y, Territory* tx, Territory* ty){    
+void Map::addEdge(int x, int y, Territory* tx, Territory* ty){  
+    if(this->adjacencyMatrix[x][y] != nullptr){
+        this->adjacencyMatrix[x][y] = nullptr;
+    }
+    if(this->adjacencyMatrix[y][x] != nullptr){
+        this->adjacencyMatrix[y][x] = nullptr;
+    }  
     this->adjacencyMatrix[x][y] = ty;
     this->adjacencyMatrix[y][x] = tx;
 }
@@ -158,6 +169,10 @@ bool Map::validate(){
 
 //Setter
 void Map::setCountries(Territory arr[]){
+
+    for(int i = 0; i < *nbTeritories; i++){
+        this->countries[i] = arr[i];
+    }
     this->countries = arr;
 }
 
@@ -187,7 +202,7 @@ std::ostream& operator<<(std::ostream &strm, const Map &m){
     string res = "";
     for (int i = 0; i < *m.nbTeritories; i++)
     {
-        res += ("The country is " + *m.countries[i].getTerritoryName() + "we need " + to_string(*m.countries[i].getAmntToInvade()) + " soldiers to invade - The neighbhors are : ");       
+        res += ("The country is " + *m.countries[i].getTerritoryName() + " we need " + to_string(*m.countries[i].getAmntToInvade()) + " soldiers to invade - The neighbhors are : ");       
 
         for (int s = 0; s < *m.nbTeritories; s++)
         {
@@ -229,12 +244,13 @@ MapLoader::MapLoader(string fileName){
         this->contInvade = new int[*nbContinents];
 
         //Creating empty teritorry array and empty map    
-        this->countries = new Territory[*this->nbTeritories];     
-        this->map = new Map(*nbTeritories, *nbContinents);    
-        this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
+        this->countries = new Territory[*this->nbTeritories];   
+
+        this->map = new Map(*nbTeritories, *nbContinents); 
 
         readContinents(fileName);
-        readCountries(fileName);    
+        readCountries(fileName);   
+        this->map->setCountries(this->countries);        
         readBorders(fileName);       
 
         if(!this->map->validate()){
