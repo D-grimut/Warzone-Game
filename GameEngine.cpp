@@ -230,6 +230,16 @@ void GameEngine::Play()
             win_state->WinInput(input);
         }
     }
+
+    Engine->~GameEngine();
+    start_state->~StartState();
+    map_loaded_state->~MapLoadedState();
+    map_validated_state->~MapValidatedState();
+    players_added_state->~PlayersAddedState();
+    assign_reinforcement_state->~AssignReinforcementState();
+    issue_order_state->~IssueOrderState();
+    execute_order_state->~ExecuteOrderState();
+    win_state->~WinState();
 }
 
 // Getter for the private attribute state
