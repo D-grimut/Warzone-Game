@@ -9,12 +9,17 @@ Map::Map(int nbTeritories, int nbContinents){
     
     this->nbTeritories = new int(nbTeritories);   
     this->nbContinents = new int(nbContinents);  
+    this->countries = new Territory[nbTeritories];
        
     //Making the adjacencyMtrix 2d array
     this->adjacencyMatrix = new Territory**[nbTeritories];
     for(int i = 0; i < nbTeritories; i++){
         adjacencyMatrix[i] = new Territory*[nbTeritories];
-    }
+
+        for(int s = 0; s<nbTeritories; s++){
+            adjacencyMatrix[i][s] = nullptr;
+        }
+    }  
 }
 
 //Default constructor
@@ -28,8 +33,7 @@ Map::Map(){
 Map::Map(const Map& og){    
     this->nbTeritories = new int(*og.nbTeritories);
     this->nbContinents = new int(*og.nbContinents);
-    this->adjacencyMatrix = new Territory**[*nbTeritories];
-    this->continents = new string[*nbContinents];
+    this->adjacencyMatrix = new Territory**[*nbTeritories];    
     this->countries = new Territory[*nbTeritories];
     
     //Creating new adjacency matrix
@@ -46,32 +50,43 @@ Map::Map(const Map& og){
     for(int s = 0; s < *nbTeritories; s++){
         countries[s] = og.countries[s];
     }
-
-    //Copying the continents array
-    for(int s = 0; s < *nbContinents; s++){
-        continents[s] = og.continents[s];
-    }   
 }
 
 //Destructor
 Map::~Map(){
+ 
+    for(int i = 0; i < *nbTeritories; i++){        
+        for(int s = 0; s < *nbTeritories; s++){
+            //We are not deleting the items at adjacencyMatrix[i][s] as those
+            //are shared territory objects that can cause issues as we can attemp to delet them again later on
+            //So we simply remove the pointer reference.           
+            adjacencyMatrix[i][s] = NULL;            
+        }
+        delete [] adjacencyMatrix[i];
+        adjacencyMatrix[i] = NULL;
+    }       
+    
     delete this->nbContinents;
     this->nbContinents = NULL;
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
 
-    for(int i = 0; i < *nbTeritories; i++){
-        delete adjacencyMatrix[i];
-        adjacencyMatrix[i] = NULL;
-    }
-
-    delete this->adjacencyMatrix;
+    delete [] this->countries;
+    this->countries = NULL;    
+ 
+    delete [] this->adjacencyMatrix;
     this->adjacencyMatrix = NULL;
 }
 
 //Adds edge between two nodes
-void Map::addEdge(int x, int y, Territory* tx, Territory* ty){    
+void Map::addEdge(int x, int y, Territory* tx, Territory* ty){  
+    if(this->adjacencyMatrix[x][y] != nullptr){
+        this->adjacencyMatrix[x][y] = nullptr;
+    }
+    if(this->adjacencyMatrix[y][x] != nullptr){
+        this->adjacencyMatrix[y][x] = nullptr;
+    }  
     this->adjacencyMatrix[x][y] = ty;
     this->adjacencyMatrix[y][x] = tx;
 }
@@ -132,6 +147,7 @@ bool Map::validate(){
 
         if((++hashmap[*this->countries[i].getTerritoryName()]) > 1){
             isUnique = false;
+            cout << "\nRejecting Map - country in 2 continents" << endl;
             break;
         }
     }
@@ -139,14 +155,24 @@ bool Map::validate(){
     //Testing Graph conectivity (if all territories are connected)
     if(counterT == *this->nbTeritories && counterC == *this->nbContinents && isUnique){
         return true;
-
     }else{
+
+        if(counterT == *this->nbTeritories){
+            cout << "\nCountries not conected - rejecting map" << endl;
+        }
+        if(counterC == *this->nbContinents){
+            cout << "\nContinents not connected - rejecting map" << endl;
+        }
         return false;
     }   
 }
 
 //Setter
 void Map::setCountries(Territory arr[]){
+
+    for(int i = 0; i < *nbTeritories; i++){
+        this->countries[i] = arr[i];
+    }
     this->countries = arr;
 }
 
@@ -188,7 +214,7 @@ std::ostream& operator<<(std::ostream &strm, const Map &m){
     string res = "";
     for (int i = 0; i < *m.nbTeritories; i++)
     {
-        res += ("The country is " + *m.countries[i].getTerritoryName() + "we need " + to_string(*m.countries[i].getAmntToInvade()) + " soldiers to invade - The neighbhors are : ");       
+        res += ("The country is " + *m.countries[i].getTerritoryName() + " we need " + to_string(*m.countries[i].getAmntToInvade()) + " soldiers to invade - The neighbhors are : ");       
 
         for (int s = 0; s < *m.nbTeritories; s++)
         {
@@ -230,12 +256,13 @@ MapLoader::MapLoader(string fileName){
         this->contInvade = new int[*nbContinents];
 
         //Creating empty teritorry array and empty map    
-        this->countries = new Territory[*this->nbTeritories];     
-        this->map = new Map(*nbTeritories, *nbContinents);    
-        this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
+        this->countries = new Territory[*this->nbTeritories];   
+
+        this->map = new Map(*nbTeritories, *nbContinents); 
 
         readContinents(fileName);
-        readCountries(fileName);    
+        readCountries(fileName);   
+        this->map->setCountries(this->countries);        
         readBorders(fileName);       
 
         if(!this->map->validate()){
@@ -254,12 +281,9 @@ MapLoader::~MapLoader(){
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
-
+  
     delete this->map;
     this->map = NULL;
-
-    delete this->countries;
-    this->countries = NULL;
 }
 
 //Helper method to count a certain type of entities in the .map file
@@ -493,7 +517,7 @@ std::ostream& operator<<(std::ostream &strm, const Territory &t){
                 << ", amount to invade: " << *t.amntToInvade << ", id of player possesing it: " << *t.posessor << endl;
 }
 
-
+//Getters
 int* Territory:: getPosessor(){
     return this->posessor;    
 }
