@@ -6,6 +6,7 @@
 using namespace std;
 
 int main() {
+    cout << "this runs A" << endl;
     //creates obj of each type to give to the cards in the deck
     Type a = Type::airlift;
     Type b = Type::blockade;
@@ -14,8 +15,9 @@ int main() {
     Type e = Type::reinforcement;
 
     //creates the deck and fills it with cards of each type
-    Deck *deckA = new Deck();
-    for (int i = (0); i < 100; i++){
+    Deck *deckA = new Deck(10);
+    cout << "this runs B" << endl;
+    for (int i = (0); i < 10; i++){
         if (i < 21){
             deckA->setDeck(i, a);
         } else if (i < 41) {
@@ -29,15 +31,18 @@ int main() {
         }
     }
 
+    cout << "this runs" << endl;
     //creates a new players hand
     Hand *handA = new Hand();
     
+    cout << "this runs" << endl;
     //draws cards for the hand
     for (int i = 0; i < 5; i++)
     {
         handA->hand[i] = deckA->draw();
     }
 
+    cout << "this runs" << endl;
     cout << "Showing cards in hand: "<< endl;
     for (int i = 0; i < 5; i++)
     {

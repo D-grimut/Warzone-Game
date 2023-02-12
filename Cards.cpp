@@ -9,7 +9,7 @@ Deck::Deck()
 {
 	this->deck = new Card[100];
 	this->inHand = new int[100]; //This checks if a card is being used or not
-	this->currentDeckSize = new int((int)100);
+	this->currentDeckSize = new int(100);
 }
 
 //overload, custom amount of cards (unused for demo and unfinished)
@@ -95,9 +95,11 @@ Card Deck::draw()
 //default constructor
 Card::Card()
 {
+	cout << "1 " << endl;
 	this->type = new Type();
-	this->number = new int();
-
+	cout << "2 " << endl;
+	this->number = new int(-1);
+	cout << "3 " << endl;
 }
 //overload, changes the type of the card
 Card::Card(Type type1)
@@ -160,6 +162,13 @@ Order Card::play(Card card)
 
 //deconstructor
 Card::~Card(){}
+
+//instertion operator
+std::ostream& operator<<(std::ostream &strm, const Card &a)
+{ 
+    return strm << "Card: " << a.type;
+}
+
 
 //Parent: Hand
 //default
