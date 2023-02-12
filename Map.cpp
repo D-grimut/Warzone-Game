@@ -157,10 +157,10 @@ bool Map::validate(){
         return true;
     }else{
 
-        if(counterT == *this->nbTeritories){
+        if(counterT != *this->nbTeritories){
             cout << "\nCountries not conected - rejecting map" << endl;
         }
-        if(counterC == *this->nbContinents){
+        if(counterC != *this->nbContinents){
             cout << "\nContinents not connected - rejecting map" << endl;
         }
         return false;
