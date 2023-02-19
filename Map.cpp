@@ -9,41 +9,89 @@ Map::Map(int nbTeritories, int nbContinents){
     
     this->nbTeritories = new int(nbTeritories);   
     this->nbContinents = new int(nbContinents);  
+    this->countries = new Territory[nbTeritories];
        
     //Making the adjacencyMtrix 2d array
-    this->adjacencyMatrix = new int*[nbTeritories];
+    this->adjacencyMatrix = new Territory**[nbTeritories];
     for(int i = 0; i < nbTeritories; i++){
-        adjacencyMatrix[i] = new int[nbTeritories];
-    }
+        adjacencyMatrix[i] = new Territory*[nbTeritories];
+
+        for(int s = 0; s<nbTeritories; s++){
+            adjacencyMatrix[i][s] = nullptr;
+        }
+    }  
 }
 
+//Default constructor
 Map::Map(){    
     this->nbTeritories = NULL;
     this->nbContinents = NULL;
     this->adjacencyMatrix = NULL;    
 }
 
+//Copy constructor
+Map::Map(const Map& og){    
+    this->nbTeritories = new int(*og.nbTeritories);
+    this->nbContinents = new int(*og.nbContinents);
+    this->adjacencyMatrix = new Territory**[*nbTeritories];    
+    this->countries = new Territory[*nbTeritories];
+    
+    //Creating new adjacency matrix
+    for(int i = 0; i < *nbTeritories; i++){
+        adjacencyMatrix[i] = new Territory*[*nbTeritories];
+
+        //Copying elemnts from old map adjacency matrix to this one
+        for(int s = 0; s < *nbTeritories; s++){
+            adjacencyMatrix[i][s] = og.adjacencyMatrix[i][s];
+        }
+    }
+
+    //Copying the territories array
+    for(int s = 0; s < *nbTeritories; s++){
+        countries[s] = og.countries[s];
+    }
+}
+
+//Destructor
 Map::~Map(){
+ 
+    for(int i = 0; i < *nbTeritories; i++){        
+        for(int s = 0; s < *nbTeritories; s++){
+            //We are not deleting the items at adjacencyMatrix[i][s] as those
+            //are shared territory objects that can cause issues as we can attemp to delet them again later on
+            //So we simply remove the pointer reference.           
+            adjacencyMatrix[i][s] = NULL;            
+        }
+        delete [] adjacencyMatrix[i];
+        adjacencyMatrix[i] = NULL;
+    }       
+    
     delete this->nbContinents;
     this->nbContinents = NULL;
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
 
-    for(int i = 0; i < *nbTeritories; i++){
-        delete adjacencyMatrix[i];
-        adjacencyMatrix[i] = NULL;
-    }
-
-    delete this->adjacencyMatrix;
+    delete [] this->countries;
+    this->countries = NULL;    
+ 
+    delete [] this->adjacencyMatrix;
     this->adjacencyMatrix = NULL;
 }
 
-void Map::addEdge(int x, int y){    
-    this->adjacencyMatrix[x][y] = 1;
-    this->adjacencyMatrix[y][x] = 1;
+//Adds edge between two nodes
+void Map::addEdge(int x, int y, Territory* tx, Territory* ty){  
+    if(this->adjacencyMatrix[x][y] != nullptr){
+        this->adjacencyMatrix[x][y] = nullptr;
+    }
+    if(this->adjacencyMatrix[y][x] != nullptr){
+        this->adjacencyMatrix[y][x] = nullptr;
+    }  
+    this->adjacencyMatrix[x][y] = ty;
+    this->adjacencyMatrix[y][x] = tx;
 }
 
+//Helper method to traverse the graph (DFS)
 void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
     
     visited[node] = true;
@@ -57,7 +105,7 @@ void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
     
     for(int i = 0; i < *this->nbTeritories; i++){
        
-        if(this->adjacencyMatrix[node][i] == 1 && !visited[i]){            
+        if(this->adjacencyMatrix[node][i] != nullptr && !visited[i]){            
             dfs(i, visited, visitedCon, ct, cc);
         }
     }
@@ -89,8 +137,6 @@ bool Map::validate(){
     int counterC = 0;    
 
     dfs(0, visits, continentVisits, counterT, counterC);     
-    // cout <<  counterT << ", " << counterC << endl;
-    // cout << *this->nbTeritories << ", " << *this->nbContinents << endl;
 
     //Deleting visits array; we only need the array for dfs/ validation
     delete visits;
@@ -101,6 +147,7 @@ bool Map::validate(){
 
         if((++hashmap[*this->countries[i].getTerritoryName()]) > 1){
             isUnique = false;
+            cout << "\nRejecting Map - country in 2 continents" << endl;
             break;
         }
     }
@@ -108,37 +155,91 @@ bool Map::validate(){
     //Testing Graph conectivity (if all territories are connected)
     if(counterT == *this->nbTeritories && counterC == *this->nbContinents && isUnique){
         return true;
-
     }else{
+
+        if(counterT == *this->nbTeritories){
+            cout << "\nCountries not conected - rejecting map" << endl;
+        }
+        if(counterC == *this->nbContinents){
+            cout << "\nContinents not connected - rejecting map" << endl;
+        }
         return false;
     }   
 }
 
-void Map::toString(){
-    for(int i = 0; i < *this->nbTeritories; i++){
-        cout<< "The country is " << *this->countries[i].getTerritoryName() << " - The neighbhors are : ";
+//Setter
+void Map::setCountries(Territory arr[]){
 
-        for(int s = 0; s < *this->nbTeritories; s++){
-            if(s == i){
-                continue;
-            }
-           
-            if(this->adjacencyMatrix[i][s] != 1){
-                continue;
-            }
-
-            cout<< *this->countries[s].getTerritoryName() << ", ";
-        }
-        cout<< "\n" << endl;
+    for(int i = 0; i < *nbTeritories; i++){
+        this->countries[i] = arr[i];
     }
+    this->countries = arr;
 }
 
-void Map::setCountries(Territory arr[]){
-    this->countries = arr;
+int* Map::getNbTerritories(){
+    return this->nbTeritories;
+}
+
+Territory* Map::getCountries(){
+    return this->countries;
+}
+
+Territory*** Map::getAdjacencyMatrix(){
+    return this->adjacencyMatrix;
+}
+
+//Operator overloading for a map
+Map& Map::operator=(const Map& og){
+
+    this->nbTeritories = new int(*og.nbTeritories);
+    this->nbContinents = new int(*og.nbContinents);
+    this->adjacencyMatrix = new Territory**[*og.nbTeritories];
+
+    //Creating new adjacency matrix
+    for(int i = 0; i < *nbTeritories; i++){
+        this->adjacencyMatrix[i] = new Territory*[*nbTeritories];
+
+        //Copying elemnts from old map adjacency matrix to this one
+        for(int s = 0; s < *nbTeritories; s++){
+            adjacencyMatrix[i][s] = og.adjacencyMatrix[i][s];
+        }
+    }
+
+    return *this;
+}
+
+//Printing a map
+std::ostream& operator<<(std::ostream &strm, const Map &m){
+
+    string res = "";
+    for (int i = 0; i < *m.nbTeritories; i++)
+    {
+        res += ("The country is " + *m.countries[i].getTerritoryName() + " we need " + to_string(*m.countries[i].getAmntToInvade()) + " soldiers to invade - The neighbhors are : ");       
+
+        for (int s = 0; s < *m.nbTeritories; s++)
+        {
+            if (s == i)
+            {
+                continue;
+            }
+
+            if (m.adjacencyMatrix[i][s] == nullptr)
+            {
+                continue;
+            }
+
+            res += ("\n" + *m.countries[s].getTerritoryName());             
+        }
+         
+        res += "\n\n";
+    }
+
+    return strm << res << endl;
 }
 
 /*---------------- Map Loader class ----------------*/ 
 
+//Map Loader contructor that loads the map
 MapLoader::MapLoader(string fileName){  
     
     this->nbTeritories = new int(countEntities(fileName, "[countries]"));
@@ -152,13 +253,16 @@ MapLoader::MapLoader(string fileName){
         string continentsArr[*this->nbContinents];
         this->continents = continentsArr;
 
+        this->contInvade = new int[*nbContinents];
+
         //Creating empty teritorry array and empty map    
-        this->countries = new Territory[*this->nbTeritories];     
-        this->map = new Map(*nbTeritories, *nbContinents);    
-        this->map->setCountries(this->countries);       //Its ok to share the countries array (shallow copy), since there should ever be only one countries array
+        this->countries = new Territory[*this->nbTeritories];   
+
+        this->map = new Map(*nbTeritories, *nbContinents); 
 
         readContinents(fileName);
-        readCountries(fileName);    
+        readCountries(fileName);   
+        this->map->setCountries(this->countries);        
         readBorders(fileName);       
 
         if(!this->map->validate()){
@@ -170,18 +274,16 @@ MapLoader::MapLoader(string fileName){
     }  
 }
 
+//Map Loader destructor
 MapLoader::~MapLoader(){
     delete this->nbContinents;
     this->nbContinents = NULL;
 
     delete this->nbTeritories;
     this->nbTeritories = NULL;
-
+  
     delete this->map;
     this->map = NULL;
-
-    delete this->countries;
-    this->countries = NULL;
 }
 
 //Helper method to count a certain type of entities in the .map file
@@ -204,9 +306,7 @@ int MapLoader::countEntities(string fileName, string enityType){
     return (counter - 1);
 }
 
-//TODO: Add error checking/ validation if file is a valid map based of teltale signs
-//like formating.
-
+//Method to read the countries in the .map file
 void MapLoader::readCountries(string fileName){
 
     ifstream file(fileName);  
@@ -237,6 +337,7 @@ void MapLoader::readCountries(string fileName){
                     this->countries[counter].setTerritoryId(stoi(propArr[0]) - 1);
                     this->countries[counter].setName(propArr[1]);                    
                     this->countries[counter].setContinentId(stoi(propArr[2]) - 1);
+                    this->countries[counter].setAmntToInvade(this->contInvade[stoi(propArr[2]) - 1]);
                     counter++;                 
                 }else{
                     break;
@@ -248,6 +349,7 @@ void MapLoader::readCountries(string fileName){
     }    
 }
 
+//Method to read the borders between countries and hence formulate the map (adding edges)
 void MapLoader::readBorders(string fileName){
 
     ifstream file(fileName);  
@@ -272,7 +374,8 @@ void MapLoader::readBorders(string fileName){
                         currCountry = (stoi(token) - 1);
                     }else{                        
                         //Creating edge (border) between the current country we are possesing and its neighbhor.
-                        this->map->addEdge(currCountry, (stoi(token) - 1));
+                        int index = (stoi(token) - 1);
+                        this->map->addEdge(currCountry, index, &this->countries[currCountry], &this->countries[index]);
                     }
                 }
                 firstToken = true;                                                            
@@ -283,6 +386,7 @@ void MapLoader::readBorders(string fileName){
     }    
 }
 
+//Reading the continents in the .map file
 void MapLoader::readContinents(string fileName){
     
     ifstream file(fileName);  
@@ -308,6 +412,7 @@ void MapLoader::readContinents(string fileName){
             
                 if(counter < *this->nbContinents){
                     this->continents[counter] = propArr[0];
+                    this->contInvade[counter] = stoi(propArr[1]);
                     counter++;
                 }else{                                      
                     break;
@@ -330,16 +435,21 @@ string MapLoader::splitString(string text, int &i){
     return token;
 }
 
-/*---------------- Teritory Class ----------------*/
+Map* MapLoader::getMap(){
+    return this->map;
+}
+
+/*---------------- Territory Class ----------------*/
 
 //Constructor
-Territory::Territory(int posessor, string TerritoryName, int TerritoryId, bool isFree, int continentId){
-
+Territory::Territory(int posessor, string TerritoryName, int TerritoryId, bool isFree, int continentId, int amntToInvade, int numberOfSoldiers){
     this->posessor = new int(posessor);
     this->TerritoryName = new string(TerritoryName);
     this->TerritoryId = new int(TerritoryId);    
     this->isFree = new bool(isFree);
     this->continentId = new int(continentId);
+    this->amntToInvade = new int(amntToInvade);
+    this->numberOfSoldiers = new int(numberOfSoldiers);    
 }
 
 //Default Consructor
@@ -349,6 +459,19 @@ Territory::Territory(){
     this->TerritoryId = new int(-1);    
     this->isFree = new bool(true);
     this->continentId = new int(-1);
+    this->amntToInvade = new int(-1);
+    this->numberOfSoldiers = new int(-1);
+}
+
+//Copy Cinstructor
+Territory::Territory(const Territory& og){
+    this->posessor = new int(*og.posessor);
+    this->TerritoryName = new string(*og.TerritoryName);
+    this->TerritoryId = new int(*og.TerritoryId);    
+    this->isFree = new bool(*og.isFree);
+    this->continentId = new int(*og.continentId);
+    this->amntToInvade = new int(*og.amntToInvade);
+    this->numberOfSoldiers = new int(*og.numberOfSoldiers);
 }
 
 //Destructor
@@ -366,9 +489,35 @@ Territory::~Territory(){
     this->isFree = NULL;
 
     delete this->continentId;
-    this->continentId = NULL;  
+    this->continentId = NULL;
+
+    delete this->amntToInvade;
+    this->amntToInvade = NULL;
+
+    delete this->numberOfSoldiers;
+    this->numberOfSoldiers = NULL;  
 }
 
+Territory& Territory::operator=(const Territory& t) {
+
+    this->setContinentId(*t.continentId);
+    this->setName(*t.TerritoryName);
+    this->setPosessor(*t.posessor);
+    this->setStatus(*t.isFree);
+    this->setTerritoryId(*t.TerritoryId);
+    this->setNumberOfSoldiers(*t.numberOfSoldiers);
+    this->setAmntToInvade(*t.amntToInvade);
+   
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream &strm, const Territory &t){
+
+    return strm << "The territorie name: " << *t.TerritoryName << " , is occupied: " << *t.isFree << ", amnt of soldiers: " << *t.numberOfSoldiers
+                << ", amount to invade: " << *t.amntToInvade << ", id of player possesing it: " << *t.posessor << endl;
+}
+
+//Getters
 int* Territory:: getPosessor(){
     return this->posessor;    
 }
@@ -387,6 +536,14 @@ bool* Territory::getIsFree(){
 
 string* Territory::getTerritoryName(){
     return this->TerritoryName;
+}
+
+int* Territory::getAmntToInvade(){
+    return this->amntToInvade;
+}
+
+int* Territory::getNumberOfSoldiers(){
+    return this->numberOfSoldiers;
 }
 
 //Setters
@@ -408,4 +565,12 @@ void Territory::setName(string name){
 
 void Territory::setContinentId(int id){
     *this->continentId = id;
+}
+
+void Territory::setAmntToInvade(int amnt){
+    *this->amntToInvade = amnt;
+}
+
+void Territory::setNumberOfSoldiers(int amnt){
+    *this->numberOfSoldiers = amnt;
 }
