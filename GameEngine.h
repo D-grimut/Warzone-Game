@@ -1,4 +1,6 @@
+#pragma once
 #include <iostream>
+#include "CommandProcessing.h"
 
 class GameEngine
 {
@@ -10,6 +12,8 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
+
+    CommandProcessor* cp;
 
 private:
     int *current_state; // current state : int or string?

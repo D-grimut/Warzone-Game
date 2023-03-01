@@ -8,6 +8,7 @@ This section is for all the constructors used for each class
 // Constructor for game engine
 GameEngine::GameEngine()
 {
+    this->cp = new CommandProcessor();
     current_state = new int(0); // default: every user starts at current state 0 aka. "Start"
 }
 
@@ -16,12 +17,16 @@ GameEngine::~GameEngine()
 {
     delete current_state;
     current_state = nullptr;
+
+    delete cp;
+    cp = NULL;
 }
 
 // Copy constructor for game engine
 GameEngine::GameEngine(const GameEngine &copy)
 {
     current_state = new int(*(copy.current_state));
+    cp = copy.cp;
 }
 
 // Constructor for start state
@@ -194,9 +199,8 @@ void GameEngine::Play()
     while (*Engine->getState() != 8)
     {
         Engine->Commands();
-        std::cout << "Your move: ";
-        std::string input;
-        std::cin >> input;
+        string input = Engine->cp->getCommand();
+        
         if (*Engine->getState() == 0)
         {
             start_state->StartInput(input);
@@ -257,7 +261,7 @@ int *GameEngine::getState()
 // Function that will change the state of the game
 void GameEngine::TransitionTo(int state)
 {
-    current_state = new int(state);
+    *current_state = state;
 }
 
 //  shows valid game engine commands for each state
@@ -318,9 +322,7 @@ void StartState::StartInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         StartInput(temp);
     }
 }
@@ -339,9 +341,7 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
         std::cout << "\nMap loaded\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         MapLoadedInput(temp);
     }
     else
@@ -349,9 +349,7 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         MapLoadedInput(temp);
     }
 }
@@ -370,9 +368,7 @@ void MapValidatedState::ValidateInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         ValidateInput(temp);
     }
 }
@@ -391,9 +387,7 @@ void PlayersAddedState::PlayersAddedInput(const std::string &input)
         std::cout << "\nPlayer added\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         PlayersAddedInput(temp);
     }
     else
@@ -401,9 +395,7 @@ void PlayersAddedState::PlayersAddedInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         PlayersAddedInput(temp);
     }
 }
@@ -421,9 +413,7 @@ void AssignReinforcementState::AssignReinforcementsInput(const std::string &inpu
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         AssignReinforcementsInput(temp);
     }
 }
@@ -441,9 +431,7 @@ void IssueOrderState::IssueOrderInput(const std::string &input)
         std::cout << "\nOrder issued\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         IssueOrderInput(temp);
     }
     else
@@ -451,9 +439,7 @@ void IssueOrderState::IssueOrderInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         IssueOrderInput(temp);
     }
 }
@@ -471,9 +457,7 @@ void ExecuteOrderState::ExecuteOrderInput(const std::string &input)
         std::cout << "\nOrder executed\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         ExecuteOrderInput(temp);
     }
     else if (input == "endexecorders")
@@ -487,9 +471,7 @@ void ExecuteOrderState::ExecuteOrderInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         ExecuteOrderInput(temp);
     }
 }
@@ -500,7 +482,7 @@ void WinState::WinInput(const std::string &input)
     if (input == "end")
     {
         engine->TransitionTo(8);
-        std::cout << "\nThank you for playing!" << std::endl;
+        std::cout << "\nThank you for playing!" << std::endl;                
         exit(0);
     }
     else if (input == "play")
@@ -513,9 +495,7 @@ void WinState::WinInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
+        string temp = engine->cp->getCommand();
         WinInput(temp);
     }
 }
