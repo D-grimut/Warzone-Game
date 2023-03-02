@@ -203,7 +203,11 @@ void GameEngine::Play()
         
         if (*Engine->getState() == 0)
         {
-            start_state->StartInput(input);
+
+            Engine->cp->validate("CANNOT USE THE COMMAND. Start state does not support the command: ", input, [start_state](string input){                
+                return start_state->StartInput(input);                    
+            });
+                     
         }
         else if (*Engine->getState() == 1)
         {
@@ -309,8 +313,8 @@ void GameEngine::Commands()
 }
 
 // Checks for the input in start state
-void StartState::StartInput(const std::string &input)
-{
+bool StartState::StartInput(const std::string &input){
+    
     if (input == "loadmap")
     {
         std::cout << "\nSuccess!\n"
@@ -321,10 +325,10 @@ void StartState::StartInput(const std::string &input)
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
-        engine->Commands();
-        string temp = engine->cp->getCommand();
-        StartInput(temp);
+        engine->Commands();        
+        return false;        
     }
+    return true;
 }
 
 // Checks for the input in Map load state

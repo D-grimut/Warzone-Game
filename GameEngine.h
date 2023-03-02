@@ -35,7 +35,7 @@ public:
     StartState(GameEngine *engine);
     ~StartState();
     StartState(const StartState &copy);
-    void StartInput(const std::string &input);
+    bool StartInput(const std::string &input);
 
 private:
     GameEngine *engine;

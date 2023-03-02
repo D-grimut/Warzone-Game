@@ -63,7 +63,8 @@ void CommandList::storeCommand(Command* newCommand){
 
     if(*this->end == *this->size - 1){
         resize();
-    }    
+    }
+    //cout << *this->end << endl;    
     this->commands[*this->end] = newCommand;    
     *this->end = *this->end + 1;
 
@@ -138,6 +139,12 @@ void CommandProcessor::toString(){
     }
 }
 
-void CommandProcessor::validate(Command* command, string status){
-
+void CommandProcessor::validate(string message, string input, function<bool(string)> func){
+    bool res = func(input);    
+    
+    if(!res){
+        this->commandList->getAtIndex(this->commandList->getEnd() - 1)->saveEffect(message + input);        
+        string temp = getCommand();
+        validate(message, temp, func);        
+    }
 }

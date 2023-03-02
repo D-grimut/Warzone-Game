@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <functional>
 using namespace std;
 
 class Command{
@@ -59,5 +60,5 @@ public:
 
     string getCommand();
     void toString();
-    void validate(Command*, string);    //TODO
+    void validate(string, string, function<bool(string)> func);    //TODO
 };
