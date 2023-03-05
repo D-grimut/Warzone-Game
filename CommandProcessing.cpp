@@ -132,19 +132,40 @@ string CommandProcessor::getCommand(){
     return temp;
 }
 
+//TODO: remove at end
+//FOR TESTING
 void CommandProcessor::toString(){    
     cout << this->commandList->getEnd() << endl;
     for(int i = 0; i < this->commandList->getEnd(); i++){      
-        cout << this->commandList->getAtIndex(i)->getCommandType() << " index : " << i <<   endl;
+        cout << this->commandList->getAtIndex(i)->getCommandType() << " EFFECT : " << this->commandList->getAtIndex(i)->getEffect() <<   endl;
     }
 }
 
-void CommandProcessor::validate(string message, string input, function<bool(string)> func){
-    bool res = func(input);    
-    
+//Function validate all user input Commands, and saves the effect of invalid commands with the according error message
+//(passed to the function)
+void CommandProcessor::validate(string message, string input, string breakCommand, bool cont, function<bool(string)> func){
+    bool res = func(input);
+
+    //This is to cover the edge case where there are two break commands that can invoke a state change in the 
+    //same state.
+    string breakSubOne = "";
+    string breakSubTwo = "";    
+
+    for(int i = 0; i < breakCommand.size(); i++){
+        if(isspace(breakCommand[i])){           
+            breakSubOne = breakCommand.substr(0, i);
+            breakSubTwo = breakCommand.substr(i+1, breakCommand.size());
+            break;
+        }
+    } 
+   
     if(!res){
         this->commandList->getAtIndex(this->commandList->getEnd() - 1)->saveEffect(message + input);        
         string temp = getCommand();
-        validate(message, temp, func);        
+        validate(message, temp, breakCommand, cont, func);    
+
+    }else if(cont && input.compare(breakCommand) != 0 && input.compare(breakSubOne) != 0 && input.compare(breakSubTwo) != 0){        
+        string temp = getCommand();
+        validate(message, temp, breakCommand, cont, func);
     }
 }

@@ -60,5 +60,5 @@ public:
 
     string getCommand();
     void toString();
-    void validate(string, string, function<bool(string)> func);    //TODO
+    void validate(string, string, string, bool, function<bool(string)> func);    //TODO
 };

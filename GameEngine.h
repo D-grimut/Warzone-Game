@@ -49,7 +49,7 @@ public:
     MapLoadedState(GameEngine *engine);
     ~MapLoadedState();
     MapLoadedState(const MapLoadedState &copy);
-    void MapLoadedInput(const std::string &input);
+    bool MapLoadedInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -62,7 +62,7 @@ public:
     MapValidatedState(GameEngine *engine);
     ~MapValidatedState();
     MapValidatedState(const MapValidatedState &copy);
-    void ValidateInput(const std::string &input);
+    bool ValidateInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -75,7 +75,7 @@ public:
     PlayersAddedState(GameEngine *engine);
     ~PlayersAddedState();
     PlayersAddedState(const PlayersAddedState &copy);
-    void PlayersAddedInput(const std::string &input);
+    bool PlayersAddedInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -88,7 +88,7 @@ public:
     AssignReinforcementState(GameEngine *engine);
     ~AssignReinforcementState();
     AssignReinforcementState(const AssignReinforcementState &copy);
-    void AssignReinforcementsInput(const std::string &input);
+    bool AssignReinforcementsInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -101,7 +101,7 @@ public:
     IssueOrderState(GameEngine *engine);
     ~IssueOrderState();
     IssueOrderState(const IssueOrderState &copy);
-    void IssueOrderInput(const std::string &input);
+    bool IssueOrderInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -114,7 +114,7 @@ public:
     ExecuteOrderState(GameEngine *engine);
     ~ExecuteOrderState();
     ExecuteOrderState(const ExecuteOrderState &copy);
-    void ExecuteOrderInput(const std::string &input);
+    bool ExecuteOrderInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -127,7 +127,7 @@ public:
     WinState(GameEngine *engine);
     ~WinState();
     WinState(const WinState &copy);
-    void WinInput(const std::string &input);
+    bool WinInput(const std::string &input);
 
 private:
     GameEngine *engine;
