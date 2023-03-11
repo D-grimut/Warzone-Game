@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "Map.h"
+#include "Player.h"
 using namespace std;
 
 //Order class (PARENT)
@@ -11,7 +13,7 @@ class Order {
         Order(const Order& e); //copy constructor
         Order& operator =(const Order& e); //asignmnet operator
         virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
-        virtual void execute(); //Execute
+        virtual void execute() = 0; //Execute
         virtual string* description(); //Shows which order it is
         string* getName();
     private:
@@ -29,8 +31,17 @@ class Deploy : public Order {
         virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
+        void setTargetTerr(Territory* target);
+        Territory getTragetTerr();
+        void setArmies(int* armies);
+        int* getArmies();
+        int* getPlayerID();
+        void setPlayerID(int* playerId);
     private:
         string* name; //used for description
+        Territory target;
+        int* armies;
+        int* playerID;
         friend std::ostream& operator<<(std::ostream &strm, const Deploy &a);
 };
 
@@ -44,7 +55,19 @@ class Advance : public Order {
         virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
+        Territory getTargetTerr();
+        Territory getSourceTerr();
+        int* getPlayerID();
+        int* getArmies();
+        void setTargetTerr(Territory* targTerr);
+        void setSourceTerr(Territory* sourceTerr);
+        void setArmies(int* numArmies);
+        void setPlayerID(int* pID);
     private:
+        Territory source;
+        Territory target;
+        int* playerID;
+        int* armies;
         string* name; //used for description
         friend std::ostream& operator<<(std::ostream &strm, const Advance &a);
 };
