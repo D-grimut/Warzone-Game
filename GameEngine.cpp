@@ -1,5 +1,7 @@
 // GameEngine.cpp
 #include "GameEngine.h"
+#include "Player.h"
+#include <cmath>
 
 /*
 This section is for all the constructors used for each class
@@ -119,6 +121,20 @@ AssignReinforcementState::~AssignReinforcementState()
     engine = nullptr;
 }
 
+
+
+// Method to calculate the armies that a player can use to reinforce
+void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayers){
+    for(int i = 0; i < nbOfPlayers; i++){
+        int *nbOfTer = new int(pArr[i]->nbTerritories());
+        int reinArm = floor(*nbOfTer/3);
+        pArr[i]->setReinforcementPool(reinArm);
+        cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
+    }
+}
+
+
+
 // Constructor for issue order state
 IssueOrderState::IssueOrderState(GameEngine *engine)
 {
@@ -136,6 +152,44 @@ IssueOrderState::~IssueOrderState()
 {
     delete engine;
     engine = nullptr;
+}
+
+void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
+    /*
+    Need:
+    deploy
+    advance
+    
+    */
+   for(int i = 0; i < nbOfPlayers; i++){
+        Territory* toAtt = pArr[i]->toAttack();
+        pArr[i]->printToAttToDef(toAtt);
+        int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
+        // cout << "Give a priority list of territories to invade e.g. 0,1,2: " << endl;
+        // for(int j = 0; j < nbOfToAtt; j++){
+        //     cout << j << ". " << *toAtt[j].getTerritoryName() << endl;
+        // }
+
+        // string prioAtt;
+        // cout << "Priority list: ";
+        // cin >> prioAtt;
+
+        Territory* toDef = pArr[i]->toDefend();
+        pArr[i]->printToAttToDef(toDef);
+        // int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
+        // cout << "Give a priority list of territories to defend e.g. 0,1,2: " << endl;
+        // for(int j = 0; j < nbOfToDef; j++){
+        //     cout << j << ". " << *toDef[j].getTerritoryName() << endl;
+        // }
+
+        // string prioDef;
+        // cout << "Priority list: ";
+        // cin >> prioDef;
+
+        //Deploy sequence of the armies owned
+
+        //Advance
+   }
 }
 
 // Constructor for execute order state
@@ -519,3 +573,28 @@ void WinState::WinInput(const std::string &input)
         WinInput(temp);
     }
 }
+
+
+/*
+Player1:
+1- return list of toDefend and toAttack (create prio for countries to defend and attack)
+2- we call a function to see # of armies that a player owns and calls the deploy order until player has no armies left
+3- call the advance order to move armies on the board (either defend or attack)
+4- cards (ffs)
+
+Player2:
+1- return list of toDefend and toAttack (create prio for countries to defend and attack)
+2- we call a function to see # of armies that a player owns and calls the deploy order until player has no armies left
+3- call the advance order to move armies on the board (either defend or attack)
+4- cards (ffs)
+
+
+mainGameLoop():
+	while(noWinner):
+		for(all the players{p1, p2}):
+			p1.reinforcementPhase();
+		for(all the players{p1, p2}):
+			p1.isseOrdersPhase();
+		for(all the players{p1, p2}):
+			p1.ordersExecutionPhase();
+*/

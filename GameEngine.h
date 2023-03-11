@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Player.h"
 
 class GameEngine
 {
@@ -85,6 +86,7 @@ public:
     ~AssignReinforcementState();
     AssignReinforcementState(const AssignReinforcementState &copy);
     void AssignReinforcementsInput(const std::string &input);
+    void reinforcementPhase(Player *playerList[], int nbOfPlayers);
 
 private:
     GameEngine *engine;
@@ -98,6 +100,7 @@ public:
     ~IssueOrderState();
     IssueOrderState(const IssueOrderState &copy);
     void IssueOrderInput(const std::string &input);
+    void issueOrdersPhase(Player *playerList[], int nbOfPlayers);
 
 private:
     GameEngine *engine;
