@@ -24,12 +24,13 @@ class Player{
         Map* map;                       // Map object
         int* sizeOfHand;
         Hand* cards;                    // List Of Cards
+        int* reinforcementPool;
 
         friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
     public:
         // Constructor with parameters, default constructor, and destructor
-        Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map);
+        Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool);
         Player();
         Player(const Player&);
         ~Player();
@@ -40,6 +41,9 @@ class Player{
         Territory* toDefend();      // Show territories to defend
         Territory* toAttack();      // Show territories to attack
         void printCards();
+        int nbTerritories();
+        void printToAttToDef(Territory* arrOfDefOrAtt);
+        int nbOfTerToAttToDef(Territory* arrOfDefOrAtt);
 
         // Setters
         void setPlayerID(int playerID);
@@ -52,12 +56,14 @@ class Player{
         void setAdjacencyMatrix(Territory** adjacencyMatrix);
         void setMap(Map map);
         void setCards(Hand cards);
+        void setReinforcementPool(int reinforcementPool);
         
         // Getters
         int getPlayerID();
         OrdersList getOrdersList();
         Hand getCards();
         int getSizeOfHand();
+        int getReinforcementPool();
 
         Player& operator=(const Player& p);
 };

@@ -7,7 +7,7 @@
 using namespace std;
 
 // Constructor of Player to initialize values
-Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map){ 
+Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool){ 
     this->nbOfTerritories = new int(nbTerritories);
     this->playerID = new int(playerID);
     this->territories = territories;
@@ -25,6 +25,8 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
 
     this->sizeOfHand = new int(6);
     this->cards = new Hand(*sizeOfHand);
+    
+    this->reinforcementPool = new int(reinforcementPool);
 }
 
 // Default Constructor
@@ -45,6 +47,8 @@ Player::Player(){
     this->map = NULL;
 
     this->cards = NULL;
+    
+    this->reinforcementPool = new int(0);
 }
 
 // Copy Constructor
@@ -59,6 +63,7 @@ Player::Player(const Player& p){
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
     this->cards = p.cards;
+    //NbArmies
 }
 
 // Destructor
@@ -92,6 +97,9 @@ Player::~Player(){
 
     delete this->cards;
     this->cards = NULL;
+
+    delete this->reinforcementPool;
+    this->reinforcementPool = NULL;
 }
 
 // Method to show owned Territories that the player owns
@@ -102,6 +110,17 @@ void Player::ownedTerritories(){
             cout << territories[i] << endl;  
         }     
     }
+}
+
+// Method that returns nb of territories owned
+int Player::nbTerritories(){
+    int counter = 0;
+    for(int i = 0; i < *nbOfTerritories; i++){
+        if(*territories[i].getPosessor() == *this->playerID && *territories[i].getPosessor() != -1){
+            counter++;
+        }     
+    }
+    return counter;
 }
 
 // Method to create orders and adds them to the OrdersList array that the Player owns
@@ -234,6 +253,26 @@ void Player::printCards(){
     }
 }
 
+void Player::printToAttToDef(Territory* arrOfDefOrAtt){
+    for(int i = 0; i < *nbOfTerritories; i++){
+        if(*arrOfDefOrAtt[i].getPosessor() == -1){
+            break;
+        }
+        cout << arrOfDefOrAtt[i] << endl;
+    }
+}
+
+int Player::nbOfTerToAttToDef(Territory* arrOfDefOrAtt){
+    int counter = 0;
+    for(int i = 0; i < *nbOfTerritories; i++){
+        if(*arrOfDefOrAtt[i].getPosessor() == -1){
+            break;
+        }
+        counter++;
+    }
+    return counter;
+}
+
 // Setters
 void Player::setPlayerID(int playerID){
     *this->playerID = playerID;
@@ -275,6 +314,10 @@ void Player::setCards(Hand cards){
     *this->cards = cards;
 }
 
+void Player::setReinforcementPool(int reinforcementPool){
+    *this->reinforcementPool = reinforcementPool;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
@@ -292,9 +335,13 @@ int Player::getSizeOfHand(){
     return *this->sizeOfHand;
 }
 
+int Player::getReinforcementPool(){
+    return *this->reinforcementPool;
+}
+
 // Stream insertion operator
 std::ostream& operator<<(std::ostream &strm, const Player &p){
-    return strm << "Player ID: " << *p.playerID << endl;
+    return strm << "Player ID: " << *p.playerID;
 }
 
 // Assignment operator
@@ -309,6 +356,7 @@ Player& Player::operator=(const Player& p){
     this->setAdjacencyMatrix(*p.adjacencyMatrix);
     this->setMap(*p.map);
     this->setCards(*p.cards);
+    this->setReinforcementPool(*p.reinforcementPool);
 
     return *this;
 }
