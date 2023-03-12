@@ -1,9 +1,22 @@
 #include "Orders.h"
 #include "Player.h"
 #include "Map.h"
+#include "Cards.h"
 #include <iostream>
 #include <string>
 using namespace std;
+
+/* TO DO 
+- Need to create a create a function that says if players are allowed to attack or not and check in all validate methods (part of negotiate)
+- Check in each validate that is card based wether that card is in the players hand or not
+- In each function that can conquer a territory, if a territory is conquered, give player a card.
+- Figure out math for advance 
+- finish negotiate
+- figure out how to deal with cards
+- neutral player
+- check validation for number of armies
+*/
+
 
 //ORDER Class (PARENT)
 
@@ -50,8 +63,7 @@ string* Order::description(){
     return this->name;
 }
 
-
-
+/*-------------------------------------------------------------------------*/
 //DEPLOY Class
 
 /*Default Constructor*/
@@ -67,6 +79,38 @@ Deploy::Deploy(const Deploy& e){
 /*Destructor*/
 Deploy::~Deploy(){
     delete this;
+}
+
+/* Getters */
+Territory Deploy::getTragetTerr(){
+    return target;
+}
+
+int* Deploy::getArmies(){
+    return armies;
+}
+
+int* Deploy:: getPlayerID(){
+    return playerID;
+}
+
+/* Setters */
+void Deploy::setTargetTerr(Territory *target1){
+    target = *target1;
+}
+
+void Deploy::setArmies(int* armies1){
+    armies = armies1;
+}
+
+void Deploy::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/* Description -> return name of order*/
+string* Deploy::description(){
+    name = new string("Deploy");
+    return this->name;
 }
 
 /*Assignment Operator*/
@@ -97,41 +141,15 @@ void Deploy::execute(){
     while(getReinforcementPool() != 0){
     //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
         if(*validate() == true){
-            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies) ;
+            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
+            setReinforcementPool(getReinforcementPool() - *armies);
         }
+        else
+            cout << "Invalid deploy, terriotry does not belong to player." << endl;
     }
 }
 
-Territory Deploy::getTragetTerr(){
-    return target;
-}
-
-void Deploy::setTargetTerr(Territory *target1){
-    target = *target1;
-}
-
-int* Deploy::getArmies(){
-    return armies;
-}
-
-void Deploy::setArmies(int* armies1){
-    armies = armies1;
-}
-
-int* Deploy:: getPlayerID(){
-    return playerID;
-}
-
-void Deploy::setPlayerID(int* pID){
-    playerID = pID;
-}
-
-string* Deploy::description(){
-    name = new string("Deploy");
-    return this->name;
-}
-
-
+/*-------------------------------------------------------------------------*/
 //ADVANCE Class
 
 /*Default Constructor*/
@@ -149,6 +167,45 @@ Advance::~Advance(){
     delete this;
 }
 
+/* Getters */
+Territory Advance::getSourceTerr(){
+    return source;
+}
+
+Territory Advance::getTargetTerr(){
+    return target;
+}
+
+int* Advance::getArmies(){
+    return armies;
+}
+
+int* Advance:: getPlayerID(){
+    return playerID;
+}
+
+/* Setters */
+void Advance::setSourceTerr(Territory* sourceTerr){
+    source = *sourceTerr;
+}
+
+void Advance::setTargetTerr(Territory *target1){
+    target = *target1;
+}
+
+void Advance::setArmies(int* armies1){
+    armies = armies1;
+}
+
+void Advance::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/*Description: Returns name of order*/
+string* Advance::description(){ 
+    return this->name;
+}
+   
 /*Assignment Operator*/
 Advance& Advance::operator=(const Advance& e){
     this->name = new string(*(e.name));
@@ -160,13 +217,14 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
     return strm << "Advance(" << a.name << ")";
 }
 
+
 /*Validate Order method*/
 bool* Advance::validate(){
     /*If the source territory does not belong to the player that issued the order, the order is invalid.
     * If the target territory is not adjacent to the source territory, the order is invalid.
     */
     bool* ptr = new bool(true);
-    if(sourceTerriotry.getPossesor() != this.getPlayerID()){
+    if(source.getPosessor() !=  getPlayerID()){
           //if (sourceTerritory !- adjacent) return false
            *ptr = false;
     }
@@ -185,16 +243,22 @@ void Advance::execute(){
     * If all the defender's armies are eliminated, the attacker captures the territory. The attacking army units that survived the battle then occupy the conquered territory.
     * A player receives a card at the end of his turn if they successfully conquered at least one territory during their turn.
     */
-    if(*validate() == true)
-    //if(target != ownedTerrority) 
-    cout << "Executing class: Advance\n";
+    if(*validate() == true){
+        if(target.getPosessor() == getPlayerID()){
+            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *source.getNumberOfSoldiers());
+            source.setNumberOfSoldiers(0);
+        }
+        if(target.getPosessor() != getPlayerID()){
+
+            if(target.getNumberOfSoldiers() == 0){
+                target.setPosessor(*getPlayerID());
+                //draw();
+            }
+        }
+    }
 }
 
-/*Description: Returns name of order*/
-string* Advance::description(){
-    return this->name;
-}
-
+/*-------------------------------------------------------------------------*/
 //BOMB Class
 
 /*Default Constructor*/
@@ -210,6 +274,29 @@ Bomb::Bomb(const Bomb& e){
 /*Destructor*/
 Bomb::~Bomb(){
     delete this;
+}
+
+/* Getters */
+Territory Bomb::getTargetTerr(){
+    return target;
+}
+
+int* Bomb:: getPlayerID(){
+    return playerID;
+}
+
+/* Setters */
+void Bomb::setTargetTerr(Territory *target1){
+    target = *target1;
+}
+
+void Bomb::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/*Description: Returns name of order*/
+string* Bomb::description(){
+    return this->name;
 }
 
 /*Assignment Operator*/
@@ -230,7 +317,7 @@ bool* Bomb::validate(){
     * order is invalid.
     */
     bool* ptr = new bool(true);
-    if(targetTerritory.getPossesor() == this.getPlayerID()){
+    if(target.getPosessor() == getPlayerID()){
         //if(terriotry != adjacent(ownedTerrtiories))
         *ptr = false;
     }
@@ -241,16 +328,13 @@ bool* Bomb::validate(){
 
 /*Execute Order method*/
 void Bomb::execute(){
-    if(*validate() == true)
-    //targetTerritories.armies -= targetTerritories.armies/2
-    cout << "Executing class: Bomb\n";
+    if(*validate() == true){
+        target.setNumberOfSoldiers(floor(*target.getNumberOfSoldiers()/2));
+    }
 }
 
-/*Description: Returns name of order*/
-string* Bomb::description(){
-    return this->name;
-}
 
+/*-------------------------------------------------------------------------*/
 //BLOCKADE Class
 
 /*Default Constructor*/
@@ -268,6 +352,29 @@ Blockade::~Blockade(){
     delete this;
 }
 
+/* Getters */
+Territory Blockade::getTargetTerr(){
+    return target;
+}
+
+int* Blockade:: getPlayerID(){
+    return playerID;
+}
+
+/* Setters */
+void Blockade::setTargetTerr(Territory target1){
+    target = target1;
+}
+
+void Blockade::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/*Description: Returns name of order*/
+string* Blockade::description(){
+    return this->name;
+}
+
 /*Assignment Operator*/
 Blockade& Blockade::operator=(const Blockade& e){
     this->name = new string(*(e.name));
@@ -281,34 +388,27 @@ std::ostream& operator<<(std::ostream &strm, const Blockade &a){
 
 /*Validate Order method*/
 bool* Blockade::validate(){
+    bool* ptr = new bool(true);
     //If the target territory belongs to an enemy player, the order is declared invalid.
-    /* if(targetTerriotry != ownedTerritory) return false;
-    */
-    cout << "Validating class: Blockade\n";
-     bool* ptr = new bool(true);
+    if(target.getPosessor() != getPlayerID()){
+        *ptr = false;
+    }
     return ptr;
 }
 
 /*Execute Order method*/
 void Blockade::execute(){
-    if(*validate() == true)
+    if(*validate() == true){
+        target.setNumberOfSoldiers(*target.getNumberOfSoldiers()*2);
+        target.setPosessor(-1); //-1 will be the neutral player
+    }
     /*If the target territory belongs to the player issuing the order, the number of armies on the territory is
     * doubled and the ownership of the territory is transferred to the Neutral player, which must be created if it does not already exist.
-    * 
-    * targetTerritories.armies *=2;
-    * if(!neutralPlayer){
-    *  neutralPLayer();
-    *  neutralPlayer.add(targetTerritory)
-    * }
     */
-    cout << "Executing class: Blockade\n";
 }
 
-/*Description: Returns name of order*/
-string* Blockade::description(){
-    return this->name;
-}
 
+/*-------------------------------------------------------------------------*/
 //AIRLIFT Class
 
 /*Default Constructor*/
@@ -326,6 +426,46 @@ Airlift::~Airlift(){
     delete this;
 }
 
+/* Getters */
+Territory Airlift::getSourceTerr(){
+    return source;
+}
+
+Territory Airlift::getTargetTerr(){
+    return target;
+}
+
+int* Airlift::getArmies(){
+    return armies;
+}
+
+
+void Airlift::setSourceTerr(Territory* sourceTerr){
+    source = *sourceTerr;
+}
+
+int* Airlift:: getPlayerID(){
+    return playerID;
+}
+
+/* Setters */ 
+void Airlift::setTargetTerr(Territory *target1){
+    target = *target1;
+}
+
+void Airlift::setArmies(int* armies1){
+    armies = armies1;
+}
+
+void Airlift::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/*Description: Returns name of order*/
+string* Airlift::description(){
+    return this->name;
+}
+
 /*Assignment Operator*/
 Airlift& Airlift::operator=(const Airlift& e){
     this->name = new string(*(e.name));
@@ -339,28 +479,24 @@ std::ostream& operator<<(std::ostream &strm, const Airlift &a){
 
 /*Validate Order method*/
 bool* Airlift::validate(){
+    bool* ptr = new bool(true);
     //If the source or target does not belong to the player that issued the order, the order is invalid.
-    //if(sourceTerriotry != ownedTerriotry || tagerTerritory!= ownedTerritory) return false
-    cout << "Validating class: Airlift\n";
-     bool* ptr = new bool(true);
+    if(source.getPosessor() != getPlayerID() || target.getPosessor() != getPlayerID()){
+        *ptr = false;
+    }
     return ptr;
 }
 
 /*Execute Order method*/
 void Airlift::execute(){
     //the selected number of armies is moved from the source to the target territory.
-    if(*validate() == true)
-    //sourceTerriotry -= numberArmies
-    //targetTerriotry += numberArmies
-    cout << "Executing class: Airlift\n";
+    if(*validate() == true){
+        target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *getArmies());
+        source.setNumberOfSoldiers(*source.getNumberOfSoldiers() - *getArmies());
+    }
 }
 
-/*Description: Returns name of order*/
-string* Airlift::description(){
-    return this->name;
-}
-
-
+/*-------------------------------------------------------------------------*/
 //NEGOTIATE Class
 
 /*Default Constructor*/
@@ -378,6 +514,29 @@ Negotiate::~Negotiate(){
     delete this;
 }
 
+/* Getters */
+Territory Negotiate::getTargetTerr(){
+    return target;
+}
+
+int* Negotiate::getPlayerID(){
+    return playerID;
+}
+
+/*Setters*/
+void Negotiate::setTargetTerr(Territory target1){
+    target = target1;
+}
+
+void Negotiate::setPlayerID(int* pID){
+    playerID = pID;
+}
+
+/*Description: Returns name of order*/
+string* Negotiate::description(){
+    return this->name;
+}
+
 /*Assignment Operator*/
 Negotiate& Negotiate::operator=(const Negotiate& e){
     this->name = new string(*(e.name));
@@ -391,10 +550,12 @@ std::ostream& operator<<(std::ostream &strm, const Negotiate &a){
 
 /*Validate Order method*/
 bool* Negotiate::validate(){
+    bool* ptr = new bool(true);
     //If the target is the player issuing the order, then the order is invalid.
     //if(targetTerritory == ownedTerriotry) return false
-    cout << "Validating class: Negotiate\n";
-    bool* ptr = new bool(true);
+    if(target.getPosessor() != getPlayerID()){
+        *ptr = false;
+    }
     return ptr;
 }
 
@@ -402,17 +563,13 @@ bool* Negotiate::validate(){
 void Negotiate::execute(){
     /*If the target is an enemy player, then the effect is that any attack that may be declared between territories
     of the player issuing the negotiate order and the target player will result in an invalid order.
-    
+
+
+        Need to create a create a function that says if players are allowed to attack or not and check in all validate methods
     */
-    cout << "Executing class: Negotiate\n";
 }
 
-/*Description: Returns name of order*/
-string* Negotiate::description(){
-    return this->name;
-}
-
-
+/*-------------------------------------------------------------------------*/
 //OrdersList Class
 
 /*Default Constructor*/
