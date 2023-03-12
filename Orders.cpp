@@ -570,9 +570,13 @@ void Negotiate::execute(){
     of the player issuing the negotiate order and the target player will result in an invalid order.
         Need to create a create a function that says if players are allowed to attack or not and check in all validate methods
     */
-   setInvalidAttacker(target.getPosessor());
-    
+   //Add a prop to player (call is something like negotatiatedWith), where the value is the ID of the player with who the attaking player has
+   //negotiated. Each time a plyer attacks (any player), check if the player is not attacking a possesor with who they negotiated
+   //Also, at the end of the round, make a forloop to erase all nogotatiateWith props for the players (set them to -1 to indicate that
+   //the players have no one with who they negotiated).
+   setInvalidAttacker(target.getPosessor());  
 
+ 
 }
 
 /*-------------------------------------------------------------------------*/

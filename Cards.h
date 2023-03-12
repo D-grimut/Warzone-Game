@@ -4,6 +4,7 @@
 using namespace std;
 #include "Orders.h"
 
+class OrdersList;
 
 //all card types
 enum class Type {

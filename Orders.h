@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <math.h>  
 #include "Map.h"
 #include "Player.h"
 using namespace std;

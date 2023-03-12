@@ -87,13 +87,10 @@ bool Map::isAdjacent(Territory terr1, Territory terr2){
                     return true;
                 }
             }
-        }
-        else
-            return false;
+        }                   
     }
+    return false;
 }
-
-
 
 //Adds edge between two nodes
 void Map::addEdge(int x, int y, Territory* tx, Territory* ty){  
