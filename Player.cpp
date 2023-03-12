@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Cards.h"
+#include "Orders.h"
 using namespace std;
 
 // Constructor of Player to initialize values

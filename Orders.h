@@ -5,6 +5,11 @@
 #include "Player.h"
 using namespace std;
 
+static int* attackInvalid = 0;
+int* getInvalidAttacker();
+void setInvalidAttacker(int* targetId);
+
+
 //Order class (PARENT)
 class Order {
     public:
@@ -167,11 +172,14 @@ class Negotiate : public Order {
         //Getters
             int* getPlayerID();
             Territory getTargetTerr();
+         
         //Setters
             void setPlayerID(int* playerId);
             void setTargetTerr(Territory target);  
+          
     private:
         Territory target; //territory to negotiate with
+        
         int* playerID; //player id issuing order
         friend std::ostream& operator<<(std::ostream &strm, const Negotiate &a);
         string* name; //used for description

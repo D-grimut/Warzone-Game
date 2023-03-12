@@ -16,7 +16,9 @@ using namespace std;
 - neutral player
 - check validation for number of armies
 */
-
+MapLoader *ml = new MapLoader("//Users//rhiannondoesburg//Documents//GitHub//Warzone-Game//europe.map");
+Map *map = ml->getMap();
+Territory* territories = map->getCountries();
 
 //ORDER Class (PARENT)
 
@@ -138,15 +140,15 @@ bool* Deploy::validate(){
 
 /*Execute Order method*/
 void Deploy::execute(){
-    while(getReinforcementPool() != 0){
-    //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
-        if(*validate() == true){
-            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
-            setReinforcementPool(getReinforcementPool() - *armies);
-        }
-        else
-            cout << "Invalid deploy, terriotry does not belong to player." << endl;
-    }
+    // while(getReinforcementPool() != 0){
+    // //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
+    //     if(*validate() == true){
+    //         target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
+    //         setReinforcementPool(getReinforcementPool() - *armies);
+    //     }
+    //     else
+    //         cout << "Invalid deploy, terriotry does not belong to player." << endl;
+    // }
 }
 
 /*-------------------------------------------------------------------------*/
@@ -228,6 +230,8 @@ bool* Advance::validate(){
           //if (sourceTerritory !- adjacent) return false
            *ptr = false;
     }
+    else if(!(map->isAdjacent(source, target)))
+        *ptr = false;
     else
         *ptr = true;
    
@@ -253,6 +257,7 @@ void Advance::execute(){
             if(target.getNumberOfSoldiers() == 0){
                 target.setPosessor(*getPlayerID());
                 //draw();
+                //setDeck()
             }
         }
     }
@@ -563,10 +568,11 @@ bool* Negotiate::validate(){
 void Negotiate::execute(){
     /*If the target is an enemy player, then the effect is that any attack that may be declared between territories
     of the player issuing the negotiate order and the target player will result in an invalid order.
-
-
         Need to create a create a function that says if players are allowed to attack or not and check in all validate methods
     */
+   setInvalidAttacker(target.getPosessor());
+    
+
 }
 
 /*-------------------------------------------------------------------------*/

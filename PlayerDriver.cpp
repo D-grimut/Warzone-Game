@@ -52,32 +52,33 @@ int main(){
     cout << endl;
 
     // Creates order
-    p1->issueOrder();
+    //p1->issueOrder();
 
-    cout << endl;
+    OrdersList o1 = p1->getOrdersList();
+    o1.execute();
 
-    // ToDefend()
-    Territory* toDef = p1->toDefend();
+    // // ToDefend()
+    // Territory* toDef = p1->toDefend();
 
-    for(int i = 0; i < nbTerritories; i++){
-        if(*toDef[i].getPosessor() == -1){
-            break;
-        }
-        cout << toDef[i] << endl;
-    }
+    // for(int i = 0; i < nbTerritories; i++){
+    //     if(*toDef[i].getPosessor() == -1){
+    //         break;
+    //     }
+    //     cout << toDef[i] << endl;
+    // }
 
-    // ToAttack()
-    Territory* toAtt = p1->toAttack();
+    // // ToAttack()
+    // Territory* toAtt = p1->toAttack();
 
-    for(int i = 0; i < nbTerritories; i++){
-        if(*toAtt[i].getPosessor() == -1){
-            break;
-        }
-        cout << toAtt[i] << endl;
-    }
+    // for(int i = 0; i < nbTerritories; i++){
+    //     if(*toAtt[i].getPosessor() == -1){
+    //         break;
+    //     }
+    //     cout << toAtt[i] << endl;
+    // }
 
-    // Print out hands of players
-    p1->printCards();
+    // // Print out hands of players
+    // p1->printCards();
 
     return 0;
 }
