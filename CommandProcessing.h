@@ -1,12 +1,13 @@
 #pragma once
 #include "GameEngine.h"
+#include "LoggingObserver.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <functional>
 using namespace std;
 
-class Command
+class Command: public ILoggable, Subject
 {
 private:
     string *commandType;
@@ -23,6 +24,8 @@ public:
 
     void saveEffect(string);
     string getEffect();
+
+    string stringToLog();
 
     // TODO AT END
     Command &operator=(const Command &);
@@ -49,7 +52,7 @@ public:
     Command *getAtIndex(int);
 };
 
-class CommandProcessor
+class CommandProcessor: public ILoggable, Subject
 {
 private:
     CommandList *commandList;
@@ -62,6 +65,7 @@ public:
     ~CommandProcessor();
 
     string getCommand();
+    string stringToLog();
     void toString();
     void validate(string, string, string, bool, function<bool(string)> func);
     bool validate(Command &command, int state, string effect);

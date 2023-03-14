@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
+#include "LoggingObserver.h"
 #include "CommandProcessing.h"
 
 class CommandProcessor;
 
-class GameEngine
+class GameEngine: public ILoggable, Subject
 {
 public:
     GameEngine();                       // default constructor
@@ -15,6 +16,8 @@ public:
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
 
+    string stringToLog();
+    
     CommandProcessor *cp;
 
 private:
