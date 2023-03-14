@@ -6,10 +6,7 @@
 #include "Player.h"
 using namespace std;
 
-static int* attackInvalid = 0;
-int* getInvalidAttacker();
-void setInvalidAttacker(int* targetId);
-
+//Player neutral = new Player(-1,)
 
 //Order class (PARENT)
 class Order {
@@ -95,11 +92,14 @@ class Bomb : public Order {
         //Getters
             Territory getTargetTerr();
             int* getPlayerID();
+            Territory getSourceTerr();
         //Setters
-            void setTargetTerr(Territory *target);
+            void setTargetTerr(Territory target);
             void setPlayerID(int* playerId);
+            void setSourceTerr(Territory source);
     private:
         Territory target; //target territory to bomb
+        Territory source;
         int* playerID; //player id issuing the order
         string* name; //used for description
         friend std::ostream& operator<<(std::ostream &strm, const Bomb &a);

@@ -6,16 +6,6 @@
 #include <string>
 using namespace std;
 
-/* TO DO 
-- Need to create a create a function that says if players are allowed to attack or not and check in all validate methods (part of negotiate)
-- Check in each validate that is card based wether that card is in the players hand or not
-- In each function that can conquer a territory, if a territory is conquered, give player a card.
-- Figure out math for advance 
-- finish negotiate
-- figure out how to deal with cards
-- neutral player
-- check validation for number of armies
-*/
 MapLoader *ml = new MapLoader("//Users//rhiannondoesburg//Documents//GitHub//Warzone-Game//europe.map");
 Map *map = ml->getMap();
 Territory* territories = map->getCountries();
@@ -227,7 +217,6 @@ bool* Advance::validate(){
     */
     bool* ptr = new bool(true);
     if(source.getPosessor() !=  getPlayerID()){
-          //if (sourceTerritory !- adjacent) return false
            *ptr = false;
     }
     else if(!(map->isAdjacent(source, target)))
@@ -249,15 +238,42 @@ void Advance::execute(){
     */
     if(*validate() == true){
         if(target.getPosessor() == getPlayerID()){
+            
             target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *source.getNumberOfSoldiers());
             source.setNumberOfSoldiers(0);
         }
         if(target.getPosessor() != getPlayerID()){
+            //if(PlayerId.getNegotiateWith() != target.getPossesor())
+            /*while(target.armies != 0 && source.armies != 0)
+            def-kill = randnum
+            att-kill = randnum
+            if def-kll<70
+             source.armies --
+            if att-kill<60
+             target.armies --
+            */
+           int defendKill = 0;
+           int attackKill = 0;
 
+           while(target.getNumberOfSoldiers() != 0 && source.getNumberOfSoldiers() != 0){
+            defendKill = rand() % 100;
+            attackKill = rand() % 100;
+            if(defendKill < 70)
+                source.setNumberOfSoldiers(*source.getNumberOfSoldiers() - 1);
+            if(attackKill < 60)
+                target.setNumberOfSoldiers(*target.getNumberOfSoldiers() - 1);
+           }
             if(target.getNumberOfSoldiers() == 0){
                 target.setPosessor(*getPlayerID());
+                target.setNumberOfSoldiers(*source.getNumberOfSoldiers());
+                source.setNumberOfSoldiers(0);
                 //draw();
                 //setDeck()
+            }
+            else if(source.getNumberOfSoldiers() == 0){
+                source.setPosessor(*target.getPosessor());
+                //draw();
+                //setDeck();
             }
         }
     }
@@ -286,13 +302,21 @@ Territory Bomb::getTargetTerr(){
     return target;
 }
 
+Territory Bomb::getSourceTerr(){
+    return source;
+}
+
 int* Bomb:: getPlayerID(){
     return playerID;
 }
 
 /* Setters */
-void Bomb::setTargetTerr(Territory *target1){
-    target = *target1;
+void Bomb::setTargetTerr(Territory target1){
+    target = target1;
+}
+
+void Bomb::setSourceTerr(Territory source){
+    source = source;
 }
 
 void Bomb::setPlayerID(int* pID){
@@ -317,15 +341,12 @@ std::ostream& operator<<(std::ostream &strm, const Bomb &a){
 
 /*Validate Order method*/
 bool* Bomb::validate(){
-    /*If the target belongs to the player that issued the order, the order is invalid.
-    * If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the
-    * order is invalid.
-    */
     bool* ptr = new bool(true);
-    if(target.getPosessor() == getPlayerID()){
-        //if(terriotry != adjacent(ownedTerrtiories))
+    if(getTargetTerr().getPosessor() == getPlayerID()){
         *ptr = false;
     }
+    else if(!(map->isAdjacent(source, target)))
+        *ptr = false;
     else
         *ptr = true;
     return ptr;
@@ -394,7 +415,6 @@ std::ostream& operator<<(std::ostream &strm, const Blockade &a){
 /*Validate Order method*/
 bool* Blockade::validate(){
     bool* ptr = new bool(true);
-    //If the target territory belongs to an enemy player, the order is declared invalid.
     if(target.getPosessor() != getPlayerID()){
         *ptr = false;
     }
@@ -407,9 +427,6 @@ void Blockade::execute(){
         target.setNumberOfSoldiers(*target.getNumberOfSoldiers()*2);
         target.setPosessor(-1); //-1 will be the neutral player
     }
-    /*If the target territory belongs to the player issuing the order, the number of armies on the territory is
-    * doubled and the ownership of the territory is transferred to the Neutral player, which must be created if it does not already exist.
-    */
 }
 
 
@@ -557,7 +574,6 @@ std::ostream& operator<<(std::ostream &strm, const Negotiate &a){
 bool* Negotiate::validate(){
     bool* ptr = new bool(true);
     //If the target is the player issuing the order, then the order is invalid.
-    //if(targetTerritory == ownedTerriotry) return false
     if(target.getPosessor() != getPlayerID()){
         *ptr = false;
     }
@@ -574,7 +590,12 @@ void Negotiate::execute(){
    //negotiated. Each time a plyer attacks (any player), check if the player is not attacking a possesor with who they negotiated
    //Also, at the end of the round, make a forloop to erase all nogotatiateWith props for the players (set them to -1 to indicate that
    //the players have no one with who they negotiated).
-   setInvalidAttacker(target.getPosessor());  
+ 
+    if(*validate() == true){
+        //getPlayerId.setInvalidAttack(target.getPoseesor());
+        //target.getPoseesor().setInvalidAttack(PlayerId)
+
+    }
 
  
 }
