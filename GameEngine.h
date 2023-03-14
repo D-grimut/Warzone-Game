@@ -2,6 +2,8 @@
 #include <iostream>
 #include "CommandProcessing.h"
 
+class CommandProcessor;
+
 class GameEngine
 {
 public:
@@ -13,7 +15,7 @@ public:
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
 
-    CommandProcessor* cp;
+    CommandProcessor *cp;
 
 private:
     int *current_state; // current state : int or string?
