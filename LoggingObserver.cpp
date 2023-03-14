@@ -18,13 +18,19 @@ void Subject::detach(){
     this->obs = NULL;
 }
 
-void Subject::notify(ILoggable* il){
+void Subject::notify(ILoggable* il){             
     this->obs->update(il);
 }
 
 //--- Observer --- TODO
+void Observer::update(ILoggable* il){    
+    cout << il->stringToLog() << endl;
+}
 
 //---LogObserver class ---
-void LogObserver::update(ILoggable* il){
-    //TODO - Open file, append to end, print string gotten from il
+void LogObserver::update(ILoggable* il){ 
+    ofstream gamelog;   
+    gamelog.open("gamelog.txt", fstream::app);
+    gamelog << il->stringToLog() + "\n";
+    gamelog.close();    
 }

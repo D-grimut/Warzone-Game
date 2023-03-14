@@ -5,7 +5,7 @@
 
 class CommandProcessor;
 
-class GameEngine: public ILoggable, Subject
+class GameEngine: public ILoggable, public Subject
 {
 public:
     GameEngine();                       // default constructor

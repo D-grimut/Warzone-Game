@@ -51,6 +51,11 @@ string Order::getName(){
     return *this->name;
 }
 
+string Order::stringToLog(){
+    string log = "Order Executed: " + *this->description();
+    return log;
+}
+
 //DEPLOY Class
 
 /*Default Constructor*/
@@ -89,6 +94,7 @@ bool* Deploy::validate(){
 /*Execute Order method*/
 void Deploy::execute(){
     cout << "Executing class: Deploy\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -135,6 +141,7 @@ bool* Advance::validate(){
 /*Execute Order method*/
 void Advance::execute(){
     cout << "Executing class: Advance\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -181,6 +188,7 @@ bool* Bomb::validate(){
 /*Execute Order method*/
 void Bomb::execute(){
     cout << "Executing class: Bomb\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -227,6 +235,7 @@ bool* Blockade::validate(){
 /*Execute Order method*/
 void Blockade::execute(){
     cout << "Executing class: Blockade\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -273,6 +282,7 @@ bool* Airlift::validate(){
 /*Execute Order method*/
 void Airlift::execute(){
     cout << "Executing class: Airlift\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -319,6 +329,7 @@ bool* Negotiate::validate(){
 /*Execute Order method*/
 void Negotiate::execute(){
     cout << "Executing class: Negotiate\n";
+    notify(this);
 }
 
 /*Description: Returns name of order*/
@@ -334,18 +345,22 @@ OrdersList::OrdersList(){
     int* size = new int(5);
     setSize(size);
     orders = new Order* [*size];
+
+    this->end = new int(-1);
 }
 
 /*Paramaterized Constructor*/
 OrdersList::OrdersList(int* size){
     setSize(size);
     orders = new Order* [*size];
+    this->end = new int(-1);
 }
 
 /*Copy Constructor*/
 OrdersList::OrdersList(const OrdersList& e){
     this->size = new int(*(e.size));
     this->orders = new Order*();
+    this->end = new int(*e.end);
 }
 
 /*Destructor*/
@@ -371,13 +386,18 @@ std::ostream& operator<<(std::ostream &strm, const OrdersList &a){
 * Adds order at index [position]
 */
 void OrdersList::addOrder(Order* newOrder, int position){
+    
     if(position > *getSize()){
         int* oldSize = getSize();
         resize();
         orders[*oldSize] = newOrder;        
+    }   
+    else{        
+        orders[position] = newOrder;       
     }
-    else
-        orders[position] = newOrder;
+        
+    *this->end = *this->end + 1;    
+    notify(this);
 }
 
 /*Creates a new array of size (size+1), then copied all elements from the old array
@@ -429,6 +449,7 @@ void OrdersList::removeOrder(int* position){
     }
     int* newSize = new int(*getSize() - 1);
     setSize(newSize);
+     *this->end = *this->end - 1;
 }
 
 /*Iterates through the array, printing description (name) of each order in the array*/
@@ -454,14 +475,19 @@ void OrdersList::setSize(int* size){
 
 /*Iterates through array and validates each order object*/
 void OrdersList::validate(){
-    for(int i = 0; i < *getSize(); i++){
+    for(int i = 0; i < *this->end; i++){
         orders[i]->validate();
     }
 }
 
 /*Iterates through array and executes each order object*/
 void OrdersList::execute(){
-    for(int i = 0; i < *getSize(); i++){
+    for(int i = 0; i < *this->end; i++){
         orders[i]->execute();
     }
+}
+
+string OrdersList::stringToLog(){    
+    string log = "Order Issued: " + *this->orders[*this->end]->description();
+    return log;
 }

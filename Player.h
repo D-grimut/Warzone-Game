@@ -8,6 +8,9 @@
 #include "Cards.h"
 using namespace std;
 
+class OrderList;
+class Hand;
+
 class Player{
     private:
         int* playerID;                  // The player's ID

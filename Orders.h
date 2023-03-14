@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "LoggingObserver.h"
 using namespace std;
 
 //Order class (PARENT)
-class Order {
+class Order: public ILoggable, public Subject{
     public:
     /*Default Constructor*/
         Order();
@@ -21,6 +22,7 @@ class Order {
     /*Description (shows order name)*/
         virtual string* description();
         string getName();
+    string stringToLog();
     private:
     /*Name of order*/
         string* name;
@@ -173,7 +175,7 @@ class Negotiate : public Order {
 };
 
 //OrdersList class (creates the vector to store orders)
-class OrdersList {
+class OrdersList: public ILoggable, public Subject{
     public:
     /*Default Constructor*/
         OrdersList();
@@ -203,6 +205,11 @@ class OrdersList {
         void execute();
     /*Resizes the array*/
         void resize();
+
+    /*end of the array*/
+        int* end;
+
+    string stringToLog();
     private:
     /*Stream insertion operator*/
         friend std::ostream& operator<<(std::ostream &strm, const OrdersList &a);

@@ -29,6 +29,13 @@ GameEngine::GameEngine(const GameEngine &copy)
     cp = copy.cp;
 }
 
+string GameEngine::stringToLog(){
+    string log = "Game Engine new state: ";
+    string state[] = {"Start State", "Map Load", "Map Validate", "Players Added", "Assign Reinforcement", "Issue Orders", "Execute Orders", "Win", "Exit"};
+    log = log + state[*getState()];    
+    return log;
+}
+
 // Constructor for start state
 StartState::StartState(GameEngine *engine)
 {
@@ -285,8 +292,9 @@ int *GameEngine::getState()
 
 // Function that will change the state of the game
 void GameEngine::TransitionTo(int state)
-{
-    *current_state = state;
+{    
+    *current_state = state;    
+    notify(this);
 }
 
 //  shows valid game engine commands for each state

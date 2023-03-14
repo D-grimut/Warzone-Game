@@ -22,6 +22,11 @@ Command::~Command()
     this->effect = NULL;
 }
 
+string Command::stringToLog(){
+    string log = "Command's Effect: " + this->getEffect();
+    return log;
+}
+
 void Command::setCommandType(string commandType)
 {
     *this->commandType = commandType;
@@ -35,6 +40,7 @@ string Command::getCommandType()
 void Command::saveEffect(string effect)
 {
     *this->effect = effect;
+    notify(this);
 }
 
 string Command::getEffect()
@@ -42,7 +48,8 @@ string Command::getEffect()
     return *this->effect;
 }
 
-/*---------Command class---------*/
+
+/*---------CommandList class---------*/
 CommandList::CommandList()
 {
     this->size = new int(50);
@@ -76,7 +83,7 @@ void CommandList::storeCommand(Command *newCommand)
     {
         resize();
     }
-    // cout << *this->end << endl;
+    
     this->commands[*this->end] = newCommand;
     *this->end = *this->end + 1;
 }
@@ -106,7 +113,7 @@ void CommandList::resize()
     this->commands = newList;
 }
 
-Command *CommandList::getAtIndex(int index)
+Command* CommandList::getAtIndex(int index)
 {
     if (index < 0 || index >= *this->size)
     {
@@ -146,7 +153,8 @@ string CommandProcessor::readCommand()
 void CommandProcessor::saveCommand(string type)
 {
     Command *newCommand = new Command(type);
-    this->commandList->storeCommand(newCommand);
+    this->commandList->storeCommand(newCommand);    
+    notify(this);
 }
 
 string CommandProcessor::getCommand()
@@ -155,6 +163,11 @@ string CommandProcessor::getCommand()
     this->saveCommand(temp);
 
     return temp;
+}
+
+string CommandProcessor::stringToLog(){        
+    string log = "Command: " + this->commandList->getAtIndex(this->commandList->getEnd() - 1)->getCommandType();
+    return log;
 }
 
 // TODO: remove at end

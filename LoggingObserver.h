@@ -1,13 +1,14 @@
 #pragma once
 #include <stdio.h>
 #include <string>
+#include <iostream>
+#include <fstream>
 using namespace std;
+class Observer;
 
 class ILoggable{
 public:
     virtual string stringToLog() = 0;
-protected:
-    virtual ~ILoggable();
 };
 
 class Subject{
@@ -24,9 +25,6 @@ public:
 };
 
 class Observer{
-private:
-    //Subject* sub; //I do not think we need this; the observer gets an ILoggable object anyways
-
 public:
     virtual void update(ILoggable*);
 };

@@ -1,5 +1,4 @@
 #pragma once
-#include "GameEngine.h"
 #include "LoggingObserver.h"
 #include <stdio.h>
 #include <iostream>
@@ -7,7 +6,9 @@
 #include <functional>
 using namespace std;
 
-class Command: public ILoggable, Subject
+class GameEngine;
+
+class Command: public ILoggable, public Subject
 {
 private:
     string *commandType;
@@ -52,7 +53,7 @@ public:
     Command *getAtIndex(int);
 };
 
-class CommandProcessor: public ILoggable, Subject
+class CommandProcessor: public ILoggable, public Subject
 {
 private:
     CommandList *commandList;
