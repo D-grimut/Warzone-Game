@@ -3,24 +3,35 @@
 #include <string>
 using namespace std;
 
-//Order Class (PARENT)
+//ORDER Class (PARENT)
 
+/*Default Constructor*/
 Order::Order(){
-    this->name = new string("0");
-} //default constructor
+    name = new string("0");
+} 
 
-Order::Order(const Order& e){ //copy constructor
+/*Copy Constructor*/
+Order::Order(const Order& e){
     this->name = new string(*(e.name));
 }
-Order& Order::operator=(const Order& e){ //assignmnet operator
+
+/*Destructor*/
+Order::~Order(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Order& Order::operator=(const Order& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Order &a){ //insertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Order &a){
     return strm << "Order(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Order::validate(){
     cout << "Validating class: Order\n";
     bool* ptr = new bool(true);
@@ -31,266 +42,362 @@ void Order::execute(){
     cout << "Executing class: Order\n";
 }
 
+/*Description: Returns name of order*/
 string* Order::description(){
     return this->name;
 }
 
-Order::~Order(){} //destructor
+string Order::getName(){
+    return *this->name;
+}
 
-//Deploy Class
+//DEPLOY Class
 
-Deploy::Deploy(){} //default constructor
+/*Default Constructor*/
+Deploy::Deploy(){
+    name = new string("Deploy");
+} 
 
-Deploy::Deploy(const Deploy& e){ //copy constructor
+/*Copy Constructor*/
+Deploy::Deploy(const Deploy& e){
     this->name = new string(*(e.name));
 }
 
-Deploy& Deploy::operator=(const Deploy& e){ //assignment operator
+/*Destructor*/
+Deploy::~Deploy(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Deploy& Deploy::operator=(const Deploy& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Deploy &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Deploy &a){
     return strm << "Deploy(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Deploy::validate(){
     cout << "Validating class: Deploy\n";
      bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Deploy::execute(){
     cout << "Executing class: Deploy\n";
 }
 
-
+/*Description: Returns name of order*/
 string* Deploy::description(){
-    name = new string("Deploy");
     return this->name;
 }
 
-Deploy::~Deploy(){} //destructor
 
-//Advance Class
+//ADVANCE Class
 
-Advance::Advance(){} //default constructor
+/*Default Constructor*/
+Advance::Advance(){
+    name = new string("Advance");
+}
 
-Advance::Advance(const Advance& e){ //copy constructor
+/*Copy Constructor*/
+Advance::Advance(const Advance& e){
     this->name = new string(*(e.name));
 }
 
-Advance& Advance::operator=(const Advance& e){ //assignment operator
+/*Destructor*/
+Advance::~Advance(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Advance& Advance::operator=(const Advance& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Advance &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Advance &a){
     return strm << "Advance(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Advance::validate(){
     cout << "Validating class: Advance\n";
     bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Advance::execute(){
     cout << "Executing class: Advance\n";
 }
 
+/*Description: Returns name of order*/
 string* Advance::description(){
-    name = new string("Advance");
     return this->name;
 }
 
-Advance::~Advance(){} //destructor
 
-//Bomb Class
+//BOMB Class
 
-Bomb::Bomb(){} //default constructor
+/*Default Constructor*/
+Bomb::Bomb(){
+    name = new string("Bomb");
+}
 
-Bomb::Bomb(const Bomb& e){ //copy constructor
+/*Copy Constructor*/
+Bomb::Bomb(const Bomb& e){
     this->name = new string(*(e.name));
 }
 
-Bomb& Bomb::operator=(const Bomb& e){ //assignmnet operator
+/*Destructor*/
+Bomb::~Bomb(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Bomb& Bomb::operator=(const Bomb& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Bomb &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Bomb &a){
     return strm << "Bomb(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Bomb::validate(){
     cout << "Validating class: Bomb\n";
     bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Bomb::execute(){
     cout << "Executing class: Bomb\n";
 }
 
+/*Description: Returns name of order*/
 string* Bomb::description(){
-    name = new string("Bomb");
     return this->name;
 }
 
-Bomb::~Bomb(){} //destructor
 
-//Blockade Class
+//BLOCKADE Class
 
-Blockade::Blockade(){} //default constructor
+/*Default Constructor*/
+Blockade::Blockade(){
+    name = new string("Blockade");
+}
 
-Blockade::Blockade(const Blockade& e){ //copy constructor
+/*Copy Constructor*/
+Blockade::Blockade(const Blockade& e){
     this->name = new string(*(e.name));
 }
 
-Blockade& Blockade::operator=(const Blockade& e){//assignmnet operator
+/*Destructor*/
+Blockade::~Blockade(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Blockade& Blockade::operator=(const Blockade& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Blockade &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Blockade &a){
     return strm << "Blockade(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Blockade::validate(){
     cout << "Validating class: Blockade\n";
      bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Blockade::execute(){
     cout << "Executing class: Blockade\n";
 }
 
+/*Description: Returns name of order*/
 string* Blockade::description(){
-    name = new string("Blockade");
     return this->name;
 }
 
-Blockade::~Blockade(){} //destructor
 
+//AIRLIFT Class
 
-//Airlift Class
+/*Default Constructor*/
+Airlift::Airlift(){
+    name = new string("Airlift");
+}
 
-Airlift::Airlift(){} //default constructor
-
-Airlift::Airlift(const Airlift& e){ //copy constructor
+/*Copy Constructor*/
+Airlift::Airlift(const Airlift& e){
     this->name = new string(*(e.name));
 }
 
-Airlift& Airlift::operator=(const Airlift& e){//assignmnet operator
+/*Destructor*/
+Airlift::~Airlift(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Airlift& Airlift::operator=(const Airlift& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Airlift &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Airlift &a){
     return strm << "Airlift(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Airlift::validate(){
     cout << "Validating class: Airlift\n";
      bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Airlift::execute(){
     cout << "Executing class: Airlift\n";
 }
 
+/*Description: Returns name of order*/
 string* Airlift::description(){
-    name = new string("Airlift");
     return this->name;
 }
 
-Airlift::~Airlift(){} //destructor
 
-//Negotiate Class
+//NEGOTIATE Class
 
-Negotiate::Negotiate(){} //default constructor
+/*Default Constructor*/
+Negotiate::Negotiate(){
+    name = new string("Negotiate");
+}
 
-Negotiate::Negotiate(const Negotiate& e){ //copy constructor
+/*Copy Constructor*/
+Negotiate::Negotiate(const Negotiate& e){
     this->name = new string(*(e.name));
 }
 
-Negotiate& Negotiate::operator=(const Negotiate& e){ //assignmnet operator
+/*Destructor*/
+Negotiate::~Negotiate(){
+    delete this;
+}
+
+/*Assignment Operator*/
+Negotiate& Negotiate::operator=(const Negotiate& e){
     this->name = new string(*(e.name));
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const Negotiate &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const Negotiate &a){
     return strm << "Negotiate(" << a.name << ")";
 }
 
+/*Validate Order method*/
 bool* Negotiate::validate(){
     cout << "Validating class: Negotiate\n";
     bool* ptr = new bool(true);
     return ptr;
 }
 
+/*Execute Order method*/
 void Negotiate::execute(){
     cout << "Executing class: Negotiate\n";
 }
 
+/*Description: Returns name of order*/
 string* Negotiate::description(){
-    name = new string("Negotiate");
     return this->name;
 }
-
-Negotiate::~Negotiate(){} //destructor
 
 
 //OrdersList Class
 
-OrdersList::OrdersList(){} //default constructor
+/*Default Constructor*/
+OrdersList::OrdersList(){
+    int* size = new int(5);
+    setSize(size);
+    orders = new Order* [*size];
+}
 
+/*Paramaterized Constructor*/
 OrdersList::OrdersList(int* size){
     setSize(size);
     orders = new Order* [*size];
 }
 
-OrdersList::OrdersList(const OrdersList& e){ //copy constructor
+/*Copy Constructor*/
+OrdersList::OrdersList(const OrdersList& e){
     this->size = new int(*(e.size));
     this->orders = new Order*();
 }
 
-OrdersList& OrdersList::operator=(const OrdersList& e){ //assignmnet operator
+/*Destructor*/
+OrdersList::~OrdersList(){
+    delete [] orders;
+    orders = nullptr;
+}
+
+/*Assignment Operator*/
+OrdersList& OrdersList::operator=(const OrdersList& e){
     this->size = new int(*(e.size));
     this->orders = new Order*();
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &strm, const OrdersList &a){ //instertion operator
+/*Stream Insertion Operator*/
+std::ostream& operator<<(std::ostream &strm, const OrdersList &a){
     return strm << "OrdersList(" << a.orders << ")";
 }
 
+/*First checks if the position is out of bounds of the array,
+* Resizes if needed
+* Adds order at index [position]
+*/
 void OrdersList::addOrder(Order* newOrder, int position){
     if(position > *getSize()){
         int* oldSize = getSize();
         resize();
-        orders[*oldSize] = newOrder;
+        orders[*oldSize] = newOrder;        
     }
     else
         orders[position] = newOrder;
 }
 
+/*Creates a new array of size (size+1), then copied all elements from the old array
+* Deletes old array and assigns pointer to new array
+*/
 void OrdersList::resize(){
-    int newSize = *getSize() * 2;
-    Order** newArr = new Order*[newSize];
-    for(int i = 0; i < *getSize(); i++){
+    int* newSize = new int(*getSize() + 1);
+    Order** newArr = new Order*[*newSize];
+    for(int i = 0; i <= *getSize(); i++){
         newArr[i] = orders[i];
     }
-
-    setSize(&newSize);
+    setSize(newSize);
     delete [] orders;
     orders = newArr;
 }
 
-
+/*Checks where position1 and position2 are
+* moves all positions according to comparison
+* moves position1 to position2
+*/
 void OrdersList::moveOrder(int* position1, int* position2){
     if(*position1 > *getSize() || *position2 > *getSize()){
             cout << "Invalid remove, please enter a number less than: " << *getSize() <<endl;
@@ -310,49 +417,51 @@ void OrdersList::moveOrder(int* position1, int* position2){
     }
 }
 
+/*Checks if position is a valid index
+* Moves index over, reduces size
+*/
 void OrdersList::removeOrder(int* position){
-        if(*position > *getSize()){
-            cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
-        }
-        for(int i = *position; i<*getSize(); i++){
-            orders[i] = orders[i+1];
-        }
-        int* newSize = new int(*getSize() - 1);
-        setSize(newSize);
+    if(*position > *getSize()){
+        cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
+    }
+    for(int i = *position; i<*getSize(); i++){
+        orders[i] = orders[i+1];
+    }
+    int* newSize = new int(*getSize() - 1);
+    setSize(newSize);
 }
 
+/*Iterates through the array, printing description (name) of each order in the array*/
 void OrdersList::showList(int x){
     for(int i = 0; i < x; i++){
-        string s = *orders[i]->getName();
+        string s = orders[i]->getName();
         if(s.compare("0") == 1){
             break;
         }
-         cout << *orders[i]->description() << endl;
+        cout << *orders[i]->description() << endl;
     }
 }
 
-string* Order::getName(){
-    return this->name;
-}
-
+/*Returns int* of the size of the array*/
 int* OrdersList::getSize(){
     return this->size;
 }
 
+/*Sets size of the array to an int* */
 void OrdersList::setSize(int* size){
     this->size = size;
 }
 
+/*Iterates through array and validates each order object*/
 void OrdersList::validate(){
     for(int i = 0; i < *getSize(); i++){
         orders[i]->validate();
     }
 }
 
+/*Iterates through array and executes each order object*/
 void OrdersList::execute(){
     for(int i = 0; i < *getSize(); i++){
         orders[i]->execute();
     }
 }
-OrdersList::~OrdersList(){
-} //destructor
