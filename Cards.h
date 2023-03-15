@@ -86,4 +86,3 @@ class Hand
 		string *name;
 		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);	
 };
-
