@@ -296,3 +296,9 @@ void Hand::removeCard(int *position){
 void Hand::setSize(int* size){
     this->size = size;
 }
+
+void Hand::showHand(){
+    for(int i = 0; i < *(getSize()); i++){
+        cout << "Card " << i << ": " << hand[i] << endl;
+    }
+}
