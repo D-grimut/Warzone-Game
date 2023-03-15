@@ -10,6 +10,7 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
+    void startupPhase(int state);
 
 private:
     int *current_state; // current state : int or string?
