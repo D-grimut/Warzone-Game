@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]){
     
     // //Valid map
     cout << "Testing an VALID file: \n";
-    MapLoader* validMap1 = new MapLoader("C:\\Users\\user1\\Desktop\\europe.map");
+    MapLoader* validMap1 = new MapLoader("europe.map");
     cout << "---------------------------------------" << endl;
     
     //Valid map
