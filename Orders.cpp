@@ -204,7 +204,7 @@ void Advance::setPlayerID(int* pID){
     playerID = pID;
 }
 
-void Negotiate::setPlayer(Player* player){
+void Advance::setPlayer(Player* player){
     this->player =  player;
 }
 
@@ -315,7 +315,7 @@ int* Bomb:: getPlayerID(){
     return playerID;
 }
 
-Player* Advance::getPlayer(){
+Player* Bomb::getPlayer(){
     return player;
 }
 
@@ -507,7 +507,7 @@ void Airlift::setPlayerID(int* pID){
     playerID = pID;
 }
 
-void Negotiate::setPlayer(Player* player){
+void Airlift::setPlayer(Player* player){
     this->player =  player;
 }
 

@@ -7,7 +7,7 @@
 using namespace std;
 
 //Player neutral = new Player(-1,)
-
+class Player;
 //Order class (PARENT)
 class Order {
     public:
