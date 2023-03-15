@@ -26,5 +26,6 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 string FileCommandProcessorAdapter::readCommand()
 {
     string command = fileReader->ReadLineFromFile();
+    this->saveCommand(command);
     return command;
 }
