@@ -209,7 +209,6 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
     return strm << "Advance(" << a.name << ")";
 }
 
-
 /*Validate Order method*/
 bool* Advance::validate(){
     /*If the source territory does not belong to the player that issued the order, the order is invalid.
@@ -267,12 +266,10 @@ void Advance::execute(){
                 target.setPosessor(*getPlayerID());
                 target.setNumberOfSoldiers(*source.getNumberOfSoldiers());
                 source.setNumberOfSoldiers(0);
-                //draw();
-                //setDeck()
             }
             else if(source.getNumberOfSoldiers() == 0){
                 source.setPosessor(*target.getPosessor());
-                //draw();
+                
                 //setDeck();
             }
         }
@@ -596,8 +593,6 @@ void Negotiate::execute(){
         //target.getPoseesor().setInvalidAttack(PlayerId)
 
     }
-
- 
 }
 
 /*-------------------------------------------------------------------------*/

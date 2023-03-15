@@ -159,6 +159,9 @@ void Player::issueOrder(){
             this->ol->addOrder(advance, *ordersIndex);
             (*ordersIndex)++;
             ol->showList(*ordersIndex);
+            //if(possesor id == this.id)
+            //add card
+            //draw() then add to hand
             break;
         }
         default:
