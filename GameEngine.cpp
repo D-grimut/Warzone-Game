@@ -1,7 +1,211 @@
 // GameEngine.cpp
 #include "GameEngine.h"
+#include "Map.h"
+#include "Cards.h"
+#include "Orders.h"
 #include "Player.h"
-#include <cmath>
+
+/*
+This section is dedicated to Assignment 2 part 2
+*/
+
+// Runs the startup for the game
+
+/*
+If your reading this I'm probably butchering my explination, sorry about that.
+TODO: Implement/Fix 4b), 4c) and 4d)
+
+
+This function essentially deals with what our p1 driver programs were already doing, this
+leads me to a few questions:
+4.c), does a army count already exist somewhere?
+ */
+void GameEngine::startupPhase(int state)
+{
+    int numOfPlayers = 0; //will be used to keep track of the number of players
+    MapLoader *validMap;
+    Map *map;
+    Territory* territories;
+    Territory*** adjacencyMatrix;
+    int nbTerritories;
+    Player *p1, *p2, *p3, *p4, *p5, *p6;
+    Deck *deckA = new Deck();
+
+    if (state == 0)
+        {
+            //1.Use the MapLoader function to select a map
+            MapLoader *validMap = new MapLoader("europe.map");
+            Map *map = validMap->getMap();
+        }
+        else if (state == 1)
+        {
+            //2.Use validate map to validate the map
+            map->validate(); 
+            //This is tecnically part of 1. but it's placed here since it doesn't make sense to do this before validation
+            Territory* territories = map->getCountries();
+            Territory*** adjacencyMatrix = map->getAdjacencyMatrix();
+            int nbTerritories = *validMap->getMap()->getNbTerritories();
+            
+        }
+        else if (state == 2)
+        {
+            //3. Adds player
+            if(numOfPlayers == 0){
+                Player *p1 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                numOfPlayers++;
+            }else if (numOfPlayers == 1){
+                Player *p2 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                numOfPlayers++;
+            }else if (numOfPlayers == 2){
+                Player *p3 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                numOfPlayers++;
+            }else if (numOfPlayers == 3){
+                Player *p4 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                numOfPlayers++;
+            }else if (numOfPlayers == 4){
+                Player *p5 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+            numOfPlayers++;
+            }else if (numOfPlayers == 5){
+                Player *p6 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                numOfPlayers++;
+            }
+        }
+        else if (state == 3)
+        {
+            //4.a) fairly distribute all the territories to the players
+            if(numOfPlayers == 2){
+                // Set p1 territories
+                for(int i = 0; i < nbTerritories/2; i++){
+                    territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = nbTerritories/2; i < nbTerritories; i++){
+                    territories[i].setPosessor(p2->getPlayerID());
+                }
+            }else if (numOfPlayers == 3){
+                // Set p1 territories
+                for(int i = 0; i < nbTerritories/3; i++){
+                    territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = nbTerritories/3; i < nbTerritories*(2/3); i++){
+                    territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = nbTerritories*(2/3); i < nbTerritories; i++){
+                    territories[i].setPosessor(p3->getPlayerID());
+                }
+            }else if (numOfPlayers == 4){
+                // Set p1 territories
+                for(int i = 0; i < nbTerritories/4; i++){
+                    territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = nbTerritories/4; i < nbTerritories/2; i++){
+                    territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = nbTerritories/2; i < nbTerritories*(3/4); i++){
+                    territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = nbTerritories*(3/4); i < nbTerritories; i++){
+                    territories[i].setPosessor(p4->getPlayerID());
+                }
+            }else if (numOfPlayers == 5){
+                // Set p1 territories
+                for(int i = 0; i < nbTerritories/5; i++){
+                    territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = nbTerritories/5; i < nbTerritories*(2/5); i++){
+                    territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = nbTerritories*(2/5); i < nbTerritories*(3/5); i++){
+                    territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = nbTerritories*(3/5); i < nbTerritories*(4/5); i++){
+                    territories[i].setPosessor(p4->getPlayerID());
+                }
+                // Set p5 territories
+                for(int i = nbTerritories*(4/5); i < nbTerritories; i++){
+                    territories[i].setPosessor(p5->getPlayerID());
+                }
+            }else if (numOfPlayers == 6){
+                // Set p1 territories
+                for(int i = 0; i < nbTerritories/6; i++){
+                    territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = nbTerritories/6; i < nbTerritories*(1/3); i++){
+                    territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = nbTerritories*(1/3); i < nbTerritories/2; i++){
+                    territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = nbTerritories/2; i < nbTerritories*(2/3); i++){
+                    territories[i].setPosessor(p4->getPlayerID());
+                }
+                // Set p5 territories
+                for(int i = nbTerritories*(2/3); i < nbTerritories*(5/6); i++){
+                    territories[i].setPosessor(p5->getPlayerID());
+                }
+                // Set p6 territories
+                for(int i = nbTerritories*(5/6); i < nbTerritories; i++){
+                    territories[i].setPosessor(p6->getPlayerID());
+                }
+            }
+            
+
+        }else if (state == 4){
+            //b) determine randomly the order of play of the players in the game
+            int min = 1, max = numOfPlayers;
+
+            //gives the player their turn order
+            for(int i = min; i <= numOfPlayers; i++)
+            {
+                //write this out >:)
+            } 
+
+            //c) give 50 initial armies to the players, which are placed in their respective reinforcement pool
+            //this one is really easy to implement, I'm just not if the reinforcement pool exists
+            //
+
+            //loop through numOfPlayers and assign them 50 troops
+
+            //d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+            //fill the deck with cards to draw from
+            for (int i = (0); i < 10; i++){
+                if (i < 2){
+                    deckA->setDeck(i, Type::airlift);
+                } else if (i < 4) {
+                    deckA->setDeck(i, Type::blockade);
+                } else if (i < 6) {
+                    deckA->setDeck(i, Type::bomb);
+                } else if (i < 8) {
+                    deckA->setDeck(i, Type::diplomacy);
+                } else {
+                    deckA->setDeck(i, Type::reinforcement);
+                }
+            }
+            //draws cards for the hand
+            for (int i = 0; i < 2; i++)
+               {
+                //struggling to figure out how to properly call the players hand
+                Card abc = deckA->draw();
+                //p1->setCards(); //doesn't work due to setCards() being a of class Hand, this is a easy fix by calling a specific card in their hand
+                //handA->hand[i] = deckA->draw();
+                }
+
+            //e) switch the game to the play phase //explain this better!
+            //This happens automatically, the reason is that it's already implemented into the game engine system
+        }
+
+}
 
 /*
 This section is for all the constructors used for each class
@@ -363,6 +567,7 @@ void StartState::StartInput(const std::string &input)
 {
     if (input == "loadmap")
     {
+        engine->startupPhase(0);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(1);
@@ -384,6 +589,7 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
 {
     if (input == "validatemap")
     {
+        engine->startupPhase(1);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(2);
@@ -415,6 +621,7 @@ void MapValidatedState::ValidateInput(const std::string &input)
 {
     if (input == "addplayer")
     {
+        engine->startupPhase(2);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(3);
@@ -436,12 +643,14 @@ void PlayersAddedState::PlayersAddedInput(const std::string &input)
 {
     if (input == "assigncountries")
     {
+        engine->startupPhase(3);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(4);
     }
     else if (input == "addplayer")
     {
+        engine->startupPhase(2);
         std::cout << "\nPlayer added\n"
                   << std::endl;
         engine->Commands();
