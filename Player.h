@@ -26,7 +26,6 @@ class Player{
         Hand* cards;                    // List Of Cards
         int* reinforcementPool;
         int* negotiateId;
-
         friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
     public:
@@ -58,6 +57,7 @@ class Player{
         void setMap(Map map);
         void setCards(Hand cards);
         void setReinforcementPool(int reinforcementPool);
+        void setNegotiateID(int negotiateId);
         
         // Getters
         int getPlayerID();
@@ -65,6 +65,7 @@ class Player{
         Hand getCards();
         int getSizeOfHand();
         int getReinforcementPool();
+        int getNegotiateID();
 
         Player& operator=(const Player& p);
 };

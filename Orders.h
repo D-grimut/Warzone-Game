@@ -38,15 +38,18 @@ class Deploy : public Order {
             Territory getTragetTerr();
             int* getArmies();
             int* getPlayerID();
+            Player* getPlayer();
         //Setters
             void setPlayerID(int* playerId);
             void setArmies(int* armies);
             void setTargetTerr(Territory* target); 
+            void setPlayer(Player* player);
     private:
         string* name; //used for description
         Territory target; //Territory to deploy armies to
         int* armies; //number of armies to deploy
         int* playerID; //player id of the player issueing the order
+        Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Deploy &a);
 };
 
@@ -65,17 +68,20 @@ class Advance : public Order {
             Territory getSourceTerr();
             int* getPlayerID();
             int* getArmies();
+            Player* getPlayer();
         //Setters
             void setTargetTerr(Territory* targTerr);
             void setSourceTerr(Territory* sourceTerr);
             void setArmies(int* numArmies);
             void setPlayerID(int* pID);
+            void setPlayer(Player* player);
     private:
         Territory source; //source terriotry
         Territory target; //terriotry to advance to
         int* playerID; //player id of player issuing order
         int* armies; //number of armies to advance
         string* name; //used for description
+        Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Advance &a);
 };
 
@@ -93,14 +99,17 @@ class Bomb : public Order {
             Territory getTargetTerr();
             int* getPlayerID();
             Territory getSourceTerr();
+            Player* getPlayer();
         //Setters
             void setTargetTerr(Territory target);
             void setPlayerID(int* playerId);
             void setSourceTerr(Territory source);
+            void setPlayer(Player* player);
     private:
         Territory target; //target territory to bomb
         Territory source;
         int* playerID; //player id issuing the order
+        Player* player;
         string* name; //used for description
         friend std::ostream& operator<<(std::ostream &strm, const Bomb &a);
 };
@@ -118,12 +127,15 @@ class Blockade : public Order {
         //Getters
             Territory getTargetTerr();
             int* getPlayerID();
+            Player* getPlayer();
         //Setters
             void setTargetTerr(Territory target);
             void setPlayerID(int* playerId);
+            void setPlayer(Player* player);
     private:
         Territory target; //terriotry to blockade
         int* playerID; //player id issuing order
+        Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Blockade &a);
         string* name; //used for description
 };
@@ -144,18 +156,20 @@ class Airlift : public Order {
             Territory getSourceTerr();
             int* getArmies();
             int* getPlayerID();
-
+            Player* getPlayer();
         //Setters
             void setTargetTerr(Territory* target);
             void setSourceTerr(Territory* source);
             void setArmies(int* armies);
             void setPlayerID(int* playerId);
+            void setPlayer(Player* player);
 
     private:
         Territory source; //terriotry sending armies
         Territory target; //terriotry receiving armies
         int* armies; //number of armies being sent
         int* playerID; // player issuing order
+        Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Airlift &a);
         string* name; //used for description
 };
@@ -173,14 +187,15 @@ class Negotiate : public Order {
         //Getters
             int* getPlayerID();
             Territory getTargetTerr();
-         
+            Player* getPlayer();
         //Setters
             void setPlayerID(int* playerId);
             void setTargetTerr(Territory target);  
+            void setPlayer(Player* player);
           
     private:
         Territory target; //territory to negotiate with
-        
+        Player* player;
         int* playerID; //player id issuing order
         friend std::ostream& operator<<(std::ostream &strm, const Negotiate &a);
         string* name; //used for description

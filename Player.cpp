@@ -138,7 +138,7 @@ void Player::issueOrder(){
             this->ol->addOrder(deploy, *ordersIndex);
             (*ordersIndex)++;
             ol->showList(*ordersIndex);
-            break; 
+            break;
         }
         case 2:
         {
@@ -318,6 +318,10 @@ void Player::setReinforcementPool(int reinforcementPool){
     *this->reinforcementPool = reinforcementPool;
 }
 
+void Player::setNegotiateID(int negotiate){
+    *this->negotiateId = negotiate;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
@@ -337,6 +341,10 @@ int Player::getSizeOfHand(){
 
 int Player::getReinforcementPool(){
     return *this->reinforcementPool;
+}
+
+int Player::getNegotiateID(){
+    return *this->negotiateId;
 }
 
 // Stream insertion operator

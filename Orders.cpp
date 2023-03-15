@@ -86,6 +86,10 @@ int* Deploy:: getPlayerID(){
     return playerID;
 }
 
+Player* Deploy::getPlayer(){
+    return player;
+}
+
 /* Setters */
 void Deploy::setTargetTerr(Territory *target1){
     target = *target1;
@@ -97,6 +101,10 @@ void Deploy::setArmies(int* armies1){
 
 void Deploy::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Deploy::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /* Description -> return name of order*/
@@ -130,15 +138,15 @@ bool* Deploy::validate(){
 
 /*Execute Order method*/
 void Deploy::execute(){
-    // while(getReinforcementPool() != 0){
-    // //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
-    //     if(*validate() == true){
-    //         target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
-    //         setReinforcementPool(getReinforcementPool() - *armies);
-    //     }
-    //     else
-    //         cout << "Invalid deploy, terriotry does not belong to player." << endl;
-    // }
+    while(getPlayer()->getReinforcementPool() != 0){
+    //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
+        if(*validate() == true){
+            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
+            getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies);
+        }
+        else
+            cout << "Invalid deploy, terriotry does not belong to player." << endl;
+    }
 }
 
 /*-------------------------------------------------------------------------*/
@@ -176,6 +184,9 @@ int* Advance:: getPlayerID(){
     return playerID;
 }
 
+Player* Advance::getPlayer(){
+    return player;
+}
 /* Setters */
 void Advance::setSourceTerr(Territory* sourceTerr){
     source = *sourceTerr;
@@ -191,6 +202,10 @@ void Advance::setArmies(int* armies1){
 
 void Advance::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Negotiate::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -242,15 +257,6 @@ void Advance::execute(){
             source.setNumberOfSoldiers(0);
         }
         if(target.getPosessor() != getPlayerID()){
-            //if(PlayerId.getNegotiateWith() != target.getPossesor())
-            /*while(target.armies != 0 && source.armies != 0)
-            def-kill = randnum
-            att-kill = randnum
-            if def-kll<70
-             source.armies --
-            if att-kill<60
-             target.armies --
-            */
            int defendKill = 0;
            int attackKill = 0;
 
@@ -269,6 +275,8 @@ void Advance::execute(){
             }
             else if(source.getNumberOfSoldiers() == 0){
                 source.setPosessor(*target.getPosessor());
+                source.setNumberOfSoldiers(*target.getNumberOfSoldiers());
+                target.setNumberOfSoldiers(0);
                 
                 //setDeck();
             }
@@ -307,6 +315,10 @@ int* Bomb:: getPlayerID(){
     return playerID;
 }
 
+Player* Advance::getPlayer(){
+    return player;
+}
+
 /* Setters */
 void Bomb::setTargetTerr(Territory target1){
     target = target1;
@@ -318,6 +330,10 @@ void Bomb::setSourceTerr(Territory source){
 
 void Bomb::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Bomb::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -384,6 +400,10 @@ int* Blockade:: getPlayerID(){
     return playerID;
 }
 
+Player* Blockade::getPlayer(){
+    return player;
+}
+
 /* Setters */
 void Blockade::setTargetTerr(Territory target1){
     target = target1;
@@ -391,6 +411,10 @@ void Blockade::setTargetTerr(Territory target1){
 
 void Blockade::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Blockade::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -458,13 +482,16 @@ int* Airlift::getArmies(){
     return armies;
 }
 
-
 void Airlift::setSourceTerr(Territory* sourceTerr){
     source = *sourceTerr;
 }
 
 int* Airlift:: getPlayerID(){
     return playerID;
+}
+
+Player* Airlift::getPlayer(){
+    return this->player;
 }
 
 /* Setters */ 
@@ -478,6 +505,10 @@ void Airlift::setArmies(int* armies1){
 
 void Airlift::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Negotiate::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -542,6 +573,10 @@ int* Negotiate::getPlayerID(){
     return playerID;
 }
 
+Player* Negotiate::getPlayer(){
+    return this->player;
+}
+
 /*Setters*/
 void Negotiate::setTargetTerr(Territory target1){
     target = target1;
@@ -549,6 +584,10 @@ void Negotiate::setTargetTerr(Territory target1){
 
 void Negotiate::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Negotiate::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -588,9 +627,18 @@ void Negotiate::execute(){
    //Also, at the end of the round, make a forloop to erase all nogotatiateWith props for the players (set them to -1 to indicate that
    //the players have no one with who they negotiated).
  
+
+ /*
+ Player 1 -> negotiates with player 2
+ PLayer 1-> setNegtoateId(2)
+ Player 2-> setnetfotiateid(1)
+
+ Player1.set(target.getPoseesror())
+ Player2.set(source.getPo);
+
+ */
     if(*validate() == true){
-        //getPlayerId.setInvalidAttack(target.getPoseesor());
-        //target.getPoseesor().setInvalidAttack(PlayerId)
+        target.getPosessor();
 
     }
 }
