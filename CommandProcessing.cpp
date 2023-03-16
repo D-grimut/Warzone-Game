@@ -13,7 +13,7 @@ Command::Command(string comandType)
     this->effect = new string("");
 }
 
-Command::Command(const Command& c)
+Command::Command(const Command &c)
 {
     this->commandType = new string(*c.commandType);
     this->effect = new string(*c.effect);
@@ -48,12 +48,15 @@ string Command::getEffect()
     return *this->effect;
 }
 
-Command& Command::operator=(const Command & c){
+Command &Command::operator=(const Command &c)
+{
     *this->commandType = *c.commandType;
     *this->effect = *c.effect;
+    return *this;
 }
 
-std::ostream &operator<<(std::ostream &strm, const Command &t){
+std::ostream &operator<<(std::ostream &strm, const Command &t)
+{
     string res = "Command Type: " + *t.commandType + ", Command Effect: " + *t.effect;
     return strm << res << endl;
 }
@@ -92,7 +95,7 @@ void CommandList::storeCommand(Command *newCommand)
     {
         resize();
     }
-    
+
     this->commands[*this->end] = newCommand;
     *this->end = *this->end + 1;
 }
@@ -172,7 +175,6 @@ string CommandProcessor::getCommand()
 
     return temp;
 }
-
 
 // Function validate all user input Commands, and saves the effect of invalid commands with the according error message
 //(passed to the function)

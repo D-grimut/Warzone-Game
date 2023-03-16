@@ -1,6 +1,6 @@
 #include "FileCommandProcessorAdapter.h"
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName, int size) : CommandProcessor(size)
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName) : CommandProcessor()
 {
     ifstream file(fileName);
 
