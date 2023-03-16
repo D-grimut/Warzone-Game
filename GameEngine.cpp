@@ -1,5 +1,6 @@
 // GameEngine.cpp
 #include "GameEngine.h"
+#include "FileCommandProcessorAdapter.h"
 
 /*
 This section is for all the constructors used for each class
@@ -29,10 +30,11 @@ GameEngine::GameEngine(const GameEngine &copy)
     cp = copy.cp;
 }
 
-string GameEngine::stringToLog(){
+string GameEngine::stringToLog()
+{
     string log = "Game Engine new state: ";
     string state[] = {"Start State", "Map Load", "Map Validate", "Players Added", "Assign Reinforcement", "Issue Orders", "Execute Orders", "Win", "Exit"};
-    log = log + state[*getState()];    
+    log = log + state[*getState()];
     return log;
 }
 
@@ -202,68 +204,68 @@ void GameEngine::Play()
     ExecuteOrderState *execute_order_state = new ExecuteOrderState(Engine);
     WinState *win_state = new WinState(Engine);
 
+    // ASK DANIEL ABOUT THIS SECTION
+    std::cout << "Would you like to read or write from file? (input should be the same as in question)" << std::endl;
+    string choice = Engine->cp->getCommand();
+    if (choice == "read")
+    {
+        // Read
+    }
+    else if (choice == "write")
+    {
+        // write
+    }
+    else
+    {
+        std::cout << "Incorrect Input" << std::endl;
+    }
+
     // loop that keeps the game running, ends when the state is 8 aka. "End"
     while (*Engine->getState() != 8)
     {
         Engine->Commands();
         string input = Engine->cp->getCommand();
-        
+
         if (*Engine->getState() == 0)
         {
 
-            Engine->cp->validate("CANNOT USE THE COMMAND. Start state does not support the command: ", input, "loadmap", false, [start_state](string input){                
-                return start_state->StartInput(input);                    
-            });
-                     
+            Engine->cp->validate("CANNOT USE THE COMMAND. Start state does not support the command: ", input, "loadmap", false, [start_state](string input)
+                                 { return start_state->StartInput(input); });
         }
         else if (*Engine->getState() == 1)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Map Load state does not support the command: ", input, "validatemap", true, [map_loaded_state](string input){                
-                return map_loaded_state->MapLoadedInput(input);                    
-            });
-            
+            Engine->cp->validate("CANNOT USE THE COMMAND. Map Load state does not support the command: ", input, "validatemap", true, [map_loaded_state](string input)
+                                 { return map_loaded_state->MapLoadedInput(input); });
         }
         else if (*Engine->getState() == 2)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Validate Map state does not support the command: ", input, "addplayer", false, [map_validated_state](string input){                
-                return map_validated_state->ValidateInput(input);                    
-            });
-           
+            Engine->cp->validate("CANNOT USE THE COMMAND. Validate Map state does not support the command: ", input, "addplayer", false, [map_validated_state](string input)
+                                 { return map_validated_state->ValidateInput(input); });
         }
         else if (*Engine->getState() == 3)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Add Player state does not support the command: ", input, "assigncountries", true, [players_added_state](string input){                
-                return players_added_state->PlayersAddedInput(input);                    
-            });
-            
+            Engine->cp->validate("CANNOT USE THE COMMAND. Add Player state does not support the command: ", input, "assigncountries", true, [players_added_state](string input)
+                                 { return players_added_state->PlayersAddedInput(input); });
         }
         else if (*Engine->getState() == 4)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Assign Reinforcements state does not support the command: ", input, "issueorder", false, [assign_reinforcement_state](string input){                
-                return assign_reinforcement_state->AssignReinforcementsInput(input);                  
-            });
-           
+            Engine->cp->validate("CANNOT USE THE COMMAND. Assign Reinforcements state does not support the command: ", input, "issueorder", false, [assign_reinforcement_state](string input)
+                                 { return assign_reinforcement_state->AssignReinforcementsInput(input); });
         }
         else if (*Engine->getState() == 5)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Issue Order state does not support the command: ", input, "endissueorders" , true, [issue_order_state](string input){                
-                return issue_order_state->IssueOrderInput(input);                  
-            });
-           
+            Engine->cp->validate("CANNOT USE THE COMMAND. Issue Order state does not support the command: ", input, "endissueorders", true, [issue_order_state](string input)
+                                 { return issue_order_state->IssueOrderInput(input); });
         }
         else if (*Engine->getState() == 6)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Execute Order state does not support the command: ", input, "win endexecorders", true, [execute_order_state](string input){                
-                return execute_order_state->ExecuteOrderInput(input);                
-            });
-            
+            Engine->cp->validate("CANNOT USE THE COMMAND. Execute Order state does not support the command: ", input, "win endexecorders", true, [execute_order_state](string input)
+                                 { return execute_order_state->ExecuteOrderInput(input); });
         }
         else if (*Engine->getState() == 7)
         {
-            Engine->cp->validate("CANNOT USE THE COMMAND. Win state does not support the command: ", input, "play", false, [win_state](string input){                
-                return win_state->WinInput(input);        
-            });
-            
+            Engine->cp->validate("CANNOT USE THE COMMAND. Win state does not support the command: ", input, "play", false, [win_state](string input)
+                                 { return win_state->WinInput(input); });
         }
     }
 
@@ -292,8 +294,8 @@ int *GameEngine::getState()
 
 // Function that will change the state of the game
 void GameEngine::TransitionTo(int state)
-{    
-    *current_state = state;    
+{
+    *current_state = state;
     notify(this);
 }
 
@@ -342,8 +344,9 @@ void GameEngine::Commands()
 }
 
 // Checks for the input in start state
-bool StartState::StartInput(const std::string &input){
-    
+bool StartState::StartInput(const std::string &input)
+{
+
     if (input == "loadmap")
     {
         std::cout << "\nSuccess!\n"
@@ -354,8 +357,8 @@ bool StartState::StartInput(const std::string &input){
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
-        engine->Commands();        
-        return false;        
+        engine->Commands();
+        return false;
     }
     return true;
 }
@@ -367,20 +370,20 @@ bool MapLoadedState::MapLoadedInput(const std::string &input)
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
-        engine->TransitionTo(2);            
+        engine->TransitionTo(2);
     }
     else if (input == "loadmap")
     {
         std::cout << "\nMap loaded\n"
                   << std::endl;
-        engine->Commands();        
+        engine->Commands();
         return true;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
-        engine->Commands();       
+        engine->Commands();
         return false;
     }
     return true;
@@ -399,7 +402,7 @@ bool MapValidatedState::ValidateInput(const std::string &input)
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
-        engine->Commands();        
+        engine->Commands();
         return false;
     }
     return true;
@@ -426,7 +429,7 @@ bool PlayersAddedState::PlayersAddedInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-       return false;
+        return false;
     }
     return true;
 }
@@ -511,8 +514,8 @@ bool WinState::WinInput(const std::string &input)
     if (input == "end")
     {
         engine->TransitionTo(8);
-        std::cout << "\nThank you for playing!" << std::endl;        
-        //engine->cp->toString(); FOR TESTING - TODO: REMOVE AT END       
+        std::cout << "\nThank you for playing!" << std::endl;
+        // engine->cp->toString(); FOR TESTING - TODO: REMOVE AT END
         exit(0);
     }
     else if (input == "play")
@@ -526,7 +529,7 @@ bool WinState::WinInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-       return false;
+        return false;
     }
     return true;
 }
