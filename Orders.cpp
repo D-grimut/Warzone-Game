@@ -82,9 +82,6 @@ int* Deploy::getArmies(){
     return armies;
 }
 
-int* Deploy:: getPlayerID(){
-    return playerID;
-}
 
 Player* Deploy::getPlayer(){
     return player;
@@ -97,10 +94,6 @@ void Deploy::setTargetTerr(Territory *target1){
 
 void Deploy::setArmies(int* armies1){
     armies = armies1;
-}
-
-void Deploy::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Deploy::setPlayer(Player* player){
@@ -127,7 +120,7 @@ std::ostream& operator<<(std::ostream &strm, const Deploy &a){
 /*Validate Order method*/
 bool* Deploy::validate(){
      bool* ptr = new bool(true);
-    if (target.getPosessor() != getPlayerID()){ //if deploying to an enemy territory, return false
+    if (*target.getPosessor() != getPlayer()->getPlayerID()){ //if deploying to an enemy territory, return false
         *ptr = false;
         cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
     }
@@ -151,7 +144,6 @@ void Deploy::execute(){
         }
         else
             cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
-    
 }
 
 /*-------------------------------------------------------------------------*/
@@ -185,10 +177,6 @@ int* Advance::getArmies(){
     return armies;
 }
 
-int* Advance:: getPlayerID(){
-    return playerID;
-}
-
 Player* Advance::getPlayer(){
     return player;
 }
@@ -211,10 +199,6 @@ void Advance::setEnemy(Player* enemy){
 
 void Advance::setArmies(int* armies1){
     armies = armies1;
-}
-
-void Advance::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Advance::setPlayer(Player* player){
@@ -240,7 +224,7 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 /*Validate Order method*/
 bool* Advance::validate(){
     bool* ptr = new bool(true);
-    if(source.getPosessor() !=  getPlayerID()){ //if source does not belong to player
+    if(*source.getPosessor() != getPlayer()->getPlayerID()){ //if source does not belong to player
            *ptr = false;
            cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
     }
@@ -263,12 +247,12 @@ bool* Advance::validate(){
 void Advance::execute(){
     Deck* deck = new Deck;
     if(*validate() == true){
-        if(target.getPosessor() == getPlayerID()){
+        if(*target.getPosessor() == getPlayer()->getPlayerID()){
             target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *source.getNumberOfSoldiers());
             source.setNumberOfSoldiers(0);
             cout << "ADAVANCE EXECUTE: "<<target.getTerritoryName() << " now has "<< target.getNumberOfSoldiers()<< endl;
         }
-        if(target.getPosessor() != getPlayerID()){
+        if(*target.getPosessor() != getPlayer()->getPlayerID()){
            int defendKill = 0;
            int attackKill = 0;
 
@@ -281,7 +265,7 @@ void Advance::execute(){
                 target.setNumberOfSoldiers(*target.getNumberOfSoldiers() - 1);
             }
             if(target.getNumberOfSoldiers() == 0){
-                target.setPosessor(*getPlayerID());
+                target.setPosessor(getPlayer()->getPlayerID());
                 target.setNumberOfSoldiers(*source.getNumberOfSoldiers());
                 source.setNumberOfSoldiers(0);
                 cout << "ADAVANCE EXECUTE: "<<target.getTerritoryName() << " was conquered! "<< endl;
@@ -327,10 +311,6 @@ Territory Bomb::getSourceTerr(){
     return source;
 }
 
-int* Bomb:: getPlayerID(){
-    return playerID;
-}
-
 Player* Bomb::getPlayer(){
     return player;
 }
@@ -342,10 +322,6 @@ void Bomb::setTargetTerr(Territory target1){
 
 void Bomb::setSourceTerr(Territory source){
     source = source;
-}
-
-void Bomb::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Bomb::setPlayer(Player* player){
@@ -385,7 +361,7 @@ bool* Bomb::validate(){
         cout<< "BOMB INVALID: you do not own this card" <<endl;
         return ptr;
     }
-    if(getTargetTerr().getPosessor() == getPlayerID()){
+    if(*getTargetTerr().getPosessor() == getPlayer()->getPlayerID()){
         *ptr = false;
         cout << "BOMB INVALID: cannot bomb your own territory"<< endl;
     }
@@ -437,10 +413,6 @@ Territory Blockade::getTargetTerr(){
     return target;
 }
 
-int* Blockade:: getPlayerID(){
-    return playerID;
-}
-
 Player* Blockade::getPlayer(){
     return player;
 }
@@ -448,10 +420,6 @@ Player* Blockade::getPlayer(){
 /* Setters */
 void Blockade::setTargetTerr(Territory target1){
     target = target1;
-}
-
-void Blockade::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Blockade::setPlayer(Player* player){
@@ -492,7 +460,7 @@ bool* Blockade::validate(){
         return ptr;
     }
     
-    if(target.getPosessor() != getPlayerID()){
+    if(*target.getPosessor() != getPlayer()->getPlayerID()){
         *ptr = false;
         cout << "BLOCKADE INVALID: Cannot call a blockade on enemy terriotry" << endl;
     }
@@ -549,10 +517,6 @@ void Airlift::setSourceTerr(Territory* sourceTerr){
     source = *sourceTerr;
 }
 
-int* Airlift:: getPlayerID(){
-    return playerID;
-}
-
 Player* Airlift::getPlayer(){
     return this->player;
 }
@@ -564,10 +528,6 @@ void Airlift::setTargetTerr(Territory *target1){
 
 void Airlift::setArmies(int* armies1){
     armies = armies1;
-}
-
-void Airlift::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Airlift::setPlayer(Player* player){
@@ -608,7 +568,7 @@ bool* Airlift::validate(){
         return ptr;
     }
 
-    if(source.getPosessor() != getPlayerID() || target.getPosessor() != getPlayerID()){
+    if(*source.getPosessor() != getPlayer()->getPlayerID() || *target.getPosessor() != getPlayer()->getPlayerID()){
         *ptr = false;
         cout << "AIRLIFT INVALID: Source or Target does not belong to you" <<endl;
     }
@@ -653,10 +613,6 @@ Territory Negotiate::getTargetTerr(){
     return target;
 }
 
-int* Negotiate::getPlayerID(){
-    return playerID;
-}
-
 Player* Negotiate::getPlayer(){
     return this->player;
 }
@@ -668,10 +624,6 @@ Player* Negotiate::getEnemy(){
 /*Setters*/
 void Negotiate::setTargetTerr(Territory target1){
     target = target1;
-}
-
-void Negotiate::setPlayerID(int* pID){
-    playerID = pID;
 }
 
 void Negotiate::setPlayer(Player* player){
@@ -716,7 +668,7 @@ bool* Negotiate::validate(){
         return ptr;
     }
     //If the target is the player issuing the order, then the order is invalid.
-    if(target.getPosessor() != getPlayerID()){
+    if(*target.getPosessor() != getPlayer()->getPlayerID()){
         *ptr = false;
     }
     else{
@@ -729,25 +681,6 @@ bool* Negotiate::validate(){
 
 /*Execute Order method*/
 void Negotiate::execute(){
-    /*If the target is an enemy player, then the effect is that any attack that may be declared between territories
-    of the player issuing the negotiate order and the target player will result in an invalid order.
-        Need to create a create a function that says if players are allowed to attack or not and check in all validate methods
-    */
-   //Add a prop to player (call is something like negotatiatedWith), where the value is the ID of the player with who the attaking player has
-   //negotiated. Each time a plyer attacks (any player), check if the player is not attacking a possesor with who they negotiated
-   //Also, at the end of the round, make a forloop to erase all nogotatiateWith props for the players (set them to -1 to indicate that
-   //the players have no one with who they negotiated).
- 
-
- /*
- Player 1 -> negotiates with player 2
- PLayer 1-> setNegtoateId(2)
- Player 2-> setnetfotiateid(1)
-
- Player1.set(target.getPoseesror())
- Player2.set(source.getPo);
-
- */
     if(*validate() == true){
         getPlayer()->setNegotiateID(getEnemy()->getPlayerID());
         getEnemy()->setNegotiateID(getPlayer()->getPlayerID());

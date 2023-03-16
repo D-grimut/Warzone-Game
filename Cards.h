@@ -75,7 +75,6 @@ class Hand
 		Hand(const Hand& e);//copy contructor
 		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
-		int* getSize();
 		void addCard(Card *card, int position);
 		void removeCard(int *position);
         int* getSize();
