@@ -69,10 +69,12 @@ int main()
 
     // TODO: Add test case for fileCommandProcessor (for Nico)
 
-    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("gamelog.txt", 30);
-    while (test->readCommand() != "EOF")
+    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("commands.txt");
+    std::string str;
+    test->attach(ol);
+    while (str != "EOF")
     {
-        std::string str = test->readCommand();
+        str = test->readCommand();
         std::cout << str << std::endl;
     }
 

@@ -1,6 +1,6 @@
 #include "FileCommandProcessorAdapter.h"
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName, int size) : CommandProcessor(size)
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName) : CommandProcessor()
 {
     ifstream file(fileName);
 
@@ -26,5 +26,6 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 string FileCommandProcessorAdapter::readCommand()
 {
     string command = fileReader->ReadLineFromFile();
+    this->saveCommand(command);
     return command;
 }

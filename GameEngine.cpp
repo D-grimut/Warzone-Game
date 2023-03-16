@@ -204,24 +204,28 @@ void GameEngine::Play()
     ExecuteOrderState *execute_order_state = new ExecuteOrderState(Engine);
     WinState *win_state = new WinState(Engine);
 
-    // ASK DANIEL ABOUT THIS SECTION
-    std::cout << "Would you like to read or write from file? (input should be the same as in question)" << std::endl;
-    string choice = Engine->cp->getCommand();
-    if (choice == "read")
+    string choice;
+    do
     {
-        // Read
-    }
-    else if (choice == "write")
-    {
-        // write
-    }
-    else
-    {
-        std::cout << "Incorrect Input" << std::endl;
-    }
+        std::cout << "Would you like to read or write from file? (input should be the same as in question)" << std::endl;
+        choice = Engine->cp->getCommand();
+        if (choice == "read")
+        {
+            FileCommandProcessorAdapter *pc = new FileCommandProcessorAdapter("commands.txt");
+            break;
+        }
+        else if (choice == "write")
+        {
+            break;
+        }
+        else
+        {
+            std::cout << "Incorrect Input" << std::endl;
+        }
+    } while (choice != "read" || choice != "write");
 
     // loop that keeps the game running, ends when the state is 8 aka. "End"
-    while (*Engine->getState() != 8)
+    while (*Engine->getState() != 8 && choice != "read")
     {
         Engine->Commands();
         string input = Engine->cp->getCommand();

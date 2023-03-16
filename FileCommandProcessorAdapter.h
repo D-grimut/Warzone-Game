@@ -10,7 +10,7 @@ private:
     FileLineReader *fileReader;
 
 public:
-    FileCommandProcessorAdapter(string fileName, int size);
+    FileCommandProcessorAdapter(string fileName);
     ~FileCommandProcessorAdapter();
 
     string readCommand() override;

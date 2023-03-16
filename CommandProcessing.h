@@ -8,7 +8,7 @@ using namespace std;
 
 class GameEngine;
 
-class Command: public ILoggable, public Subject
+class Command : public ILoggable, public Subject
 {
 private:
     string *commandType;
@@ -53,9 +53,9 @@ public:
     Command *getAtIndex(int);
 };
 
-class CommandProcessor: public ILoggable, public Subject
+class CommandProcessor : public ILoggable, public Subject
 {
-private:
+protected:
     CommandList *commandList;
     virtual string readCommand();
     void saveCommand(string);
