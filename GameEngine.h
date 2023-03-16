@@ -114,6 +114,7 @@ public:
     ~ExecuteOrderState();
     ExecuteOrderState(const ExecuteOrderState &copy);
     void ExecuteOrderInput(const std::string &input);
+    void executeOrderPhase(Player *playerList[], int nbOfPlayers);
 
 private:
     GameEngine *engine;

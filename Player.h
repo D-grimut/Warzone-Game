@@ -39,7 +39,7 @@ class Player{
 
         // Methods
         void ownedTerritories();                     // Show all owned territories
-        void issueOrder(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer);           // Create order and add it to array of orders
+        void issueOrder(string orderName, int* nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer);           // Create order and add it to array of orders
         Territory* toDefend();                       // Show territories to defend
         Territory* toAttack();                       // Show territories to attack
         void printCards();

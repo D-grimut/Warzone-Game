@@ -10,9 +10,10 @@ int main(){
     GameEngine *engine = new GameEngine();
     AssignReinforcementState *en = new AssignReinforcementState(engine);
     IssueOrderState *ios = new IssueOrderState(engine);
+    ExecuteOrderState *exo = new ExecuteOrderState(engine);
 
     // Load map, store map, store all territories, get number of territories
-    MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
+    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\OneDrive\\Documents\\GitHub\\Warzone-Game\\Warzone-Game\\europe.map");
 
     Map *map = ml->getMap();
 
@@ -44,7 +45,9 @@ int main(){
 
     //mainGameLoop();
     en->reinforcementPhase(pArr, nbOfPlayers);
+    cout << "here" << endl;
     ios->issueOrdersPhase(pArr, nbOfPlayers);
+    exo->executeOrderPhase(pArr, nbOfPlayers);
 
     return 0;
 }

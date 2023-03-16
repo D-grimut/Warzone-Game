@@ -160,9 +160,9 @@ IssueOrderState::~IssueOrderState()
 }
 
 void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
-    for(int i = 0; i < nbOfPlayers; i++){
-        pArr[i]->setNegotiateID(0);
-    }
+    // for(int i = 0; i < nbOfPlayers; i++){
+    //     pArr[i]->setNegotiateID(0);
+    // }
 
    for(int i = 0; i < nbOfPlayers; i++){
         Territory* toAtt = pArr[i]->toAttack();
@@ -177,7 +177,8 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         int nbOfRein = pArr[i]->getReinforcementPool();
 
         string targetTerr, sourceTerr, cardOrder;
-        int nbOfArmies, counterDep, toAttPossesor;
+        int counterDep, toAttPossesor;
+        int* nbOfArmies;
         Territory* target = new Territory;
         Territory* source = new Territory;
         Player* enemy;
@@ -187,14 +188,14 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
             cout << "Enter the country you would like to deploy armies to: ";
             cin >> targetTerr;
             cout << "Enter the amount of armies to send: ";
-            cin >> nbOfArmies;
-            if(nbOfRein - nbOfArmies < 0){
+            cin >> *nbOfArmies;
+            if(nbOfRein - *nbOfArmies < 0){
                 cout << "Please enter a valid amount of armies to deploy" << endl;
                 nbOfArmies = 0;
             }
             
             pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
-            nbOfRein = nbOfRein - nbOfArmies;
+            nbOfRein = nbOfRein - *nbOfArmies;
         }
 
         OrdersList* ol = pArr[i]->getOrdersList();
@@ -217,7 +218,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 cout << "Which territory would you like to advance to: ";
                 cin >> targetTerr;
                 cout << "How many armies would you like to move: ";
-                cin >> nbOfArmies;
+                cin >> *nbOfArmies;
 
                 for(int j = 0; j < nbOfToDef; j++){
                     if(sourceTerr == *toDef[j].getTerritoryName()){
@@ -294,7 +295,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                     cout << "Which territory would you like to advance to: ";
                     cin >> targetTerr;
                     cout << "How many armies would you like to move: ";
-                    cin >> nbOfArmies;
+                    cin >> *nbOfArmies;
 
                     for(int j = 0; j < nbOfToDef; j++){
                         if(sourceTerr == *toDef[j].getTerritoryName()){
@@ -335,6 +336,12 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
             }while(validCardOrder);            
         }
    }
+}
+
+void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers){
+    for(int i = 0; i < nbOfPlayers; i++){
+        pArr[i]->getOrdersList()->execute();
+    }
 }
 
 // Constructor for execute order state
