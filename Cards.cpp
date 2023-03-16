@@ -77,7 +77,7 @@ std::ostream& operator<<(std::ostream &strm, const Deck &a)
 }
 
 //the draw method
-Card Deck::draw()
+Card* Deck::draw()
 {
 	this->random = new int();
 	*random = rand() % getCurrentDeckSize(); //chooses a random card in the deck
@@ -88,7 +88,7 @@ Card Deck::draw()
 	inHand[*random] = 1; // sets the card as taken
 	Card *a = new Card(deck[*random]);
 	a->setNumber(*random);
-	return *a; // returns the card
+	return a; // returns the card
 }
 
 //Parent: Card
@@ -222,13 +222,17 @@ std::ostream &operator<<(std::ostream &strm, const Card &a)
 //default
 Hand::Hand()
 {
-	this->hand = new Card[5];
+	int *size = new int(5);
+    setSize(size);
+    hand = new Card *[*size];
 }
 
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
-	this->hand = new Card[handSize];
+	int *size = new int(handSize);
+    setSize(size);
+    hand = new Card *[*size];
 }
 
 //copy constructor
@@ -252,3 +256,47 @@ std::ostream& operator<<(std::ostream &strm, const Hand &a)
 
 //Deconstructor
 Hand::~Hand(){}
+
+int* Hand::getSize(){
+    return this->size;
+}
+
+void Hand::addCard(Card *card, int position){
+    if(position > *getSize()){
+        int *oldSize = getSize();
+        resize();
+        hand[*oldSize] = card;        
+    }
+    else
+        hand[position] = card;
+}
+
+void Hand::resize(){
+    int *newSize = new int(*getSize() + 1);
+    Card **newArr = new Card*[*newSize];
+    for(int i = 0; i <= *getSize(); i++){
+        newArr[i] = hand[i];
+    }
+    setSize(newSize);
+    delete [] hand;
+    hand = newArr;
+}
+
+void Hand::removeCard(int *position){
+    if(*position > *getSize()){
+        cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
+    }
+    for(int i = *position; i<*getSize(); i++){
+        hand[i] = hand[i+1];
+    }
+    int* newSize = new int(*getSize() - 1);
+    setSize(newSize);
+}
+
+void Hand::setSize(int* size){
+    this->size = size;
+}
+
+Card* Hand::getCard(int i){
+    return hand[i];
+}

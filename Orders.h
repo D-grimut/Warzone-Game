@@ -6,6 +6,7 @@
 #include "Player.h"
 using namespace std;
 
+class Player;
 //Player neutral = new Player(-1,)
 
 //Order class (PARENT)
@@ -38,21 +39,24 @@ class Deploy : public Order {
             Territory getTragetTerr();
             int* getArmies();
             int* getPlayerID();
+            Player* getPlayer();
         //Setters
             void setPlayerID(int* playerId);
             void setArmies(int* armies);
             void setTargetTerr(Territory* target); 
+            void setPlayer(Player* player);
     private:
         string* name; //used for description
         Territory target; //Territory to deploy armies to
         int* armies; //number of armies to deploy
         int* playerID; //player id of the player issueing the order
+        Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Deploy &a);
 };
 
 //Advance class
 class Advance : public Order {
-    public:
+     public:
         Advance();
         ~Advance();
         Advance(const Advance& e); //copy constructor
@@ -65,17 +69,23 @@ class Advance : public Order {
             Territory getSourceTerr();
             int* getPlayerID();
             int* getArmies();
+            Player* getPlayer();
+            Player* getEnemy();
         //Setters
             void setTargetTerr(Territory* targTerr);
             void setSourceTerr(Territory* sourceTerr);
             void setArmies(int* numArmies);
             void setPlayerID(int* pID);
+            void setPlayer(Player* player);
+            void setEnemy(Player* enemy);
     private:
         Territory source; //source terriotry
         Territory target; //terriotry to advance to
         int* playerID; //player id of player issuing order
         int* armies; //number of armies to advance
         string* name; //used for description
+        Player* player;
+        Player* enemy;
         friend std::ostream& operator<<(std::ostream &strm, const Advance &a);
 };
 

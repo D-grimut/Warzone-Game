@@ -49,15 +49,15 @@ int main(){
     cout << endl;
 
     // Creates order
-    p1->issueOrder();
+    // p1->issueOrder();
 
     cout << endl;
 
     // Creates order
     //p1->issueOrder();
 
-    OrdersList o1 = p1->getOrdersList();
-    o1.execute();
+    // OrdersList o1 = p1->getOrdersList();
+    // o1.execute();
 
     // // ToDefend()
     // Territory* toDef = p1->toDefend();

@@ -23,8 +23,8 @@ int main(){
     int nbTerritories = *ml->getMap()->getNbTerritories();
     
     // Create a new player with playerID = 1 and playerID = 2 and territories
-    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0);
-    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0);
+    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0);
+    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0);
 
     const int nbOfPlayers = 2;
     Player *pArr[nbOfPlayers] = {p1, p2};
@@ -41,7 +41,9 @@ int main(){
         territories[i].setNumberOfSoldiers(0);
     }
 
-    // en->reinforcementPhase(pArr, nbOfPlayers);
+
+    //mainGameLoop();
+    en->reinforcementPhase(pArr, nbOfPlayers);
     ios->issueOrdersPhase(pArr, nbOfPlayers);
 
     return 0;

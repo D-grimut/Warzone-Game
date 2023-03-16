@@ -6,7 +6,7 @@
 #include <string>
 using namespace std;
 
-MapLoader *ml = new MapLoader("//Users//rhiannondoesburg//Documents//GitHub//Warzone-Game//europe.map");
+MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
 Map *map = ml->getMap();
 Territory* territories = map->getCountries();
 
@@ -86,6 +86,10 @@ int* Deploy:: getPlayerID(){
     return playerID;
 }
 
+Player* Deploy::getPlayer(){
+    return player;
+}
+
 /* Setters */
 void Deploy::setTargetTerr(Territory *target1){
     target = *target1;
@@ -97,6 +101,10 @@ void Deploy::setArmies(int* armies1){
 
 void Deploy::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Deploy::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /* Description -> return name of order*/
@@ -119,26 +127,30 @@ std::ostream& operator<<(std::ostream &strm, const Deploy &a){
 /*Validate Order method*/
 bool* Deploy::validate(){
      bool* ptr = new bool(true);
-//If the target territory does not belong to the player that issued the order, the order is invalid.
-    if (target.getPosessor() != getPlayerID()){
+    if (target.getPosessor() != getPlayerID()){ //if deploying to an enemy territory, return false
         *ptr = false;
+        cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
     }
-    else
+    else if (getPlayer()->getReinforcementPool() < *getArmies()){
+        *ptr = false;
+        cout << "DEPLOY INVALID: Too many armies deployed" << endl;
+    }
+   else{
         *ptr = true;
+        cout << "DEPLOY VALID"<< endl;
+    }
     return ptr;
 }
 
 /*Execute Order method*/
 void Deploy::execute(){
-    // while(getReinforcementPool() != 0){
-    // //If the target territory belongs to the player that issued the deploy order, the selected number of armies is added to the number of armies on that territory.
-    //     if(*validate() == true){
-    //         target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies);
-    //         setReinforcementPool(getReinforcementPool() - *armies);
-    //     }
-    //     else
-    //         cout << "Invalid deploy, terriotry does not belong to player." << endl;
-    // }
+    if(*validate() == true){
+            target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *armies); //add armies to target
+            getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
+            cout<< "DEPLOY EXECUTE: " << target.getTerritoryName() << " now has " << target.getNumberOfSoldiers() << ". Number of reinforcements left in pool: " << getPlayer()->getReinforcementPool() <<endl;
+        }
+        else
+            cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
 }
 
 /*-------------------------------------------------------------------------*/
@@ -176,6 +188,13 @@ int* Advance:: getPlayerID(){
     return playerID;
 }
 
+Player* Advance::getPlayer(){
+    return player;
+}
+
+Player* Advance::getEnemy(){
+    return enemy;
+}
 /* Setters */
 void Advance::setSourceTerr(Territory* sourceTerr){
     source = *sourceTerr;
@@ -185,12 +204,20 @@ void Advance::setTargetTerr(Territory *target1){
     target = *target1;
 }
 
+void Advance::setEnemy(Player* enemy){
+    this->enemy = enemy;
+}
+
 void Advance::setArmies(int* armies1){
     armies = armies1;
 }
 
 void Advance::setPlayerID(int* pID){
     playerID = pID;
+}
+
+void Advance::setPlayer(Player* player){
+    this->player =  player;
 }
 
 /*Description: Returns name of order*/
@@ -211,46 +238,36 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 
 /*Validate Order method*/
 bool* Advance::validate(){
-    /*If the source territory does not belong to the player that issued the order, the order is invalid.
-    * If the target territory is not adjacent to the source territory, the order is invalid.
-    */
     bool* ptr = new bool(true);
-    if(source.getPosessor() !=  getPlayerID()){
+    if(source.getPosessor() !=  getPlayerID()){ //if source does not belong to player
            *ptr = false;
+           cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
     }
-    else if(!(map->isAdjacent(source, target)))
+    else if(!(map->isAdjacent(source, target))) {//check if target is next to source
         *ptr = false;
-    else
+        cout << "INVALID ADVANCE: Target terriotry is too far away!" << endl;
+    }
+     else if(getPlayer()->getNegotiateID() == *target.getPosessor()){
+        *ptr = false;
+        cout << "INVALID ADVANCE: Negotiation between territories" << endl;
+    }
+    else{
         *ptr = true;
-   
+        cout << "ADVANCE VALID"<< endl;
+    }
     return ptr;
 }
 
 /*Execute Order method*/
 void Advance::execute(){
-    /*If the source and target territory both belong to the player that issued the order, the army units are moved
-    from the source to the target territory.
-    * If the target territory belongs to another player than the player that issued the advance order, an attack is simulated when the order is executed. An attack is simulated by the following battle simulation mechanism:
-    * Each attacking army unit involved has 60% chances of killing one defending army. At the same time, each defending army unit has 70% chances of killing one attacking army unit.
-    * If all the defender's armies are eliminated, the attacker captures the territory. The attacking army units that survived the battle then occupy the conquered territory.
-    * A player receives a card at the end of his turn if they successfully conquered at least one territory during their turn.
-    */
+    Deck* deck = new Deck;
     if(*validate() == true){
         if(target.getPosessor() == getPlayerID()){
-            
             target.setNumberOfSoldiers(*target.getNumberOfSoldiers() + *source.getNumberOfSoldiers());
             source.setNumberOfSoldiers(0);
+            cout << "ADAVANCE EXECUTE: "<<target.getTerritoryName() << " now has "<< target.getNumberOfSoldiers()<< endl;
         }
         if(target.getPosessor() != getPlayerID()){
-            //if(PlayerId.getNegotiateWith() != target.getPossesor())
-            /*while(target.armies != 0 && source.armies != 0)
-            def-kill = randnum
-            att-kill = randnum
-            if def-kll<70
-             source.armies --
-            if att-kill<60
-             target.armies --
-            */
            int defendKill = 0;
            int attackKill = 0;
 
@@ -261,16 +278,22 @@ void Advance::execute(){
                 source.setNumberOfSoldiers(*source.getNumberOfSoldiers() - 1);
             if(attackKill < 60)
                 target.setNumberOfSoldiers(*target.getNumberOfSoldiers() - 1);
-           }
+            }
             if(target.getNumberOfSoldiers() == 0){
                 target.setPosessor(*getPlayerID());
                 target.setNumberOfSoldiers(*source.getNumberOfSoldiers());
                 source.setNumberOfSoldiers(0);
+                cout << "ADAVANCE EXECUTE: "<<target.getTerritoryName() << " was conquered! "<< endl;
+                Card* newCard = deck->draw();
+                getPlayer()->getCards().addCard(newCard,(*getPlayer()->getCards().getSize() + 1));
+                cout <<getPlayer()->getPlayerID() << " has received a new card " << endl;
             }
             else if(source.getNumberOfSoldiers() == 0){
                 source.setPosessor(*target.getPosessor());
-                
-                //setDeck();
+                source.setNumberOfSoldiers(*target.getNumberOfSoldiers());
+                target.setNumberOfSoldiers(0);
+                cout << "ADAVANCE EXECUTE: "<<source.getTerritoryName() << " was taken by enemy!"<< endl;
+                getEnemy()->getCards().addCard(deck->draw(), (*getEnemy()->getCards().getSize()+1));
             }
         }
     }

@@ -12,7 +12,8 @@ enum class Type {
 	reinforcement, 
 	blockade,
 	airlift,
-	diplomacy
+	diplomacy,
+	null
 };
 
 //Card class
@@ -48,7 +49,7 @@ class Deck
 		~Deck();//deconstructor
 		Deck(const Deck& e);//copy constructor
 		Deck& operator =(const Deck& e);//assignment constructor
-		Card draw();//draws a card
+		Card* draw();//draws a card
 		Card getDeck(); //gets a card from the deck
 		void setDeck(int x, Card card); //fills the deck with a card
 		int getInHand(); 
@@ -74,11 +75,16 @@ class Hand
 		Hand(const Hand& e);//copy contructor
 		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
-		Card *hand;
-	private:
-		string* name;
-		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);
+		int* getSize();
+		void addCard(Card *card, int position);
+		void removeCard(int *position);
+        void setSize(int *size);
+        void resize();
+		Card **hand;
+		Card* getCard(int i);
 		
-
+	private:
+		int *size;
+		string *name;
+		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);	
 };
-

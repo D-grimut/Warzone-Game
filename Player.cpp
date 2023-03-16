@@ -23,7 +23,7 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
     this->adjacencyMatrix = adjacencyMatrix;
     this->map = map;
 
-    this->sizeOfHand = new int(6);
+    this->sizeOfHand = new int(0);
     this->cards = new Hand(*sizeOfHand);
     
     this->reinforcementPool = new int(reinforcementPool);
@@ -125,67 +125,57 @@ int Player::nbTerritories(){
 
 // Method to create orders and adds them to the OrdersList array that the Player owns
 // Prints out the list of orders after creating it
-void Player::issueOrder(){
-    int choice;
-    cout << "What order would you like to create: " << endl;
-    cout << "1. Deploy\n2. Bomb\n3. Blockade\n4. Negotiate\n5. Airlift\n6. Advance\nChoice: ";
-    cin >> choice;
-
-    switch (choice){
-        case 1:
-        {
-            Order *deploy = new Deploy();
-            this->ol->addOrder(deploy, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break; 
-        }
-        case 2:
-        {
-            Order *bomb = new Bomb();
-            this->ol->addOrder(bomb, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 3:
-        {
-            Order *blockade = new Blockade();
-            this->ol->addOrder(blockade, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 4:
-        {
-            Order *negotiate = new Negotiate();
-            this->ol->addOrder(negotiate, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 5:
-        {
-            Order *airlift = new Airlift();
-            this->ol->addOrder(airlift, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 6:
-        {
-            Order *advance = new Advance();
-            this->ol->addOrder(advance, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            //if(possesor id == this.id)
-            //add card
-            //draw() then add to hand
-            break;
-        }
-        default:
-            cout << "Bad choice... Exiting the function" << endl; 
-    }        
+void Player::issueOrder(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer){
+    if(orderName == "Deploy"){
+        Deploy *deploy = new Deploy();
+        deploy->setPlayer(this);
+        deploy->setTargetTerr(targetTerr);
+        // deploy->setArmies(nbOfArmies); // HAS TO BE POINTER
+        this->ol->addOrder(deploy, *ordersIndex);
+        (*ordersIndex)++;
+    }else if(orderName == "Bomb"){
+        Bomb *bomb = new Bomb();
+        // bomb->setTargetTerr(targetTerr);
+        // bomb->setSourceTerr(sourceTerr);
+        // bomb->setPlayer(this);
+        //DOM  PLEEAESE
+        this->ol->addOrder(bomb, *ordersIndex);
+        (*ordersIndex)++;
+    }else if(orderName == "Blockade"){
+        Blockade *blockade = new Blockade();
+        // blockade->setPlayer(this);
+        // blockade->setTargetTerr(targetTerr);
+        //DOM  PLEEAESE
+        this->ol->addOrder(blockade, *ordersIndex);
+        (*ordersIndex)++;
+    }else if(orderName == "Negotiate"){
+        Negotiate *negotiate = new Negotiate();
+        // negotiate->setTargetTerr(targetTerr);
+        // negotiate->setPlayer(this);
+        // negotiate->setEnemy(enemy);
+        //DOM  PLEEAESE
+        this->ol->addOrder(negotiate, *ordersIndex);
+        (*ordersIndex)++;
+    }else if(orderName == "Airlift"){
+        Airlift *airlift = new Airlift();
+        // airlift->setTargetTerr(targetTerr);
+        // airlift->setSourceTerr(sourceTerr);
+        // airlift->setPlayer(this);
+        // airlift->setArmies(nbOfArmies);
+        //DOM  PLEEAESE
+        this->ol->addOrder(airlift, *ordersIndex);
+        (*ordersIndex)++;
+    }else if(orderName == "Advance"){
+        Advance *advance = new Advance();
+        // advance->setEnemy(enemy);
+        // advance->setPlayer(thisPlayer);
+        // advance->setTargetTerr(targetTerr);
+        // advance->setSourceTerr(sourceTerr);
+        // advance->setArmies(nbOfArmies);
+        //DOM  PLEEAESE
+        this->ol->addOrder(advance, *ordersIndex);
+        (*ordersIndex)++;
+    }     
 }
 
 // Method that finds Territories to defend and adds them to a new array
@@ -318,13 +308,17 @@ void Player::setReinforcementPool(int reinforcementPool){
     *this->reinforcementPool = reinforcementPool;
 }
 
+void Player::setNegotiateID(int negotiate){
+    *this->negotiateId = negotiate;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
 }
 
-OrdersList Player::getOrdersList(){
-    return *this->ol;
+OrdersList* Player::getOrdersList(){
+    return this->ol;
 }
 
 Hand Player::getCards(){
@@ -337,6 +331,14 @@ int Player::getSizeOfHand(){
 
 int Player::getReinforcementPool(){
     return *this->reinforcementPool;
+}
+
+int Player::getOrdersIndex(){
+    return *this->ordersIndex;
+}
+
+int Player::getNegotiateID(){
+    return *this->negotiateId;
 }
 
 // Stream insertion operator

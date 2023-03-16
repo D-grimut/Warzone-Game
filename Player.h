@@ -10,6 +10,7 @@ using namespace std;
 
 class OrdersList;
 class Hand;
+class Orders;
 
 class Player{
     private:
@@ -37,10 +38,10 @@ class Player{
         ~Player();
 
         // Methods
-        void ownedTerritories();    // Show all owned territories
-        void issueOrder();          // Create order and add it to array of orders
-        Territory* toDefend();      // Show territories to defend
-        Territory* toAttack();      // Show territories to attack
+        void ownedTerritories();                     // Show all owned territories
+        void issueOrder(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer);           // Create order and add it to array of orders
+        Territory* toDefend();                       // Show territories to defend
+        Territory* toAttack();                       // Show territories to attack
         void printCards();
         int nbTerritories();
         void printToAttToDef(Territory* arrOfDefOrAtt);
@@ -58,13 +59,16 @@ class Player{
         void setMap(Map map);
         void setCards(Hand cards);
         void setReinforcementPool(int reinforcementPool);
+        void setNegotiateID(int negotiateId);
         
         // Getters
         int getPlayerID();
-        OrdersList getOrdersList();
+        OrdersList* getOrdersList();
         Hand getCards();
         int getSizeOfHand();
         int getReinforcementPool();
+        int getOrdersIndex();
+        int getNegotiateID();
 
         Player& operator=(const Player& p);
 };

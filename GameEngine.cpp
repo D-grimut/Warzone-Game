@@ -1,6 +1,7 @@
 // GameEngine.cpp
 #include "GameEngine.h"
 #include "Player.h"
+#include "Orders.h"
 #include <cmath>
 
 /*
@@ -125,9 +126,13 @@ AssignReinforcementState::~AssignReinforcementState()
 
 // Method to calculate the armies that a player can use to reinforce
 void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayers){
+    //Ask Daniel about the "Owns all territories in continent" bonus
     for(int i = 0; i < nbOfPlayers; i++){
         int *nbOfTer = new int(pArr[i]->nbTerritories());
         int reinArm = floor(*nbOfTer/3);
+        if(reinArm < 3){
+            reinArm = 3;
+        }
         pArr[i]->setReinforcementPool(reinArm);
         cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
     }
@@ -155,40 +160,180 @@ IssueOrderState::~IssueOrderState()
 }
 
 void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
-    /*
-    Need:
-    deploy
-    advance
-    
-    */
+    for(int i = 0; i < nbOfPlayers; i++){
+        pArr[i]->setNegotiateID(0);
+    }
+
    for(int i = 0; i < nbOfPlayers; i++){
         Territory* toAtt = pArr[i]->toAttack();
         pArr[i]->printToAttToDef(toAtt);
         int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
-        // cout << "Give a priority list of territories to invade e.g. 0,1,2: " << endl;
-        // for(int j = 0; j < nbOfToAtt; j++){
-        //     cout << j << ". " << *toAtt[j].getTerritoryName() << endl;
-        // }
-
-        // string prioAtt;
-        // cout << "Priority list: ";
-        // cin >> prioAtt;
+        
 
         Territory* toDef = pArr[i]->toDefend();
         pArr[i]->printToAttToDef(toDef);
-        // int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
-        // cout << "Give a priority list of territories to defend e.g. 0,1,2: " << endl;
-        // for(int j = 0; j < nbOfToDef; j++){
-        //     cout << j << ". " << *toDef[j].getTerritoryName() << endl;
-        // }
+        int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
+        
+        int nbOfRein = pArr[i]->getReinforcementPool();
 
-        // string prioDef;
-        // cout << "Priority list: ";
-        // cin >> prioDef;
+        string targetTerr, sourceTerr, cardOrder;
+        int nbOfArmies, counterDep, toAttPossesor;
+        Territory* target = new Territory;
+        Territory* source = new Territory;
+        Player* enemy;
 
-        //Deploy sequence of the armies owned
+        while(nbOfRein != 0){
+            cout << "You have " << nbOfRein << " left to deploy" << endl;
+            cout << "Enter the country you would like to deploy armies to: ";
+            cin >> targetTerr;
+            cout << "Enter the amount of armies to send: ";
+            cin >> nbOfArmies;
+            if(nbOfRein - nbOfArmies < 0){
+                cout << "Please enter a valid amount of armies to deploy" << endl;
+                nbOfArmies = 0;
+            }
+            
+            pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
+            nbOfRein = nbOfRein - nbOfArmies;
+        }
 
-        //Advance
+        OrdersList* ol = pArr[i]->getOrdersList();
+        int listSize = pArr[i]->getOrdersIndex();
+        ol->showList(listSize);
+
+        bool isAdvancing = true;
+        int choice;
+        do{
+            cout << "Would you like to advance?\n1. Yes\n2. No\nChoice: ";
+            cin >> choice;
+            if(choice == 1){
+                cout << "Territories to attack: " << endl;
+                pArr[i]->printToAttToDef(toAtt);
+                cout << "Territories to defend: " << endl;
+                pArr[i]->printToAttToDef(toDef);
+
+                cout << "Which territory would you like to take armies from: ";
+                cin >> sourceTerr;
+                cout << "Which territory would you like to advance to: ";
+                cin >> targetTerr;
+                cout << "How many armies would you like to move: ";
+                cin >> nbOfArmies;
+
+                for(int j = 0; j < nbOfToDef; j++){
+                    if(sourceTerr == *toDef[j].getTerritoryName()){
+                        *source = toDef[j];
+                    }
+                    if(targetTerr == *toDef[j].getTerritoryName()){
+                        *target = toDef[j];
+                    }
+                }
+
+                for(int j = 0; j < nbOfToAtt; j++){
+                    if(targetTerr == *toAtt[j].getTerritoryName()){
+                        *target = toAtt[j];
+                        toAttPossesor = *toAtt[j].getPosessor();
+                        for(int k = 0; k < nbOfPlayers; k++){
+                                if(toAttPossesor == pArr[k]->getPlayerID()){
+                                    enemy = pArr[k];
+                                }
+                        }
+                    }
+                }
+                pArr[i]->issueOrder("Advance", nbOfArmies, target, source, enemy, pArr[i]);
+            }else if(choice == 2){
+                isAdvancing = false;
+            }
+        }while(isAdvancing);
+
+        bool validCardOrder = true;
+
+        if(pArr[i]->getSizeOfHand() == 0){
+            cout << "You have no cards to create a new order..." << endl;
+        }else{
+            do{
+                cout << "Select a card in your hand to create an order: " << endl;
+                pArr[i]->printCards();
+                cout << "Choice: ";
+                cin >> cardOrder;
+
+                if(cardOrder == "Bomb"){
+                    cout << "Which territory would you like to send a bomb from: ";
+                    cin >> sourceTerr;
+                    cout << "Which territory would you like to target: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            *source = toDef[j];
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            *target = toAtt[j];
+                            break;
+                        }
+                    }
+                    pArr[i]->issueOrder("Bomb", 0, target, source, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }else if(cardOrder == "Blockade"){
+                    cout << "Which territory would you like to blockade: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            *source = toDef[j];
+                            break;
+                        }
+                    }
+                    pArr[i]->issueOrder("Blockade", 0, target, nullptr, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }else if(cardOrder == "Airlift"){
+                    cout << "Which territory would you like to take armies from: ";
+                    cin >> sourceTerr;
+                    cout << "Which territory would you like to advance to: ";
+                    cin >> targetTerr;
+                    cout << "How many armies would you like to move: ";
+                    cin >> nbOfArmies;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            *source = toDef[j];
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(targetTerr == *toDef[j].getTerritoryName()){
+                            *target = toDef[j];
+                            break;
+                        }
+                    }
+
+                    pArr[i]->issueOrder("Airlift", nbOfArmies, target, source, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }else if(cardOrder == "Negotiate"){
+                    cout << "Which territory would you like to negotiate with: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            *target = toAtt[j];
+                            toAttPossesor = *toAtt[j].getPosessor();
+                            for(int k = 0; k < nbOfPlayers; k++){
+                                    if(toAttPossesor == pArr[k]->getPlayerID()){
+                                        enemy = pArr[k];
+                                    }
+                            }
+                        }
+                    }
+
+                    pArr[i]->issueOrder("Negotiate", 0, target, nullptr, enemy, pArr[i]);
+                    validCardOrder = false;
+                }else{
+                    cout << "Invalid order... Try again";
+                }
+            }while(validCardOrder);            
+        }
    }
 }
 
