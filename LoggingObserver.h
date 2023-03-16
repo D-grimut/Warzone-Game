@@ -6,6 +6,27 @@
 using namespace std;
 class Observer;
 
+// Resizable array for Observer Objects
+class ObserverList
+{
+private:
+    Observer **obs;
+    int *size;
+    int *end;
+
+public:
+    ObserverList();
+    ObserverList(int);
+    ~ObserverList();
+
+    void add(Observer* );
+    int getSize();
+    int getEnd();
+    void resize();   
+    void removeAtIndex(int);
+    Observer* getAtIndex(int); 
+};
+
 class ILoggable{
 public:
     virtual string stringToLog() = 0;
@@ -13,11 +34,11 @@ public:
 
 class Subject{
 private:
-    Observer* obs;
+    ObserverList* obs;
 
 public:
     void attach(Observer*);
-    void detach();
+    void detach(Observer* o);
     void notify(ILoggable*);
 
     Subject();
