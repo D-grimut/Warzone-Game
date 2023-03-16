@@ -69,12 +69,14 @@ class Advance : public Order {
             int* getPlayerID();
             int* getArmies();
             Player* getPlayer();
+            Player* getEnemy();
         //Setters
             void setTargetTerr(Territory* targTerr);
             void setSourceTerr(Territory* sourceTerr);
             void setArmies(int* numArmies);
             void setPlayerID(int* pID);
             void setPlayer(Player* player);
+            void setEnemy(Player* enemy);
     private:
         Territory source; //source terriotry
         Territory target; //terriotry to advance to
@@ -82,6 +84,7 @@ class Advance : public Order {
         int* armies; //number of armies to advance
         string* name; //used for description
         Player* player;
+        Player* enemy;
         friend std::ostream& operator<<(std::ostream &strm, const Advance &a);
 };
 
@@ -188,14 +191,17 @@ class Negotiate : public Order {
             int* getPlayerID();
             Territory getTargetTerr();
             Player* getPlayer();
+            Player* getEnemy();
         //Setters
             void setPlayerID(int* playerId);
             void setTargetTerr(Territory target);  
             void setPlayer(Player* player);
+            void setEnemy(Player* enemy);
           
     private:
         Territory target; //territory to negotiate with
         Player* player;
+        Player* enemy;
         int* playerID; //player id issuing order
         friend std::ostream& operator<<(std::ostream &strm, const Negotiate &a);
         string* name; //used for description
@@ -218,6 +224,7 @@ public:
     void validate(); //not implemented, prints that it is being called
     void execute(); //not implemented, prints that it is being called
     void resize();
+    Order* getOrder(int i);
 private:
     friend std::ostream& operator<<(std::ostream &strm, const OrdersList &a);
     Order** orders; //vecotr created

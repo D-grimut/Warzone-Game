@@ -77,7 +77,7 @@ std::ostream& operator<<(std::ostream &strm, const Deck &a)
 }
 
 //the draw method
-Card Deck::draw()
+Card* Deck::draw()
 {
 	this->random = new int();
 	*random = rand() % getCurrentDeckSize(); //chooses a random card in the deck
@@ -88,7 +88,7 @@ Card Deck::draw()
 	inHand[*random] = 1; // sets the card as taken
 	Card *a = new Card(deck[*random]);
 	a->setNumber(*random);
-	return *a; // returns the card
+	return a; // returns the card
 }
 
 //Parent: Card
@@ -295,4 +295,8 @@ void Hand::removeCard(int *position){
 
 void Hand::setSize(int* size){
     this->size = size;
+}
+
+Card* Hand::getCard(int i){
+    return hand[i];
 }

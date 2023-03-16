@@ -5,6 +5,7 @@
 #include "Orders.h"
 #include "Player.h"
 
+class Player;
 /*
 This section is dedicated to Assignment 2 part 2
 */
@@ -28,6 +29,8 @@ void GameEngine::startupPhase(int state)
     Territory* territories;
     Territory*** adjacencyMatrix;
     int nbTerritories;
+    int negotiateID;
+    int reinforcementPool;
     Player *p1, *p2, *p3, *p4, *p5, *p6;
     Deck *deckA = new Deck();
 
@@ -51,22 +54,22 @@ void GameEngine::startupPhase(int state)
         {
             //3. Adds player
             if(numOfPlayers == 0){
-                Player *p1 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p1 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
                 numOfPlayers++;
             }else if (numOfPlayers == 1){
-                Player *p2 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p2 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
                 numOfPlayers++;
             }else if (numOfPlayers == 2){
-                Player *p3 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p3 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
                 numOfPlayers++;
             }else if (numOfPlayers == 3){
-                Player *p4 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p4 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
                 numOfPlayers++;
             }else if (numOfPlayers == 4){
-                Player *p5 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p5 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
             numOfPlayers++;
             }else if (numOfPlayers == 5){
-                Player *p6 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map); 
+                Player *p6 = new Player((numOfPlayers+1), territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
                 numOfPlayers++;
             }
         }
@@ -196,7 +199,7 @@ void GameEngine::startupPhase(int state)
             for (int i = 0; i < 2; i++)
                {
                 //struggling to figure out how to properly call the players hand
-                Card abc = deckA->draw();
+                Card abc = *deckA->draw();
                 //p1->setCards(); //doesn't work due to setCards() being a of class Hand, this is a easy fix by calling a specific card in their hand
                 //handA->hand[i] = deckA->draw();
                 }
@@ -333,7 +336,7 @@ void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayer
         int *nbOfTer = new int(pArr[i]->nbTerritories());
         int reinArm = floor(*nbOfTer/3);
         pArr[i]->setReinforcementPool(reinArm);
-        cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
+        std::cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
     }
 }
 
@@ -380,7 +383,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
 
         Territory* toDef = pArr[i]->toDefend();
         pArr[i]->printToAttToDef(toDef);
-        // int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
+        int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
         // cout << "Give a priority list of territories to defend e.g. 0,1,2: " << endl;
         // for(int j = 0; j < nbOfToDef; j++){
         //     cout << j << ". " << *toDef[j].getTerritoryName() << endl;
@@ -389,8 +392,17 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         // string prioDef;
         // cout << "Priority list: ";
         // cin >> prioDef;
+        //if(cin is Deploy)
+        while(pArr[i]->getReinforcementPool() !=0){
+            cout << "Reinforcement pool has " <<pArr[i]->getReinforcementPool() << " armies left. Where would you like to deploy?" <<endl;
 
-        //Deploy sequence of the armies owned
+            cout<< "How many armies? " << endl;
+        }
+       
+        cout << "What would you like to do next? Options: " <<endl;
+        cout << "Cards available: " << endl;
+        
+        
 
         //Advance
    }

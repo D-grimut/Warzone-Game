@@ -7,11 +7,7 @@
 using namespace std;
 
 // Constructor of Player to initialize values
-<<<<<<< HEAD
-Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId){ 
-=======
-Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool){ 
->>>>>>> ebc8b27 (New Functions)
+    Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId){ 
     this->nbOfTerritories = new int(nbTerritories);
     this->playerID = new int(playerID);
     this->territories = territories;
@@ -322,13 +318,10 @@ void Player::setReinforcementPool(int reinforcementPool){
     *this->reinforcementPool = reinforcementPool;
 }
 
-<<<<<<< HEAD
 void Player::setNegotiateID(int negotiate){
     *this->negotiateId = negotiate;
 }
 
-=======
->>>>>>> ebc8b27 (New Functions)
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
@@ -350,13 +343,10 @@ int Player::getReinforcementPool(){
     return *this->reinforcementPool;
 }
 
-<<<<<<< HEAD
 int Player::getNegotiateID(){
     return *this->negotiateId;
 }
 
-=======
->>>>>>> ebc8b27 (New Functions)
 // Stream insertion operator
 std::ostream& operator<<(std::ostream &strm, const Player &p){
     return strm << "Player ID: " << *p.playerID;

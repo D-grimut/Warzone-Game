@@ -17,22 +17,11 @@ int main(){
     int nbTerritories = *ml->getMap()->getNbTerritories();
     
     // Create a new player with playerID = 1 and playerID = 2 and territories
-<<<<<<< HEAD
 
     Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0);
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0);
     Player *neutral = new Player(-1, territories, nbTerritories, adjacencyMatrix, map, 0, 0);
 
-=======
-<<<<<<< HEAD
-    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map);
-    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map);
-    Player *neutral = new Player(-1, territories, nbTerritories, adjacencyMatrix, map);
-=======
-    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0);
-    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0);
->>>>>>> aec8cff (New Functions)
->>>>>>> ebc8b27 (New Functions)
 
     // Set first half of territories so that Player 1 owns it
     for(int i = 0; i < nbTerritories/2; i++){

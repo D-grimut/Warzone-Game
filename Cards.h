@@ -49,7 +49,7 @@ class Deck
 		~Deck();//deconstructor
 		Deck(const Deck& e);//copy constructor
 		Deck& operator =(const Deck& e);//assignment constructor
-		Card draw();//draws a card
+		Card* draw();//draws a card
 		Card getDeck(); //gets a card from the deck
 		void setDeck(int x, Card card); //fills the deck with a card
 		int getInHand(); 
@@ -82,6 +82,8 @@ class Hand
         void setSize(int *size);
         void resize();
 		Card **hand;
+		Card* getCard(int i);
+		
 	private:
 		int *size;
 		string *name;
