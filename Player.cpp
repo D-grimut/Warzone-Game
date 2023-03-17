@@ -146,7 +146,6 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
         bomb->setTargetTerr(targetTerr);
         bomb->setSourceTerr(sourceTerr);
         bomb->setPlayer(this);
-        //DOM  PLEEAESE
         this->ol->addOrder(bomb, *ordersIndex);
         (*ordersIndex)++;
     }else if(orderName == "Blockade"){

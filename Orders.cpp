@@ -134,7 +134,6 @@ bool* Deploy::validate(){
 /*Execute Order method*/
 void Deploy::execute(){
         bool valid = *this->validate();
-        cout << getPlayer()->getPlayerID() << endl;
         if(valid == true){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *armies); //add armies to target
             getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
@@ -697,18 +696,21 @@ OrdersList::OrdersList(){
     int* size = new int(5);
     setSize(size);
     orders = new Order* [*size];
+    this->end = new int(0);
 }
 
 /*Paramaterized Constructor*/
 OrdersList::OrdersList(int* size){
     setSize(size);
     orders = new Order* [*size];
+    this->end = new int(0);
 }
 
 /*Copy Constructor*/
 OrdersList::OrdersList(const OrdersList& e){
     this->size = new int(*(e.size));
     this->orders = new Order*();
+    this->end = new int(*(e.end));
 }
 
 /*Destructor*/
@@ -721,6 +723,7 @@ OrdersList::~OrdersList(){
 OrdersList& OrdersList::operator=(const OrdersList& e){
     this->size = new int(*(e.size));
     this->orders = new Order*();
+    *this->end = *e.end;
     return *this;
 }
 
@@ -736,8 +739,10 @@ void OrdersList::addOrder(Order* newOrder, int position){
         resize();
         orders[*oldSize] = newOrder;
     }
-    else
+    else{
         orders[position] = newOrder;
+    }
+    *this->end = *this->end + 1;   
 }
 
 void OrdersList::resize(){
@@ -781,6 +786,7 @@ void OrdersList::removeOrder(int* position){
         }
         int* newSize = new int(*getSize() - 1);
         setSize(newSize);
+        *this->end = *this->end - 1;
 }
 
 void OrdersList::showList(int x){
@@ -812,7 +818,7 @@ void OrdersList::validate(){
 }
 
 void OrdersList::execute(){
-    for(int i = 0; i < *getSize(); i++){
+    for(int i = 0; i < *this->end; i++){
         orders[i]->execute();
     }
 }

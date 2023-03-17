@@ -193,6 +193,13 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 cout << "Please enter a valid amount of armies to deploy" << endl;
                 nbOfArmies = 0;
             }
+            for(int j = 0; j < nbOfToDef; j++){
+                // Check for valid name
+                if(targetTerr == *toDef[j].getTerritoryName()){
+                    *target = toDef[j];
+                    break;
+                }
+            }
             
             pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
             nbOfRein = nbOfRein - *nbOfArmies;

@@ -209,6 +209,7 @@ public:
     void execute(); //not implemented, prints that it is being called
     void resize();
     Order* getOrder(int i);
+    int* end;
 private:
     friend std::ostream& operator<<(std::ostream &strm, const OrdersList &a);
     Order** orders; //vecotr created
