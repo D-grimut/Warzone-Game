@@ -12,6 +12,7 @@ private:
 public:
     FileCommandProcessorAdapter(string fileName);
     ~FileCommandProcessorAdapter();
+    FileCommandProcessorAdapter(const FileCommandProcessorAdapter &copy);
 
     string readCommand() override;
 };
