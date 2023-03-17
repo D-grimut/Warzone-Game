@@ -346,14 +346,14 @@ OrdersList::OrdersList(){
     setSize(size);
     orders = new Order* [*size];
 
-    this->end = new int(-1);
+    this->end = new int(0);
 }
 
 /*Paramaterized Constructor*/
 OrdersList::OrdersList(int* size){
     setSize(size);
     orders = new Order* [*size];
-    this->end = new int(-1);
+    this->end = new int(0);
 }
 
 /*Copy Constructor*/
@@ -488,6 +488,6 @@ void OrdersList::execute(){
 }
 
 string OrdersList::stringToLog(){    
-    string log = "Order Issued: " + *this->orders[*this->end]->description();
+    string log = "Order Issued: " + *this->orders[*this->end - 1]->description();
     return log;
 }
