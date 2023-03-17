@@ -178,7 +178,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
 
         string targetTerr, sourceTerr, cardOrder;
         int counterDep, toAttPossesor;
-        int* nbOfArmies;
+        int* nbOfArmies = new int(0);
         Territory* target = new Territory;
         Territory* source = new Territory;
         Player* enemy;
@@ -189,9 +189,9 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
             cin >> targetTerr;
             cout << "Enter the amount of armies to send: ";
             cin >> *nbOfArmies;
-            if(nbOfRein - *nbOfArmies < 0){
-                cout << "Please enter a valid amount of armies to deploy" << endl;
-                nbOfArmies = 0;
+            while(nbOfRein - *nbOfArmies < 0 || *nbOfArmies <= 0){
+                cout << "Please enter a valid amount of armies to deploy: ";
+                cin >> *nbOfArmies;
             }
             for(int j = 0; j < nbOfToDef; j++){
                 // Check for valid name

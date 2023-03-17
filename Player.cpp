@@ -28,7 +28,7 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
     
     this->reinforcementPool = new int(reinforcementPool);
     this->negotiateId = 0;
-    this->gotCard = false;
+    this->gotCard = new bool(false);
 }
 
 // Default Constructor
@@ -52,7 +52,7 @@ Player::Player(){
     
     this->reinforcementPool = new int(0);
     this->negotiateId = 0;
-    this->gotCard = false;
+    this->gotCard = new bool(false);
 }
 
 // Copy Constructor
@@ -67,9 +67,9 @@ Player::Player(const Player& p){
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
     this->cards = p.cards;
-   this->reinforcementPool = new int(*p.reinforcementPool);
+    this->reinforcementPool = new int(*p.reinforcementPool);
     this->negotiateId = 0;
-    this->gotCard = false;
+    this->gotCard = new bool(p.gotCard);
 }
 
 // Destructor

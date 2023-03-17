@@ -22,10 +22,12 @@ int main(){
     Territory*** adjacencyMatrix = map->getAdjacencyMatrix();
 
     int nbTerritories = *ml->getMap()->getNbTerritories();
+
+    bool gotCard = false;
     
     // Create a new player with playerID = 1 and playerID = 2 and territories
-    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, false);
-    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, false);
+    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
+    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
     const int nbOfPlayers = 2;
     Player *pArr[nbOfPlayers] = {p1, p2};
