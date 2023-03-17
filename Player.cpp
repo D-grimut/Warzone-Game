@@ -7,7 +7,7 @@
 using namespace std;
 
 // Constructor of Player to initialize values
-Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId){  
+Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId, bool* gotCard){  
     this->nbOfTerritories = new int(nbTerritories);
     this->playerID = new int(playerID);
     this->territories = territories;
@@ -27,6 +27,8 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
     this->cards = new Hand(*sizeOfHand);
     
     this->reinforcementPool = new int(reinforcementPool);
+    this->negotiateId = 0;
+    this->gotCard = false;
 }
 
 // Default Constructor
@@ -49,6 +51,8 @@ Player::Player(){
     this->cards = NULL;
     
     this->reinforcementPool = new int(0);
+    this->negotiateId = 0;
+    this->gotCard = false;
 }
 
 // Copy Constructor
@@ -63,7 +67,9 @@ Player::Player(const Player& p){
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
     this->cards = p.cards;
-    //NbArmies
+   this->reinforcementPool = new int(*p.reinforcementPool);
+    this->negotiateId = 0;
+    this->gotCard = false;
 }
 
 // Destructor
@@ -100,6 +106,8 @@ Player::~Player(){
 
     delete this->reinforcementPool;
     this->reinforcementPool = NULL;
+
+    
 }
 
 // Method to show owned Territories that the player owns
@@ -312,6 +320,10 @@ void Player::setNegotiateID(int negotiate){
     *this->negotiateId = negotiate;
 }
 
+void Player::setGotCard(bool gotCard){
+    *this->gotCard = gotCard;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
@@ -339,6 +351,10 @@ int Player::getOrdersIndex(){
 
 int Player::getNegotiateID(){
     return *this->negotiateId;
+}
+
+bool Player::getGotCard(){
+    return *this->gotCard;
 }
 
 // Stream insertion operator

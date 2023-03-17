@@ -263,9 +263,15 @@ void Advance::execute(){
                 target->setNumberOfSoldiers(*source->getNumberOfSoldiers());
                 source->setNumberOfSoldiers(0);
                 cout << "ADAVANCE EXECUTE: "<<target->getTerritoryName() << " was conquered! "<< endl;
-                Card* newCard = deck->draw();
-                getPlayer()->getCards().addCard(newCard,(*getPlayer()->getCards().getSize() + 1));
-                cout <<getPlayer()->getPlayerID() << " has received a new card " << endl;
+                if(getPlayer()->getGotCard() == false){
+                    Card* newCard = deck->draw();
+                    getPlayer()->getCards().addCard(newCard,(*getPlayer()->getCards().getSize() + 1));
+                    getPlayer()->setGotCard(true);
+                    cout <<getPlayer()->getPlayerID() << " has received a new card " << endl;
+                }
+                else if(getPlayer()->getGotCard() == true){
+                    cout <<getPlayer()->getPlayerID() << " has already recieved a card this turn." << endl;
+                }
             }
             else if(source->getNumberOfSoldiers() == 0){
                 source->setPosessor(*target->getPosessor());
