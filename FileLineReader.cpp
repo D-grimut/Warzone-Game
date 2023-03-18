@@ -35,3 +35,4 @@ std::string FileLineReader::ReadLineFromFile()
     }
     return "EOF";
 }
+

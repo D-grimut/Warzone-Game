@@ -10,7 +10,8 @@ private:
     FileLineReader *fileReader;
 
 public:
-    FileCommandProcessorAdapter(string fileName);
+    //Constructors and Destructors
+    FileCommandProcessorAdapter(string fileName);  
     ~FileCommandProcessorAdapter();
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter &copy);
 

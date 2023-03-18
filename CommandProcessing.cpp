@@ -76,6 +76,18 @@ CommandList::CommandList(int size)
     this->end = new int(0);
 }
 
+CommandList::CommandList(CommandList* cl)
+{
+    this->size = new int(*cl->size);
+    this->commands = new Command *[*this->size];
+    this->end = new int(*cl->end);
+
+    for(int i = 0; i < *this->end; i++){
+        commands[i] = cl->commands[i];
+    }
+}
+
+
 CommandList::~CommandList()
 {
     delete this->size;
@@ -137,6 +149,25 @@ Command *CommandList::getAtIndex(int index)
     }
 }
 
+CommandList &CommandList::operator=(const CommandList &c)
+{
+    *this->size = *c.size;
+    *this->end = *c.end;
+
+    for(int i = 0; i < *this->end; i++){
+        this->storeCommand(c.commands[i]);
+    }    
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &strm, const CommandList &t)
+{
+    for(int i = 0; i < *t.end; i++){
+        cout << t.commands[i] << endl;
+    };
+}
+
+
 /*---------CommandProcessor class---------*/
 CommandProcessor::CommandProcessor()
 {
@@ -146,6 +177,11 @@ CommandProcessor::CommandProcessor()
 CommandProcessor::CommandProcessor(int size)
 {
     this->commandList = new CommandList(size);
+}
+
+CommandProcessor::CommandProcessor(CommandProcessor* cp)
+{
+    this->commandList = cp->commandList;
 }
 
 CommandProcessor::~CommandProcessor()
@@ -314,4 +350,15 @@ bool CommandProcessor::validate(Command &command, int state, string effect)
         return true;
         break;
     }
+}
+
+CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c)
+{
+    this->commandList = c.commandList;
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cp)
+{
+    return cout << cp.commandList << endl;
 }

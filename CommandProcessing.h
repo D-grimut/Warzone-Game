@@ -44,7 +44,7 @@ public:
     //Constructors
     CommandList();
     CommandList(int);
-    CommandList(CommandList*);// TODO
+    CommandList(CommandList*);
     ~CommandList();
 
     void storeCommand(Command *);       //Adds a Command object into the array
@@ -52,7 +52,7 @@ public:
     int getEnd();                       //Getter to get the index of the end of the array    
     Command *getAtIndex(int);           //Method to get the element at a given index, return null if out of bounds
 
-    //Assignment and insertion operators - TODO
+    //Assignment and insertion operators
     CommandList &operator=(const Command &);
     friend std::ostream &operator<<(std::ostream &strm, const CommandList &cl);
 };
@@ -68,14 +68,14 @@ public:
     //Constructors and Destructs
     CommandProcessor();
     CommandProcessor(int);
-    CommandProcessor(CommandProcessor*); //TODO
+    CommandProcessor(CommandProcessor*);
     ~CommandProcessor();
 
     string getCommand();                                                            //Method that reads a command from the console and saves it    
     void validate(string, string, string, bool, function<bool(string)> func);       //Method that validates all user input that is passed by console
     bool validate(Command &command, int state, string effect);                      //Method to validate specific Command objects at specific states
 
-    //Assignment and insertion operators - TODO
-    CommandList &operator=(const Command &);
-    friend std::ostream &operator<<(std::ostream &strm, const CommandList &cl);
+    //Assignment and insertion operators
+    CommandProcessor &operator=(const CommandProcessor &);
+    friend std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cl);
 };

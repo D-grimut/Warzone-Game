@@ -26,7 +26,7 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 }
 
 // copy consturctor
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter &copy) : CommandProcessor()
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter &copy) : CommandProcessor(copy)
 {
     if (copy.fileReader != nullptr)
     {
