@@ -1,5 +1,304 @@
 // GameEngine.cpp
 #include "GameEngine.h"
+#include "Map.h"
+#include "Cards.h"
+#include "Orders.h"
+#include "Player.h"
+
+/*
+This section is dedicated to Assignment 2 part 2
+*/
+
+// Runs the startup for the game
+
+/*
+If your reading this I'm probably butchering my explination, sorry about that.
+TODO: Implement/Fix 4b), 4c) and 4d)
+ */
+void GameEngine::startupPhase(int state)
+{   
+    if (state == 0)
+        {
+            //1.Use the MapLoader function to select a map
+            this->validMap = new MapLoader("europe.map");
+            this->map = validMap->getMap();
+            std::cout << "Map selected" << std::endl;
+        }
+        else if (state == 1)
+        {
+            //2.Use validate map to validate the map
+            this->territories = map->getCountries();
+            this->adjacencyMatrix = map->getAdjacencyMatrix();
+            this->nbTerritories = validMap->getMap()->getNbTerritories();
+            std::cout << "Map validated and loaded" << std::endl;
+            if(!this->map->validate()){
+                cout << "Map is invalid; failed validation() method - rejecting map" << endl;
+            }else{
+                cout << "Map is valid!" << endl;
+            }
+        }
+        else if (state == 2)
+        {
+            //3. Adds player
+            if(*this->numOfPlayers == 0){
+                this->p1->setPlayerID(1);
+                this->p1->setTerritories(*this->territories);
+                this->p1->setNbOfTerritories(*this->nbTerritories);
+                this->p1->setAdjacencyMatrix(*this->adjacencyMatrix);
+                this->p1->setMap(*this->map);
+                *this->numOfPlayers = 1;
+                std::cout << "Player 1 added" << std::endl;
+            }else if (*numOfPlayers == 1){
+                Player *p2 = new Player(2, territories, *nbTerritories, adjacencyMatrix, map); 
+                *this->numOfPlayers = 2;
+                std::cout << "Player 2 added" << std::endl;
+            }else if (*this->numOfPlayers == 2){
+                Player *p3 = new Player(3, territories, *nbTerritories, adjacencyMatrix, map); 
+                *this->numOfPlayers = 3;
+                std::cout << "Player 3 added" << std::endl;
+            }else if (*numOfPlayers == 3){
+                Player *p4 = new Player(4, territories, *nbTerritories, adjacencyMatrix, map); 
+                *this->numOfPlayers = 4;
+                std::cout << "Player 4 added" << std::endl;
+            }else if (*numOfPlayers == 4){
+                Player *p5 = new Player(5, territories, *nbTerritories, adjacencyMatrix, map); 
+                *this->numOfPlayers = 5;
+                std::cout << "Player 5 added" << std::endl;
+            }else if (*numOfPlayers == 5){
+                Player *p6 = new Player(6, territories, *nbTerritories, adjacencyMatrix, map); 
+                *this->numOfPlayers = 6;
+                std::cout << "Player 6 added" << std::endl;
+            }
+        }
+        else if (state == 3)
+        {
+            //4.a) fairly distribute all the territories to the players
+            if(*this->numOfPlayers == 2){
+                // Set p1 territories
+                std::cout << "That runs" << std::endl;
+                for(int i = 0; i < *this->nbTerritories/2; i++){
+                    std::cout << this->p1->getPlayerID() << std::endl;
+                    this->territories[i].setPosessor(this->p1->getPlayerID());
+                }
+                // Set p2 territories
+                std::cout << "errors here?" << std::endl;
+                for(int i = *this->nbTerritories/2; i < *this->nbTerritories; i++){
+                    std::cout << "or over here?" << std::endl;
+                    this->territories[i].setPosessor(this->p2->getPlayerID());
+                }
+            }else if (*this->numOfPlayers == 3){
+                // Set p1 territories
+                for(int i = 0; i < *this->nbTerritories/3; i++){
+                    this->territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = *this->nbTerritories/3; i < *this->nbTerritories*(2/3); i++){
+                    this->territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = *this->nbTerritories*(2/3); i < *this->nbTerritories; i++){
+                    this->territories[i].setPosessor(p3->getPlayerID());
+                }
+            }else if (*numOfPlayers == 4){
+                // Set p1 territories
+                for(int i = 0; i < *this->nbTerritories/4; i++){
+                    this->territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = *this->nbTerritories/4; i < *this->nbTerritories/2; i++){
+                    this->territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = *this->nbTerritories/2; i < *this->nbTerritories*(3/4); i++){
+                    this->territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = *this->nbTerritories*(3/4); i < *this->nbTerritories; i++){
+                    this->territories[i].setPosessor(p4->getPlayerID());
+                }
+            }else if (*this->numOfPlayers == 5){
+                // Set p1 territories
+                for(int i = 0; i < *this->nbTerritories/5; i++){
+                    this->territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = *this->nbTerritories/5; i < *this->nbTerritories*(2/5); i++){
+                    this->territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = *this->nbTerritories*(2/5); i < *this->nbTerritories*(3/5); i++){
+                    this->territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = *this->nbTerritories*(3/5); i < *this->nbTerritories*(4/5); i++){
+                    this->territories[i].setPosessor(p4->getPlayerID());
+                }
+                // Set p5 territories
+                for(int i = *this->nbTerritories*(4/5); i < *this->nbTerritories; i++){
+                    this->territories[i].setPosessor(p5->getPlayerID());
+                }
+            }else if (*this->numOfPlayers == 6){
+                // Set p1 territories
+                for(int i = 0; i < *this->nbTerritories/6; i++){
+                    this->territories[i].setPosessor(p1->getPlayerID());
+                }
+                // Set p2 territories
+                for(int i = *this->nbTerritories/6; i < *this->nbTerritories*(1/3); i++){
+                    this->territories[i].setPosessor(p2->getPlayerID());
+                }
+                // Set p3 territories
+                for(int i = *this->nbTerritories*(1/3); i < *this->nbTerritories/2; i++){
+                    this->territories[i].setPosessor(p3->getPlayerID());
+                }
+                // Set p4 territories
+                for(int i = *this->nbTerritories/2; i < *this->nbTerritories*(2/3); i++){
+                    this->territories[i].setPosessor(p4->getPlayerID());
+                }
+                // Set p5 territories
+                for(int i = *this->nbTerritories*(2/3); i < *this->nbTerritories*(5/6); i++){
+                    this->territories[i].setPosessor(p5->getPlayerID());
+                }
+                // Set p6 territories
+                for(int i = *this->nbTerritories*(5/6); i < *this->nbTerritories; i++){
+                    this->territories[i].setPosessor(p6->getPlayerID());
+                }
+            }
+            std::cout << "Territories seperated" << std::endl;
+            std::cout << "Territories that each player owns: " << std::endl;
+
+            for(int i = 1; i < *this->numOfPlayers; i++)
+            {
+                std::cout << "Player " << i << ": " << std::endl;
+                if(i == 1){
+                    this->p1->ownedTerritories();
+                } else if (i == 2){
+                    this->p2->ownedTerritories();
+                } else if (i == 3){
+                    this->p3->ownedTerritories();
+                } else if (i == 4){
+                    this->p4->ownedTerritories();
+                } else if (i == 5){
+                    this->p5->ownedTerritories();
+                } else if (i == 6){
+                    this->p6->ownedTerritories();
+                } 
+            }
+
+            //b) determine randomly the order of play of the players in the game
+            int min = 1, max = *this->numOfPlayers;
+
+            //gives the player their turn order
+            for(int i = min; i < *this->numOfPlayers; i++)
+            {
+                int temp = rand() % *this->numOfPlayers + 1;
+                if (temp == 1 && p1Order == 0){
+                    *this->p1Order = i;
+                } else if (temp == 2 && p2Order == 0){
+                    *this->p2Order = i;
+                } else if (temp == 3 && p3Order == 0){
+                    *this->p3Order = i;
+                } else if (temp == 4 && p4Order == 0){
+                    *this->p4Order = i;
+                } else if (temp == 5 && p5Order == 0){
+                    *this->p5Order = i;
+                } else if (temp == 6 && p6Order == 0){
+                    *this->p6Order = i;
+                }
+            } 
+            std::cout << "Player order:" << std::endl;
+            for(int i = 1; i <= *this->numOfPlayers; i++)
+            {
+                int temp;
+                if(i == 1){
+                    temp = *this->p1Order;
+                } else if (i == 2){
+                    temp = *this->p2Order;
+                } else if (i == 3){
+                    temp = *this->p3Order;
+                } else if (i == 4){
+                    temp = *this->p4Order;
+                } else if (i == 5){
+                    temp = *this->p5Order;
+                } else if (i == 6){
+                    temp = *this->p6Order;
+                }
+                std::cout << "Player " << i << ": " << temp << std::endl;
+            }
+
+            //c) give 50 initial armies to the players, which are placed in their respective reinforcement pool
+            //loop through numOfPlayers and assign them 50 troops
+            for (int i = 1; i <= *this->numOfPlayers; i++)
+            {
+                if (i == 1){
+                    this->p1->setReinforcements(50);
+                } else if (i == 2){
+                    this->p2->setReinforcements(50);
+                } else if (i == 3){
+                    this->p3->setReinforcements(50);
+                } else if (i == 4){
+                    this->p4->setReinforcements(50);
+                } else if (i == 5){
+                    this->p5->setReinforcements(50);
+                } else if (i == 6){
+                    this->p6->setReinforcements(50);
+                }
+                std::cout << "Player " << i << " reinforcements number: " << p1->getReinforcements() << std::endl;
+            }
+
+
+            //d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+            //fill the deck with cards to draw from
+            for (int i = 0; i < 10; i++){
+                if (i < 2){
+                    this->deckA->setDeck(i, Type::airlift);
+                } else if (i < 4) {
+                    this->deckA->setDeck(i, Type::blockade);
+                } else if (i < 6) {
+                    this->deckA->setDeck(i, Type::bomb);
+                } else if (i < 8) {
+                    this->deckA->setDeck(i, Type::diplomacy);
+                } else {
+                    this->deckA->setDeck(i, Type::reinforcement);
+                }
+            }
+            //draws cards for the hand
+            for (int i = 0; i < 2; i++)
+            {
+                if(*this->p1Order == 1){
+                    Card a = deckA->draw();
+                    this->p1->getCards().addCard(&a, i);
+                }
+                if(*this->p2Order == 1){
+                    Card b = deckA->draw();
+                    this->p1->getCards().addCard(&b, i);
+                }
+                if(*this->p3Order == 1){
+                    Card c = deckA->draw();
+                    this->p1->getCards().addCard(&c, i);
+                }
+                if(*this->p4Order == 1){
+                    Card d = deckA->draw();
+                    this->p1->getCards().addCard(&d, i);
+                } 
+                if(*this->p5Order == 1){
+                    Card e = deckA->draw();
+                    this->p1->getCards().addCard(&e, i);
+                } 
+                if(*this->p6Order == 1){
+                    Card f = deckA->draw();
+                    this->p1->getCards().addCard(&f, i);
+                }
+
+            }
+
+
+            //e) switch the game to the play phase //explain this better!
+            //This happens automatically, the reason is that it's already implemented into the game engine system
+            std::cout << "Switching to game phase" << std::endl;
+            std::cout << "Beyond this point the program does nothing" << std::endl;
+        }
+
+}
 
 /*
 This section is for all the constructors used for each class
@@ -9,6 +308,20 @@ This section is for all the constructors used for each class
 GameEngine::GameEngine()
 {
     current_state = new int(0); // default: every user starts at current state 0 aka. "Start"
+    this->numOfPlayers = new int(0);
+    this->p1Order = new int(0);
+    this->p2Order = new int(0);
+    this->p3Order = new int(0);
+    this->p4Order = new int(0);
+    this->p5Order = new int(0);
+    this->p6Order = new int(0);
+    this->p1 = new Player();
+    this->p2 = new Player();
+    this->p3 = new Player();
+    this->p4 = new Player();
+    this->p5 = new Player();
+    this->p6 = new Player();
+    
 }
 
 // Destructor for game engine
@@ -309,6 +622,7 @@ void StartState::StartInput(const std::string &input)
 {
     if (input == "loadmap")
     {
+        engine->startupPhase(0);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(1);
@@ -330,6 +644,7 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
 {
     if (input == "validatemap")
     {
+        engine->startupPhase(1);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(2);
@@ -361,6 +676,7 @@ void MapValidatedState::ValidateInput(const std::string &input)
 {
     if (input == "addplayer")
     {
+        engine->startupPhase(2);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(3);
@@ -382,12 +698,14 @@ void PlayersAddedState::PlayersAddedInput(const std::string &input)
 {
     if (input == "assigncountries")
     {
+        engine->startupPhase(3);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(4);
     }
     else if (input == "addplayer")
     {
+        engine->startupPhase(2);
         std::cout << "\nPlayer added\n"
                   << std::endl;
         engine->Commands();
