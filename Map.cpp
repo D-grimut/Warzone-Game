@@ -265,12 +265,7 @@ MapLoader::MapLoader(string fileName){
         this->map->setCountries(this->countries);        
         readBorders(fileName);       
 
-        if(!this->map->validate()){
-           cout << "Map is invalid; failed validation() method - rejecting map" << endl;
-           
-        }else{
-            cout << "Map is valid!" << endl;
-        }
+        
     }  
 }
 
