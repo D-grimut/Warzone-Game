@@ -14,8 +14,8 @@ public:
     std::string ReadLineFromFile();
 
     // Assignment and insertion operators
-    friend std::ostream &operator<<(std::ostream &os, FileLineReader &flr);
-    FileLineReader &operator=(const FileLineReader &other);
+    friend std::ostream &operator<<(std::ostream &os, FileLineReader &);
+    FileLineReader &operator=(const FileLineReader &);
 
     std::string getFileName();
 

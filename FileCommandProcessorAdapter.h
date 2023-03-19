@@ -16,8 +16,8 @@ public:
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter &copy);
 
     // insertion and assignment operator
-    friend std::ostream &operator<<(std::ostream &os, const FileCommandProcessorAdapter &fcpa);
-    FileCommandProcessorAdapter &operator=(const FileCommandProcessorAdapter &other);
+    friend std::ostream &operator<<(std::ostream &os, const FileCommandProcessorAdapter &);
+    FileCommandProcessorAdapter &operator=(const FileCommandProcessorAdapter &);
 
     string readCommand() override;
 };
