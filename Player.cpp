@@ -13,6 +13,7 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
 
     int* size = new int(10);
     this->ol = new OrdersList(size);
+    this->reinforcements = new int(0);
 
     this->ordersIndex = new int(0);
 
@@ -231,6 +232,10 @@ void Player::printCards(){
 }
 
 // Setters
+void Player::setReinforcements(int reinforcements){
+    *this->reinforcements = reinforcements;
+}
+
 void Player::setPlayerID(int playerID){
     *this->playerID = playerID;
 }
@@ -272,6 +277,10 @@ void Player::setCards(Hand cards){
 }
 
 // Getters
+int Player::getReinforcements(){
+    return *this->reinforcements;
+}
+
 int Player::getPlayerID(){
     return *this->playerID;
 }
