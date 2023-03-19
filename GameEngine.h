@@ -1,4 +1,8 @@
 #include <iostream>
+#include "Map.h"
+#include "Cards.h"
+#include "Orders.h"
+#include "Player.h"
 
 class GameEngine
 {
@@ -10,8 +14,18 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
+    void startupPhase(int state);
 
 private:
+    int *numOfPlayers; //will be used to keep track of the number of players
+    int *p1Order, *p2Order, *p3Order, *p4Order, *p5Order, *p6Order;
+    MapLoader *validMap;
+    Map *map;
+    Territory* territories;
+    Territory*** adjacencyMatrix;
+    int *nbTerritories;
+    Player *p1, *p2, *p3, *p4, *p5, *p6;
+    Deck *deckA;
     int *current_state; // current state : int or string?
 };
 
