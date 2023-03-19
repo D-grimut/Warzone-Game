@@ -16,6 +16,11 @@ Subject::~Subject()
     this->obs = NULL;
 }
 
+Subject::Subject(const Subject &other)
+{
+    this->obs = new ObserverList(*other.obs);
+}
+
 void Subject::attach(Observer *o)
 {
     this->obs[obs->getEnd()].add(o);
@@ -114,6 +119,20 @@ ObserverList::~ObserverList()
 
     delete this->end;
     this->end = NULL;
+}
+
+ObserverList::ObserverList(const ObserverList &other)
+{
+    this->size = new int(*other.size);
+    this->end = new int(*other.end);
+
+    this->obs = new Observer *[*this->size];
+
+    for (int i = 0; i < *other.end; i++)
+    {
+        this->obs[i] = new Observer(*other.obs[i]);
+    }
+    *this->end = *other.end;
 }
 
 void ObserverList::add(Observer *o)
