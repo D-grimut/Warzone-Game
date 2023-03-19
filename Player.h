@@ -21,6 +21,7 @@ class Player{
         Map* map;                       // Map object
         int* sizeOfHand;
         Hand* cards;                    // List Of Cards
+        int *reinforcements;
 
         friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
@@ -49,12 +50,14 @@ class Player{
         void setAdjacencyMatrix(Territory** adjacencyMatrix);
         void setMap(Map map);
         void setCards(Hand cards);
+        void setReinforcements(int reinforcements);
         
         // Getters
         int getPlayerID();
         OrdersList getOrdersList();
         Hand getCards();
         int getSizeOfHand();
+        int getReinforcements();
 
         Player& operator=(const Player& p);
 };
