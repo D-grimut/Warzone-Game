@@ -65,7 +65,7 @@ class Player{
         // Getters
         int getPlayerID();
         OrdersList* getOrdersList();
-        Hand getCards();
+        Hand* getCards();
         int getSizeOfHand();
         int getReinforcementPool();
         int getOrdersIndex();

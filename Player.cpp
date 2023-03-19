@@ -139,8 +139,8 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
         deploy->setPlayer(this);
         deploy->setTargetTerr(targetTerr);
         deploy->setArmies(nbOfArmies);
-        cout << *targetTerr->getNumberOfSoldiers() << " in Player class" << endl; 
-        cout << *this->playerID << " player id in player class" << endl;
+        //cout << *targetTerr->getNumberOfSoldiers() << " in Player class" << endl; 
+        //cout << *this->playerID << " player id in player class" << endl;
         this->ol->addOrder(deploy, *ordersIndex);
         (*ordersIndex)++;
     }/*else*/ if(orderName == "Bomb"){
@@ -330,8 +330,8 @@ OrdersList* Player::getOrdersList(){
     return this->ol;
 }
 
-Hand Player::getCards(){
-    return *this->cards;
+Hand* Player::getCards(){
+    return this->cards;
 }
 
 int Player::getSizeOfHand(){

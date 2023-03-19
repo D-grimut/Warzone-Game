@@ -132,3 +132,13 @@ public:
 private:
     GameEngine *engine;
 };
+
+class MainGameState
+{
+    public: 
+        MainGameState(GameEngine *engine);
+        ~MainGameState();
+        MainGameState(const MainGameState &copy);
+        void mainGameLoop;
+
+};

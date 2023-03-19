@@ -98,7 +98,7 @@ Card::Card()
 	this->type = new Type(Type::blockade);	
 	this->number = new int();
 
-	int* size = new int(10);
+	size = new int(10);
 
     this->ol = new OrdersList(size);
 	this->ordersIndex = new int(0);
@@ -108,7 +108,7 @@ Card::Card(Type type1)
 {
 	this->type = new Type(type1);
 	this->number = new int();
-	int* size = new int(10);
+	size = new int(10);
     this->ol = new OrdersList(size);
 	this->ordersIndex = new int(0);
 }
@@ -222,16 +222,14 @@ std::ostream &operator<<(std::ostream &strm, const Card &a)
 //default
 Hand::Hand()
 {
-	int *size = new int(5);
-    setSize(size);
+	size = new int(5);
     hand = new Card *[*size];
 }
 
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
-	int *size = new int(handSize);
-    setSize(size);
+	size = new int(handSize);
     hand = new Card *[*size];
 }
 

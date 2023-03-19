@@ -13,7 +13,7 @@ int main(){
     ExecuteOrderState *exo = new ExecuteOrderState(engine);
 
     // Load map, store map, store all territories, get number of territories
-    MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
+    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\OneDrive\\Documents\\GitHub\\Warzone-Game\\Warzone-Game\\europe.map");
 
     Map *map = ml->getMap();
 
@@ -24,7 +24,7 @@ int main(){
     int nbTerritories = *ml->getMap()->getNbTerritories();
 
     bool gotCard = false;
-    
+
     // Create a new player with playerID = 1 and playerID = 2 and territories
     Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
@@ -45,6 +45,7 @@ int main(){
     }
 
     //mainGameLoop();
+    
     en->reinforcementPhase(pArr, nbOfPlayers);
     ios->issueOrdersPhase(pArr, nbOfPlayers);
     exo->executeOrderPhase(pArr, nbOfPlayers);

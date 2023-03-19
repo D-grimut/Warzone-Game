@@ -16,7 +16,7 @@ class Order {
         ~Order();
         Order(const Order& e); //copy constructor
         Order& operator =(const Order& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute() = 0; //Execute
         virtual string* description(); //Shows which order it is
         string* getName();
@@ -32,7 +32,7 @@ class Deploy : public Order {
         ~Deploy();
         Deploy(const Deploy& e); //copy constructor
         Deploy& operator =(const Deploy& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
@@ -58,7 +58,7 @@ class Advance : public Order {
         ~Advance();
         Advance(const Advance& e); //copy constructor
         Advance& operator =(const Advance& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
@@ -90,7 +90,7 @@ class Bomb : public Order {
         ~Bomb();
         Bomb(const Bomb& e); //copy constructor
         Bomb& operator =(const Bomb& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
@@ -116,7 +116,7 @@ class Blockade : public Order {
         ~Blockade();
         Blockade(const Blockade& e); //copy constructor
         Blockade& operator =(const Blockade& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
@@ -139,7 +139,7 @@ class Airlift : public Order {
         ~Airlift();
         Airlift(const Airlift& e); //copy constructor
         Airlift& operator =(const Airlift& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
 
@@ -171,7 +171,7 @@ class Negotiate : public Order {
         ~Negotiate();
         Negotiate(const Negotiate& e); //copy constructor
         Negotiate& operator =(const Negotiate& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters

@@ -34,6 +34,7 @@ class Card
 	private:
 		Type *type;
 		string* name;
+		int* size;
 		OrdersList *ol;// list of orders
 		int *ordersIndex;// Index of Orders
 		int *number = new int();
