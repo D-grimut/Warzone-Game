@@ -204,6 +204,14 @@ void GameEngine::Play()
         if (choice == "read")
         {
             FileCommandProcessorAdapter *pc = new FileCommandProcessorAdapter("commands.txt");
+            string s = "";
+            while(s != "EOF"){
+                s = pc->readCommand();
+                cout << s << endl;
+            }
+            //Printing all commands stored by the Command Processor - FOR DEMO
+            cout << *pc << endl;
+
             break;
         }
         else if (choice == "write")
@@ -347,6 +355,7 @@ bool StartState::StartInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(1);
+        *engine->cp->state = 1;
     }
     else
     {
@@ -366,6 +375,7 @@ bool MapLoadedState::MapLoadedInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(2);
+        *engine->cp->state = 2;
     }
     else if (input == "loadmap")
     {
@@ -392,6 +402,7 @@ bool MapValidatedState::ValidateInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(3);
+        *engine->cp->state = 3;
     }
     else
     {
@@ -411,6 +422,7 @@ bool PlayersAddedState::PlayersAddedInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(4);
+        *engine->cp->state = 4;
     }
     else if (input == "addplayer")
     {
@@ -436,6 +448,7 @@ bool AssignReinforcementState::AssignReinforcementsInput(const std::string &inpu
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(5);
+        *engine->cp->state = 5;
     }
     else
     {
@@ -454,6 +467,7 @@ bool IssueOrderState::IssueOrderInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(6);
+        *engine->cp->state = 6;
     }
     else if (input == "issueorder")
     {
@@ -479,6 +493,7 @@ bool ExecuteOrderState::ExecuteOrderInput(const std::string &input)
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(7);
+        *engine->cp->state = 7;
     }
     else if (input == "execorder")
     {
@@ -509,13 +524,18 @@ bool WinState::WinInput(const std::string &input)
     if (input == "end")
     {
         engine->TransitionTo(8);
+        *engine->cp->state = 8;
         std::cout << "\nThank you for playing!" << std::endl;
-        // engine->cp->toString(); FOR TESTING - TODO: REMOVE AT END
+
+        //Printing all commands stored by the Command Processor - FOR DEMO
+        cout << *engine->cp << endl;
+       
         exit(0);
     }
     else if (input == "play")
     {
         engine->TransitionTo(0);
+        *engine->cp->state = 0;
         std::cout << "\n Back to the start." << std::endl;
         return true;
     }

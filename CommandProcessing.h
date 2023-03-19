@@ -53,7 +53,7 @@ public:
     Command *getAtIndex(int);           //Method to get the element at a given index, return null if out of bounds
 
     //Assignment and insertion operators
-    CommandList &operator=(const Command &);
+    CommandList &operator=(const CommandList &);
     friend std::ostream &operator<<(std::ostream &strm, const CommandList &cl);
 };
 
@@ -65,6 +65,7 @@ protected:
     void saveCommand(string);           //Method that saves the command into the commandList array
 
 public:
+    int* state;                         //state of the game
     //Constructors and Destructs
     CommandProcessor();
     CommandProcessor(int);
@@ -73,7 +74,7 @@ public:
 
     string getCommand();                                                            //Method that reads a command from the console and saves it    
     void validate(string, string, string, bool, function<bool(string)> func);       //Method that validates all user input that is passed by console
-    bool validate(Command &command, int state, string effect);                      //Method to validate specific Command objects at specific states
+    bool validate(Command &command, string effect);                      //Method to validate specific Command objects at specific states
 
     //Assignment and insertion operators
     CommandProcessor &operator=(const CommandProcessor &);

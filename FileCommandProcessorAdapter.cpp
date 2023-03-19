@@ -56,6 +56,9 @@ FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCo
 // insertion operator
 std::ostream &operator<<(std::ostream &os, const FileCommandProcessorAdapter &adapter)
 {
-    os << "FileCommandProcessorAdapter is using File: " << adapter.fileReader->getFileName() << "." << std::endl;
-    return os;
+    string s = "FileCommandProcessorAdapter is using File: " + adapter.fileReader->getFileName() + ".\n";
+    for(int i = 0; i < adapter.commandList->getEnd(); i++){
+       s +=  "Command Type: " + adapter.commandList->getAtIndex(i)->getCommandType() + ", Command Effect: " + adapter.commandList->getAtIndex(i)->getEffect() + "\n";
+    };      
+    return os << s << endl;;
 }

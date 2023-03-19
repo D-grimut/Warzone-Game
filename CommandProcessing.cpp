@@ -149,8 +149,7 @@ Command *CommandList::getAtIndex(int index)
     }
 }
 
-CommandList &CommandList::operator=(const CommandList &c)
-{
+CommandList& CommandList::operator=(const CommandList &c){
     *this->size = *c.size;
     *this->end = *c.end;
 
@@ -162,9 +161,12 @@ CommandList &CommandList::operator=(const CommandList &c)
 
 std::ostream &operator<<(std::ostream &strm, const CommandList &t)
 {
+    string s = "";
     for(int i = 0; i < *t.end; i++){
-        cout << t.commands[i] << endl;
+       s +=  "Command Type: " + t.commands[i]->getCommandType() + ", Command Effect: " + t.commands[i]->getEffect() + "\n";
     };
+
+    return strm << s << endl;
 }
 
 
@@ -172,22 +174,28 @@ std::ostream &operator<<(std::ostream &strm, const CommandList &t)
 CommandProcessor::CommandProcessor()
 {
     this->commandList = new CommandList();
+    this->state = new int(0);
 }
 
 CommandProcessor::CommandProcessor(int size)
 {
     this->commandList = new CommandList(size);
+    this->state = new int(0);
 }
 
 CommandProcessor::CommandProcessor(CommandProcessor* cp)
 {
     this->commandList = cp->commandList;
+    this->state = new int(*cp->state);
 }
 
 CommandProcessor::~CommandProcessor()
 {
     delete this->commandList;
     this->commandList = NULL;
+
+    delete this->state;
+    this->state =NULL;
 }
 
 string CommandProcessor::readCommand()
@@ -246,9 +254,9 @@ void CommandProcessor::validate(string message, string input, string breakComman
     }
 }
 
-bool CommandProcessor::validate(Command &command, int state, string effect)
+bool CommandProcessor::validate(Command &command, string effect)
 {
-    switch (state)
+    switch (*this->state)
     {
     case 0:
         if (command.getCommandType() == "loadmap")
@@ -355,10 +363,16 @@ bool CommandProcessor::validate(Command &command, int state, string effect)
 CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c)
 {
     this->commandList = c.commandList;
+    *this->state = *c.state;
     return *this;
 }
 
 std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cp)
 {
-    return cout << cp.commandList << endl;
+    string s = "";
+    for(int i = 0; i < cp.commandList->getEnd(); i++){
+       s +=  "Command Type: " + cp.commandList->getAtIndex(i)->getCommandType() + ", Command Effect: " + cp.commandList->getAtIndex(i)->getEffect() + "\n";
+    };
+
+    return strm << s << endl;
 }
