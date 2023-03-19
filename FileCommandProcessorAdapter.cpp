@@ -49,16 +49,7 @@ string FileCommandProcessorAdapter::readCommand()
 // assignment operator
 FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter &other)
 {
-    if (this != &other)
-    {
-        delete fileReader;
-        fileReader = nullptr;
-
-        if (other.fileReader != nullptr)
-        {
-            fileReader = new FileLineReader(*other.fileReader);
-        }
-    }
+    *this->fileReader = *other.fileReader;
     return *this;
 }
 

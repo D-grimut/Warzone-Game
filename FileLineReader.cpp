@@ -52,21 +52,9 @@ std::ostream &operator<<(std::ostream &os, FileLineReader &flr)
 // assignment operator
 FileLineReader &FileLineReader::operator=(const FileLineReader &other)
 {
-    if (this == &other)
-    {
-        return *this;
-    }
-
-    if (file != nullptr && file->is_open())
-    {
-        file->close();
-    }
-
-    *file_name = *other.file_name;
-    *currentLine = *other.currentLine;
-    delete file;
-    file = new std::ifstream(*file_name);
-
+    this->file = other.file;
+    *this->currentLine = *other.currentLine;
+    *this->file_name = *other.file_name;
     return *this;
 }
 
