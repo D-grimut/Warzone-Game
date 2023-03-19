@@ -51,8 +51,6 @@ FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCo
 {
     if (this != &other)
     {
-        CommandProcessor::operator=(other);
-
         delete fileReader;
         fileReader = nullptr;
 
