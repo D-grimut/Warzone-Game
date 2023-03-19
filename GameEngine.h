@@ -16,6 +16,7 @@ public:
     int *getState();                    // getter
     void startupPhase(int state);
     int *numOfPlayers; //will be used to keep track of the number of players
+    bool *startupSuccess; // makes sure the startup works correctly
 
 private:   
     int *p1Order, *p2Order, *p3Order, *p4Order, *p5Order, *p6Order;
