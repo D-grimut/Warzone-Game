@@ -11,7 +11,8 @@ enum class Type {
 	reinforcement, 
 	blockade,
 	airlift,
-	diplomacy
+	diplomacy,
+	null
 };
 
 //Card class
@@ -73,11 +74,15 @@ class Hand
 		Hand(const Hand& e);//copy contructor
 		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
-		Card *hand;
+		int *getSize();
+		void addCard(Card *card, int position);
+		void removeCard(int *position);
+		void showHand();
+        void setSize(int *size);
+        void resize();
+		Card **hand;
 	private:
-		string* name;
-		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);
-		
-
+		int *size;
+		string *name;
+		friend std::ostream& operator<<(std::ostream &strm, const Hand &a);	
 };
-
