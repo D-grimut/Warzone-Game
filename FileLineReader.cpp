@@ -38,6 +38,7 @@ std::string FileLineReader::ReadLineFromFile()
     return "EOF";
 }
 
+// insertion operator
 std::ostream &operator<<(std::ostream &os, FileLineReader &flr)
 {
     std::string line = flr.ReadLineFromFile();
@@ -46,4 +47,30 @@ std::ostream &operator<<(std::ostream &os, FileLineReader &flr)
         os << line;
     }
     return os;
+}
+
+// assignment operator
+FileLineReader &FileLineReader::operator=(const FileLineReader &other)
+{
+    if (this == &other)
+    {
+        return *this;
+    }
+
+    if (file != nullptr && file->is_open())
+    {
+        file->close();
+    }
+
+    *file_name = *other.file_name;
+    *currentLine = *other.currentLine;
+    delete file;
+    file = new std::ifstream(*file_name);
+
+    return *this;
+}
+
+std::string FileLineReader::getFileName()
+{
+    return *file_name;
 }

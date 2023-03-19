@@ -45,3 +45,28 @@ string FileCommandProcessorAdapter::readCommand()
     this->saveCommand(command);
     return command;
 }
+
+// assignment operator
+FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter &other)
+{
+    if (this != &other)
+    {
+        CommandProcessor::operator=(other);
+
+        delete fileReader;
+        fileReader = nullptr;
+
+        if (other.fileReader != nullptr)
+        {
+            fileReader = new FileLineReader(*other.fileReader);
+        }
+    }
+    return *this;
+}
+
+// insertion operator
+std::ostream &operator<<(std::ostream &os, const FileCommandProcessorAdapter &adapter)
+{
+    os << "FileCommandProcessorAdapter is using File: " << adapter.fileReader->getFileName() << "." << std::endl;
+    return os;
+}
