@@ -41,31 +41,51 @@ void GameEngine::startupPhase(int state)
         {
             //3. Adds player
             if(*this->numOfPlayers == 0){
-                this->p1->setPlayerID(1);
-                this->p1->setTerritories(*this->territories);
+                this->p1->setPlayerID(1);                             
+                this->p1->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p1->setMap(this->map);
+                this->p1->setTerritories(this->territories);
                 this->p1->setNbOfTerritories(*this->nbTerritories);
-                this->p1->setAdjacencyMatrix(*this->adjacencyMatrix);
-                this->p1->setMap(*this->map);
                 *this->numOfPlayers = 1;
                 std::cout << "Player 1 added" << std::endl;
             }else if (*numOfPlayers == 1){
-                Player *p2 = new Player(2, territories, *nbTerritories, adjacencyMatrix, map); 
-                *this->numOfPlayers = 2;
+                this->p2->setPlayerID(2);                             
+                this->p2->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p2->setMap(this->map);
+                this->p2->setTerritories(this->territories);
+                this->p2->setNbOfTerritories(*this->nbTerritories);
+                *this->numOfPlayers = 2;                
                 std::cout << "Player 2 added" << std::endl;
             }else if (*this->numOfPlayers == 2){
-                Player *p3 = new Player(3, territories, *nbTerritories, adjacencyMatrix, map); 
+                this->p3->setPlayerID(3);                             
+                this->p3->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p3->setMap(this->map);
+                this->p3->setTerritories(this->territories);
+                this->p3->setNbOfTerritories(*this->nbTerritories);
                 *this->numOfPlayers = 3;
                 std::cout << "Player 3 added" << std::endl;
             }else if (*numOfPlayers == 3){
-                Player *p4 = new Player(4, territories, *nbTerritories, adjacencyMatrix, map); 
+                this->p4->setPlayerID(4);                             
+                this->p4->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p4->setMap(this->map);
+                this->p4->setTerritories(this->territories);
+                this->p4->setNbOfTerritories(*this->nbTerritories);
                 *this->numOfPlayers = 4;
                 std::cout << "Player 4 added" << std::endl;
             }else if (*numOfPlayers == 4){
-                Player *p5 = new Player(5, territories, *nbTerritories, adjacencyMatrix, map); 
+                this->p5->setPlayerID(5);                             
+                this->p5->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p5->setMap(this->map);
+                this->p5->setTerritories(this->territories);
+                this->p5->setNbOfTerritories(*this->nbTerritories);
                 *this->numOfPlayers = 5;
                 std::cout << "Player 5 added" << std::endl;
             }else if (*numOfPlayers == 5){
-                Player *p6 = new Player(6, territories, *nbTerritories, adjacencyMatrix, map); 
+                this->p6->setPlayerID(6);                             
+                this->p6->setAdjacencyMatrix(this->adjacencyMatrix);
+                this->p6->setMap(this->map);
+                this->p6->setTerritories(this->territories);    
+                this->p6->setNbOfTerritories(*this->nbTerritories);            
                 *this->numOfPlayers = 6;
                 std::cout << "Player 6 added" << std::endl;
             }
@@ -76,14 +96,11 @@ void GameEngine::startupPhase(int state)
             if(*this->numOfPlayers == 2){
                 // Set p1 territories
                 std::cout << "That runs" << std::endl;
-                for(int i = 0; i < *this->nbTerritories/2; i++){
-                    std::cout << this->p1->getPlayerID() << std::endl;
-                    this->territories[i].setPosessor(this->p1->getPlayerID());
+                for(int i = 0; i < *this->nbTerritories/2; i++){                    
+                    this->territories[i].setPosessor(this->p1->getPlayerID());                    
                 }
                 // Set p2 territories
-                std::cout << "errors here?" << std::endl;
-                for(int i = *this->nbTerritories/2; i < *this->nbTerritories; i++){
-                    std::cout << "or over here?" << std::endl;
+                for(int i = *this->nbTerritories/2; i < *this->nbTerritories; i++){                  
                     this->territories[i].setPosessor(this->p2->getPlayerID());
                 }
             }else if (*this->numOfPlayers == 3){
@@ -166,10 +183,9 @@ void GameEngine::startupPhase(int state)
             std::cout << "Territories seperated" << std::endl;
             std::cout << "Territories that each player owns: " << std::endl;
 
-            for(int i = 1; i < *this->numOfPlayers; i++)
-            {
-                std::cout << "Player " << i << ": " << std::endl;
-                if(i == 1){
+            for(int i = 1; i <= *this->numOfPlayers; i++)
+            {               
+                if(i == 1){                    
                     this->p1->ownedTerritories();
                 } else if (i == 2){
                     this->p2->ownedTerritories();
@@ -188,9 +204,10 @@ void GameEngine::startupPhase(int state)
             int min = 1, max = *this->numOfPlayers;
 
             //gives the player their turn order
-            for(int i = min; i < *this->numOfPlayers; i++)
+            for(int i = min; i <= *this->numOfPlayers; i++)
             {
-                int temp = rand() % *this->numOfPlayers + 1;
+                int temp = 1 + (rand() % *this->numOfPlayers);
+                cout << temp << ", " <<  i << endl;               
                 if (temp == 1 && p1Order == 0){
                     *this->p1Order = i;
                 } else if (temp == 2 && p2Order == 0){
@@ -205,6 +222,10 @@ void GameEngine::startupPhase(int state)
                     *this->p6Order = i;
                 }
             } 
+
+            // *this->p1Order = 1;
+            // *this->p2Order = 2;
+
             std::cout << "Player order:" << std::endl;
             for(int i = 1; i <= *this->numOfPlayers; i++)
             {
@@ -261,36 +282,36 @@ void GameEngine::startupPhase(int state)
                     this->deckA->setDeck(i, Type::reinforcement);
                 }
             }
+
             //draws cards for the hand
             for (int i = 0; i < 2; i++)
             {
-                if(*this->p1Order == 1){
-                    Card a = deckA->draw();
-                    this->p1->getCards().addCard(&a, i);
+                if(*this->p1Order == 1){                    
+                    Card a = deckA->draw();                                                    
+                    this->p1->getCards()->addCard(&a, i);                   
                 }
                 if(*this->p2Order == 1){
                     Card b = deckA->draw();
-                    this->p1->getCards().addCard(&b, i);
+                    this->p1->getCards()->addCard(&b, i);
                 }
                 if(*this->p3Order == 1){
                     Card c = deckA->draw();
-                    this->p1->getCards().addCard(&c, i);
+                    this->p1->getCards()->addCard(&c, i);
                 }
                 if(*this->p4Order == 1){
                     Card d = deckA->draw();
-                    this->p1->getCards().addCard(&d, i);
+                    this->p1->getCards()->addCard(&d, i);
                 } 
                 if(*this->p5Order == 1){
                     Card e = deckA->draw();
-                    this->p1->getCards().addCard(&e, i);
+                    this->p1->getCards()->addCard(&e, i);
                 } 
                 if(*this->p6Order == 1){
                     Card f = deckA->draw();
-                    this->p1->getCards().addCard(&f, i);
+                    this->p1->getCards()->addCard(&f, i);
                 }
 
             }
-
 
             //e) switch the game to the play phase //explain this better!
             //This happens automatically, the reason is that it's already implemented into the game engine system
@@ -321,7 +342,7 @@ GameEngine::GameEngine()
     this->p4 = new Player();
     this->p5 = new Player();
     this->p6 = new Player();
-    
+    this->deckA = new Deck();    
 }
 
 // Destructor for game engine
@@ -679,7 +700,17 @@ void MapValidatedState::ValidateInput(const std::string &input)
         engine->startupPhase(2);
         std::cout << "\nSuccess!\n"
                   << std::endl;
-        engine->TransitionTo(3);
+        std::cout << "\nPlayer added\n"
+                  << std::endl;
+        if(*engine->numOfPlayers >= 2){
+            engine->TransitionTo(3);
+            return;
+        }
+        engine->Commands();
+        std::cout << "Your move: ";
+        std::string temp;
+        std::cin >> temp;
+        ValidateInput(temp);        
     }
     else
     {

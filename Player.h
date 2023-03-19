@@ -41,21 +41,21 @@ class Player{
 
         // Setters
         void setPlayerID(int playerID);
-        void setTerritories(Territory territories);
+        void setTerritories(Territory* territories);
         void setOl(OrdersList ol);
         void setNbOfTerritories(int nbOfTerritories);
         void setOrdersIndex(int ordersIndex);
         void setToDefArr(Territory toDefArr);
         void setToAttArr(Territory toAttArr);
-        void setAdjacencyMatrix(Territory** adjacencyMatrix);
-        void setMap(Map map);
+        void setAdjacencyMatrix(Territory*** adjacencyMatrix);
+        void setMap(Map* map);
         void setCards(Hand cards);
         void setReinforcements(int reinforcements);
         
         // Getters
         int getPlayerID();
         OrdersList getOrdersList();
-        Hand getCards();
+        Hand* getCards();
         int getSizeOfHand();
         int getReinforcements();
 

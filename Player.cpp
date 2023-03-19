@@ -33,6 +33,8 @@ Player::Player(){
     this->territories = NULL;
     this->nbOfTerritories = new int(0);
 
+    this->reinforcements = new int(0);
+
     int* size = new int(10);
     this->ol = new OrdersList(size);
 
@@ -44,7 +46,8 @@ Player::Player(){
     this->adjacencyMatrix = NULL;
     this->map = NULL;
 
-    this->cards = NULL;
+    this->sizeOfHand = new int(5);
+    this->cards = new Hand(5);  
 }
 
 // Copy Constructor
@@ -59,6 +62,8 @@ Player::Player(const Player& p){
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
     this->cards = p.cards;
+    this->reinforcements = new int(*p.reinforcements);
+
 }
 
 // Destructor
@@ -96,8 +101,8 @@ Player::~Player(){
 
 // Method to show owned Territories that the player owns
 void Player::ownedTerritories(){
-    cout << "Territories owned by Player " << this->getPlayerID() << endl;
-    for(int i = 0; i < *nbOfTerritories; i++){
+    cout << "Territories owned by Player " << this->getPlayerID() << endl;    
+    for(int i = 0; i < *nbOfTerritories; i++){        
         if(*territories[i].getPosessor() == *this->playerID && *territories[i].getPosessor() != -1){
             cout << territories[i] << endl;  
         }     
@@ -240,8 +245,8 @@ void Player::setPlayerID(int playerID){
     *this->playerID = playerID;
 }
 
-void Player::setTerritories(Territory territories){
-    *this->territories = territories;
+void Player::setTerritories(Territory* territories){
+    this->territories = territories;
 }
 
 void Player::setOl(OrdersList ol){
@@ -264,12 +269,12 @@ void Player::setToAttArr(Territory toAttArr){
     *this->toAttArr = toAttArr;
 }
 
-void Player::setAdjacencyMatrix(Territory** adjacencyMatrix){
-    *this->adjacencyMatrix = adjacencyMatrix;
+void Player::setAdjacencyMatrix(Territory*** adjacencyMatrix){
+    this->adjacencyMatrix = adjacencyMatrix;
 }
 
-void Player::setMap(Map map){
-    *this->map = map;
+void Player::setMap(Map *map){
+    this->map = map;
 }
 
 void Player::setCards(Hand cards){
@@ -289,8 +294,8 @@ OrdersList Player::getOrdersList(){
     return *this->ol;
 }
 
-Hand Player::getCards(){
-    return *this->cards;
+Hand* Player::getCards(){
+    return this->cards;
 }
 
 int Player::getSizeOfHand(){
@@ -305,14 +310,14 @@ std::ostream& operator<<(std::ostream &strm, const Player &p){
 // Assignment operator
 Player& Player::operator=(const Player& p){
     this->setPlayerID(*p.playerID);
-    this->setTerritories(*p.territories);
+    this->setTerritories(p.territories);
     this->setOl(*p.ol);
     this->setNbOfTerritories(*p.nbOfTerritories);
     this->setOrdersIndex(*p.ordersIndex);
     this->setToDefArr(*p.toDefArr);
     this->setToAttArr(*p.toAttArr);
-    this->setAdjacencyMatrix(*p.adjacencyMatrix);
-    this->setMap(*p.map);
+    this->setAdjacencyMatrix(p.adjacencyMatrix);
+    this->setMap(p.map);
     this->setCards(*p.cards);
 
     return *this;

@@ -222,17 +222,15 @@ std::ostream &operator<<(std::ostream &strm, const Card &a)
 //default
 Hand::Hand()
 {
-	int *size = new int(5);
-    setSize(size);
-    hand = new Card *[*size];
+	size = new int(5);    
+    hand = new Card *[5];
 }
 
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
-	int *size = new int(handSize);
-    setSize(size);
-    hand = new Card *[*size];
+	size = new int(handSize);    
+    hand = new Card *[handSize];
 }
 
 //copy constructor
@@ -261,14 +259,19 @@ int* Hand::getSize(){
     return this->size;
 }
 
-void Hand::addCard(Card *card, int position){
+void Hand::addCard(Card *card, int position){	
+	cout << *this->size << endl;	
     if(position > *getSize()){
         int *oldSize = getSize();
         resize();
         hand[*oldSize] = card;        
     }
-    else
-        hand[position] = card;
+    else{
+		cout << position << endl;
+		cout << *this->size << endl;
+		hand[position] = card;
+	}
+       
 }
 
 void Hand::resize(){

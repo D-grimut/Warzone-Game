@@ -15,9 +15,9 @@ public:
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
     void startupPhase(int state);
-
-private:
     int *numOfPlayers; //will be used to keep track of the number of players
+
+private:   
     int *p1Order, *p2Order, *p3Order, *p4Order, *p5Order, *p6Order;
     MapLoader *validMap;
     Map *map;
