@@ -115,7 +115,8 @@ std::ostream& operator<<(std::ostream &strm, const Deploy &a){
 
 /*Validate Order method*/
 bool* Deploy::validate(){
-     bool* ptr = new bool(true);
+    bool* ptr = new bool(true);
+    cout << *target->getPosessor() << ", " << getPlayer()->getPlayerID() << endl;
     if (*target->getPosessor() != getPlayer()->getPlayerID()){ //if deploying to an enemy territory, return false
         *ptr = false;
         cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
@@ -134,8 +135,11 @@ bool* Deploy::validate(){
 /*Execute Order method*/
 void Deploy::execute(){
         bool valid = *this->validate();
+        // cout << *armies << " armies, " << *target->getNumberOfSoldiers() << " # of soldiers" << endl;
+        // cout << "Math: " << (*target->getNumberOfSoldiers()) + (*armies) << endl;
         if(valid == true){
-            target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *armies); //add armies to target
+            target->setNumberOfSoldiers((*target->getNumberOfSoldiers()) + (*armies)); //add armies to target
+            cout << getPlayer()->getReinforcementPool() - *armies << " haha " << endl;
             getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
             cout<< "DEPLOY EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " armies. Number of reinforcements left in pool: " << getPlayer()->getReinforcementPool() <<endl;
         }
@@ -221,6 +225,7 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 /*Validate Order method*/
 bool* Advance::validate(){
     bool* ptr = new bool(true);
+    cout << *getArmies() << ", " << *source->getNumberOfSoldiers() << endl;
     if(*source->getPosessor() != getPlayer()->getPlayerID()){ //if source does not belong to player
            *ptr = false;
            cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
@@ -228,6 +233,9 @@ bool* Advance::validate(){
      else if(getPlayer()->getNegotiateID() == *target->getPosessor()){
         *ptr = false;
         cout << "INVALID ADVANCE: Negotiation between territories" << endl;
+    }else if(*getArmies() > *source->getNumberOfSoldiers()){
+        *ptr = false;
+        cout << "INVALID ADVANCE: Too many armies!" << endl;
     }
     else{
         *ptr = true;
@@ -239,10 +247,11 @@ bool* Advance::validate(){
 /*Execute Order method*/
 void Advance::execute(){
     Deck* deck = new Deck;
+    cout << *target->getNumberOfSoldiers() << ", " << *source->getNumberOfSoldiers() << ", " << *getArmies() << endl;
     if(*validate() == true){
         if(*target->getPosessor() == getPlayer()->getPlayerID()){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *source->getNumberOfSoldiers());
-            source->setNumberOfSoldiers(0);
+            source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
             cout << "ADAVANCE EXECUTE: "<<target->getTerritoryName() << " now has "<< target->getNumberOfSoldiers()<< endl;
         }
         if(*target->getPosessor() != getPlayer()->getPlayerID()){

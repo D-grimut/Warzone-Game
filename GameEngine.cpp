@@ -160,9 +160,9 @@ IssueOrderState::~IssueOrderState()
 }
 
 void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
-    // for(int i = 0; i < nbOfPlayers; i++){
-    //     pArr[i]->setNegotiateID(0);
-    // }
+    for(int i = 0; i < nbOfPlayers; i++){
+        pArr[i]->setNegotiateID(0);
+    }
 
    for(int i = 0; i < nbOfPlayers; i++){
         Territory* toAtt = pArr[i]->toAttack();
@@ -179,9 +179,10 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         string targetTerr, sourceTerr, cardOrder;
         int counterDep, toAttPossesor;
         int* nbOfArmies = new int(0);
-        Territory* target = new Territory;
-        Territory* source = new Territory;
+        Territory* target/* = new Territory*/;
+        Territory* source /*= new Territory*/;
         Player* enemy;
+        bool invalidName = true;
 
         while(nbOfRein != 0){
             cout << "You have " << nbOfRein << " left to deploy" << endl;
@@ -193,13 +194,21 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 cout << "Please enter a valid amount of armies to deploy: ";
                 cin >> *nbOfArmies;
             }
-            for(int j = 0; j < nbOfToDef; j++){
-                // Check for valid name
-                if(targetTerr == *toDef[j].getTerritoryName()){
-                    *target = toDef[j];
-                    break;
+            while(invalidName){
+                for(int j = 0; j < nbOfToDef; j++){
+                    if(targetTerr == *toDef[j].getTerritoryName()){
+                        // delete target;
+                        target = new Territory(toDef[j]);
+                        invalidName = false;
+                        break;
+                    }
                 }
+                if(invalidName == true){
+                    cout << "You have inputted an incorrect name. Please write a correct territory name: ";
+                    cin >> targetTerr;
+                } 
             }
+            invalidName = true;
             
             pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
             nbOfRein = nbOfRein - *nbOfArmies;
@@ -227,30 +236,86 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 cout << "How many armies would you like to move: ";
                 cin >> *nbOfArmies;
 
-                for(int j = 0; j < nbOfToDef; j++){
-                    if(sourceTerr == *toDef[j].getTerritoryName()){
-                        *source = toDef[j];
+               invalidName = true;
+               while(invalidName){
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            // delete source;
+                            source = new Territory(toDef[j]);
+                        }
+                        if(targetTerr == *toDef[j].getTerritoryName()){
+                            // delete target;
+                            target = new Territory(toDef[j]);
+                        }
+                        invalidName = false;
+                        break;
                     }
+                    if(invalidName == true){
+                        cout << "You have inputted an incorrect name. Please write a correct target territory name: ";
+                        cin >> targetTerr;
+                        cout << "You have inputted an incorrect name. Please write a correct source territory name: ";
+                        cin >> sourceTerr;
+                    }
+               }
+                // for(int j = 0; j < nbOfToDef; j++){
+                //     if(sourceTerr == *toDef[j].getTerritoryName()){
+                //         *source = toDef[j];
+                //     }
+                //     if(targetTerr == *toDef[j].getTerritoryName()){
+                //         *target = toDef[j];
+                //     }
+                // }
+
+                /*
+                while(invalidName){
+                for(int j = 0; j < nbOfToDef; j++){
                     if(targetTerr == *toDef[j].getTerritoryName()){
                         *target = toDef[j];
+                        invalidName = false;
+                        break;
                     }
                 }
-
-                for(int j = 0; j < nbOfToAtt; j++){
-                    if(targetTerr == *toAtt[j].getTerritoryName()){
-                        *target = toAtt[j];
-                        toAttPossesor = *toAtt[j].getPosessor();
-                        for(int k = 0; k < nbOfPlayers; k++){
-                                if(toAttPossesor == pArr[k]->getPlayerID()){
-                                    enemy = pArr[k];
-                                }
+                if(invalidName == true){
+                    cout << "You have inputted an incorrect name. Please write a correct territory name: ";
+                    cin >> targetTerr;
+                } 
+            }
+                */
+               invalidName = true;
+                while(invalidName){
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            // delete target;
+                            target = new Territory(toAtt[j]);
+                            invalidName = false;
+                            toAttPossesor = *toAtt[j].getPosessor();
+                            for(int k = 0; k < nbOfPlayers; k++){
+                                    if(toAttPossesor == pArr[k]->getPlayerID()){
+                                        enemy = pArr[k];
+                                    }
+                            }
                         }
                     }
+                    if(invalidName == true){
+                        cout << "You have inputted an incorrect name. Please write a correct target territory name: ";
+                        cin >> targetTerr;
+                    }
                 }
+                // for(int j = 0; j < nbOfToAtt; j++){
+                //     if(targetTerr == *toAtt[j].getTerritoryName()){
+                //         *target = toAtt[j];
+                //         toAttPossesor = *toAtt[j].getPosessor();
+                //         for(int k = 0; k < nbOfPlayers; k++){
+                //                 if(toAttPossesor == pArr[k]->getPlayerID()){
+                //                     enemy = pArr[k];
+                //                 }
+                //         }
+                //     }
+                // }
                 pArr[i]->issueOrder("Advance", nbOfArmies, target, source, enemy, pArr[i]);
-            }else if(choice == 2){
-                isAdvancing = false;
-            }
+                }else if(choice == 2){
+                    isAdvancing = false;
+                }
         }while(isAdvancing);
 
         bool validCardOrder = true;
@@ -342,6 +407,9 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 }
             }while(validCardOrder);            
         }
+        ol = pArr[i]->getOrdersList();
+        listSize = pArr[i]->getOrdersIndex();
+        ol->showList(listSize);
    }
 }
 

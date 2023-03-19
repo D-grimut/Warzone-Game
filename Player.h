@@ -28,6 +28,7 @@ class Player{
         int* reinforcementPool;
         int* negotiateId;
         bool* gotCard;
+        // int* tInNa, tInSa, tInEu, tInAf, tInAs, tInOc;
         friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
     public:

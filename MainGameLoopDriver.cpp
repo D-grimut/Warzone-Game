@@ -44,10 +44,8 @@ int main(){
         territories[i].setNumberOfSoldiers(0);
     }
 
-
     //mainGameLoop();
     en->reinforcementPhase(pArr, nbOfPlayers);
-    cout << "here" << endl;
     ios->issueOrdersPhase(pArr, nbOfPlayers);
     exo->executeOrderPhase(pArr, nbOfPlayers);
 

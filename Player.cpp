@@ -27,7 +27,7 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
     this->cards = new Hand(*sizeOfHand);
     
     this->reinforcementPool = new int(reinforcementPool);
-    this->negotiateId = 0;
+    this->negotiateId = new int(0);
     this->gotCard = new bool(false);
 }
 
@@ -51,7 +51,7 @@ Player::Player(){
     this->cards = NULL;
     
     this->reinforcementPool = new int(0);
-    this->negotiateId = 0;
+    this->negotiateId = new int (0);
     this->gotCard = new bool(false);
 }
 
@@ -139,47 +139,45 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
         deploy->setPlayer(this);
         deploy->setTargetTerr(targetTerr);
         deploy->setArmies(nbOfArmies);
+        cout << *targetTerr->getNumberOfSoldiers() << " in Player class" << endl; 
+        cout << *this->playerID << " player id in player class" << endl;
         this->ol->addOrder(deploy, *ordersIndex);
         (*ordersIndex)++;
-    }else if(orderName == "Bomb"){
+    }/*else*/ if(orderName == "Bomb"){
         Bomb *bomb = new Bomb();
         bomb->setTargetTerr(targetTerr);
         bomb->setSourceTerr(sourceTerr);
         bomb->setPlayer(this);
         this->ol->addOrder(bomb, *ordersIndex);
         (*ordersIndex)++;
-    }else if(orderName == "Blockade"){
+    }/*else */if(orderName == "Blockade"){
         Blockade *blockade = new Blockade();
         blockade->setPlayer(this);
         blockade->setTargetTerr(targetTerr);
-        //DOM  PLEEAESE
         this->ol->addOrder(blockade, *ordersIndex);
         (*ordersIndex)++;
-    }else if(orderName == "Negotiate"){
+    }/*else*/ if(orderName == "Negotiate"){
         Negotiate *negotiate = new Negotiate();
         negotiate->setTargetTerr(targetTerr);
         negotiate->setPlayer(this);
         negotiate->setEnemy(enemy);
-        //DOM  PLEEAESE
         this->ol->addOrder(negotiate, *ordersIndex);
         (*ordersIndex)++;
-    }else if(orderName == "Airlift"){
+    }/*else */if(orderName == "Airlift"){
         Airlift *airlift = new Airlift();
         airlift->setTargetTerr(targetTerr);
         airlift->setSourceTerr(sourceTerr);
         airlift->setPlayer(this);
         airlift->setArmies(nbOfArmies);
-        //DOM  PLEEAESE
         this->ol->addOrder(airlift, *ordersIndex);
         (*ordersIndex)++;
-    }else if(orderName == "Advance"){
+    }/*else*/ if(orderName == "Advance"){
         Advance *advance = new Advance();
         advance->setEnemy(enemy);
         advance->setPlayer(thisPlayer);
         advance->setTargetTerr(targetTerr);
         advance->setSourceTerr(sourceTerr);
         advance->setArmies(nbOfArmies);
-        //DOM  PLEEAESE
         this->ol->addOrder(advance, *ordersIndex);
         (*ordersIndex)++;
     }     
