@@ -19,39 +19,52 @@ public:
     ObserverList(int);
     ~ObserverList();
 
-    void add(Observer* );
+    void add(Observer *);
     int getSize();
     int getEnd();
-    void resize();   
+    void resize();
     void removeAtIndex(int);
-    Observer* getAtIndex(int); 
+    Observer *getAtIndex(int);
+
+    // assign and insertion
+    ObserverList &operator=(const ObserverList &other);
+    friend ostream &operator<<(ostream &os, const ObserverList &obj);
 };
 
-class ILoggable{
+class ILoggable
+{
 public:
     virtual string stringToLog() = 0;
 };
 
-class Subject{
+class Subject
+{
 private:
-    ObserverList* obs;
+    ObserverList *obs;
 
 public:
-    void attach(Observer*);
-    void detach(Observer* o);
-    void notify(ILoggable*);
+    void attach(Observer *);
+    void detach(Observer *o);
+    void notify(ILoggable *);
 
     Subject();
     ~Subject();
+
+    friend ostream &operator<<(ostream &os, const Subject &sub);
+    Subject &operator=(const Subject &other);
 };
 
-class Observer{
+class Observer
+{
 public:
-    virtual void update(ILoggable*);
+    virtual void update(ILoggable *);
+    friend ostream &operator<<(ostream &os, const LogObserver &obs);
 };
 
-class LogObserver: public Observer{
+class LogObserver : public Observer
+{
 
 public:
-    void update(ILoggable*);
+    void update(ILoggable *);
+    friend ostream &operator<<(ostream &os, const LogObserver &lobs);
 };

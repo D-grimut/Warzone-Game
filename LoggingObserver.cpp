@@ -1,46 +1,87 @@
 #include "LoggingObserver.h"
 
 //--- Subject Class ---
-Subject::Subject(){
+Subject::Subject()
+{
     this->obs = new ObserverList();
 }
 
-Subject::~Subject(){
-    for(int i = 0; i < this->obs->getEnd(); i++){
+Subject::~Subject()
+{
+    for (int i = 0; i < this->obs->getEnd(); i++)
+    {
         delete obs->getAtIndex(i);
     }
-    delete [] this->obs;
+    delete[] this->obs;
     this->obs = NULL;
 }
 
-void Subject::attach(Observer* o){
+void Subject::attach(Observer *o)
+{
     this->obs[obs->getEnd()].add(o);
 }
 
-void Subject::detach(Observer* o){
-    for(int i = 0; i < this->obs->getEnd(); i++){
-        if(obs->getAtIndex(i) == o){
+void Subject::detach(Observer *o)
+{
+    for (int i = 0; i < this->obs->getEnd(); i++)
+    {
+        if (obs->getAtIndex(i) == o)
+        {
             this->obs->removeAtIndex(i);
         }
-    }    
+    }
 }
 
-void Subject::notify(ILoggable* il){  
-    for(int i = 0; i < this->obs->getEnd(); i++){
-       this->obs->getAtIndex(i)->update(il);
-    }  
+void Subject::notify(ILoggable *il)
+{
+    for (int i = 0; i < this->obs->getEnd(); i++)
+    {
+        this->obs->getAtIndex(i)->update(il);
+    }
 }
 
-void Observer::update(ILoggable* il){    
+ostream &operator<<(ostream &os, const Subject &sub)
+{
+    for (int i = 0; i < sub.obs->getEnd(); i++)
+    {
+        os << *sub.obs->getAtIndex(i) << endl;
+    }
+    return os;
+}
+
+Subject &Subject::operator=(const Subject &other)
+{
+    delete obs;
+    obs = other.obs;
+
+    return *this;
+}
+
+//---Observer class ---
+void Observer::update(ILoggable *il)
+{
     cout << il->stringToLog() << endl;
 }
 
+ostream &operator<<(ostream &os, const Observer &obs)
+{
+    os << "Observer insertion operator called" << endl;
+    return os;
+}
+
 //---LogObserver class ---
-void LogObserver::update(ILoggable* il){ 
-    ofstream gamelog;   
+void LogObserver::update(ILoggable *il)
+{
+    ofstream gamelog;
     gamelog.open("gamelog.txt", fstream::app);
     gamelog << il->stringToLog() + "\n";
-    gamelog.close();    
+    gamelog.close();
+}
+
+ostream &operator<<(ostream &os, const LogObserver &lobs)
+{
+    os << "LogObserver insertion operator called" << endl;
+    return os;
 }
 
 /*---------CommandList class---------*/
@@ -63,7 +104,8 @@ ObserverList::~ObserverList()
     delete this->size;
     this->size = NULL;
 
-    for(int i = 0; i < *this->end; i++){
+    for (int i = 0; i < *this->end; i++)
+    {
         delete obs[i];
     }
 
@@ -81,7 +123,7 @@ void ObserverList::add(Observer *o)
     {
         resize();
     }
-    
+
     this->obs[*this->end] = o;
     *this->end = *this->end + 1;
 }
@@ -111,7 +153,7 @@ void ObserverList::resize()
     this->obs = newList;
 }
 
-Observer* ObserverList::getAtIndex(int index)
+Observer *ObserverList::getAtIndex(int index)
 {
     if (index < 0 || index >= *this->size)
     {
@@ -123,11 +165,34 @@ Observer* ObserverList::getAtIndex(int index)
     }
 }
 
-void ObserverList::removeAtIndex(int s){
+void ObserverList::removeAtIndex(int s)
+{
     this->obs[s] = NULL;
 
-    for(int i = s; i < *this->end - 1; i++){
+    for (int i = s; i < *this->end - 1; i++)
+    {
         obs[i] = obs[i + 1];
     }
     *this->end = *this->end - 1;
+}
+
+ObserverList &ObserverList::operator=(const ObserverList &other)
+{
+    *this->size = *other.size;
+    *this->end = *other.end;
+    for (int i = 0; i < *end; i++)
+    {
+        obs[i] = other.obs[i];
+    }
+    return *this;
+}
+
+ostream &operator<<(ostream &os, const ObserverList &obj)
+{
+    for (int i = 0; i < *(obj.end); i++)
+    {
+        os << "Observer " << i << ": " << obj.obs[i] << endl;
+    }
+
+    return os;
 }

@@ -67,9 +67,7 @@ int main()
     cp->getCommand();
     cp->getCommand();
 
-    // TODO: Add test case for fileCommandProcessor (for Nico)
-
-    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("commands.txt");
+    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("gamelog.txt");
     std::string str;
     test->attach(ol);
     while (str != "EOF")
