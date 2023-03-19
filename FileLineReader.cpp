@@ -3,36 +3,47 @@
 // constructor
 FileLineReader::FileLineReader(const std::string &filename)
 {
-    file_name = filename;
-    file.open(filename);
+    file_name = new std::string(filename);
+    file = new std::ifstream(filename);
+    currentLine = new std::string("");
 }
 
 // destructor
 FileLineReader::~FileLineReader()
 {
-    if (file.is_open())
+    if (file != nullptr && file->is_open())
     {
-        file.close();
+        file->close();
     }
+    delete file;
+    delete currentLine;
+    delete file_name;
 }
 
 // copy constructor
 FileLineReader::FileLineReader(const FileLineReader &copy)
 {
-    if (copy.file.is_open())
-    {
-        file.open(copy.file_name);
-    }
+    file_name = new std::string(*copy.file_name);
+    file = new std::ifstream(*file_name);
+    currentLine = new std::string(*copy.currentLine);
 }
 
 // reads 1 line from the file and then goes onto the next line.
 std::string FileLineReader::ReadLineFromFile()
 {
-    std::string line;
-    if (std::getline(file, line))
+    if (std::getline(*file, *currentLine))
     {
-        return line;
+        return *currentLine;
     }
     return "EOF";
 }
 
+std::ostream &operator<<(std::ostream &os, FileLineReader &flr)
+{
+    std::string line = flr.ReadLineFromFile();
+    if (line != "EOF")
+    {
+        os << line;
+    }
+    return os;
+}
