@@ -259,16 +259,13 @@ int* Hand::getSize(){
     return this->size;
 }
 
-void Hand::addCard(Card *card, int position){	
-	cout << *this->size << endl;	
+void Hand::addCard(Card *card, int position){
     if(position > *getSize()){
         int *oldSize = getSize();
         resize();
         hand[*oldSize] = card;        
     }
     else{
-		cout << position << endl;
-		cout << *this->size << endl;
 		hand[position] = card;
 	}
        

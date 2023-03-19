@@ -30,11 +30,12 @@ void GameEngine::startupPhase(int state)
             this->territories = map->getCountries();
             this->adjacencyMatrix = map->getAdjacencyMatrix();
             this->nbTerritories = validMap->getMap()->getNbTerritories();
-            std::cout << "Map validated and loaded" << std::endl;
             if(!this->map->validate()){
                 cout << "Map is invalid; failed validation() method - rejecting map" << endl;
+                *this->startupSuccess = false;
             }else{
                 cout << "Map is valid!" << endl;
+                *this->startupSuccess = true;
             }
         }
         else if (state == 2)
@@ -106,78 +107,78 @@ void GameEngine::startupPhase(int state)
             }else if (*this->numOfPlayers == 3){
                 // Set p1 territories
                 for(int i = 0; i < *this->nbTerritories/3; i++){
-                    this->territories[i].setPosessor(p1->getPlayerID());
+                    this->territories[i].setPosessor(this->p1->getPlayerID());
                 }
                 // Set p2 territories
                 for(int i = *this->nbTerritories/3; i < *this->nbTerritories*(2/3); i++){
-                    this->territories[i].setPosessor(p2->getPlayerID());
+                    this->territories[i].setPosessor(this->p2->getPlayerID());
                 }
                 // Set p3 territories
                 for(int i = *this->nbTerritories*(2/3); i < *this->nbTerritories; i++){
-                    this->territories[i].setPosessor(p3->getPlayerID());
+                    this->territories[i].setPosessor(this->p3->getPlayerID());
                 }
             }else if (*numOfPlayers == 4){
                 // Set p1 territories
                 for(int i = 0; i < *this->nbTerritories/4; i++){
-                    this->territories[i].setPosessor(p1->getPlayerID());
+                    this->territories[i].setPosessor(this->p1->getPlayerID());
                 }
                 // Set p2 territories
                 for(int i = *this->nbTerritories/4; i < *this->nbTerritories/2; i++){
-                    this->territories[i].setPosessor(p2->getPlayerID());
+                    this->territories[i].setPosessor(this->p2->getPlayerID());
                 }
                 // Set p3 territories
                 for(int i = *this->nbTerritories/2; i < *this->nbTerritories*(3/4); i++){
-                    this->territories[i].setPosessor(p3->getPlayerID());
+                    this->territories[i].setPosessor(this->p3->getPlayerID());
                 }
                 // Set p4 territories
                 for(int i = *this->nbTerritories*(3/4); i < *this->nbTerritories; i++){
-                    this->territories[i].setPosessor(p4->getPlayerID());
+                    this->territories[i].setPosessor(this->p4->getPlayerID());
                 }
             }else if (*this->numOfPlayers == 5){
                 // Set p1 territories
                 for(int i = 0; i < *this->nbTerritories/5; i++){
-                    this->territories[i].setPosessor(p1->getPlayerID());
+                    this->territories[i].setPosessor(this->p1->getPlayerID());
                 }
                 // Set p2 territories
                 for(int i = *this->nbTerritories/5; i < *this->nbTerritories*(2/5); i++){
-                    this->territories[i].setPosessor(p2->getPlayerID());
+                    this->territories[i].setPosessor(this->p2->getPlayerID());
                 }
                 // Set p3 territories
                 for(int i = *this->nbTerritories*(2/5); i < *this->nbTerritories*(3/5); i++){
-                    this->territories[i].setPosessor(p3->getPlayerID());
+                    this->territories[i].setPosessor(this->p3->getPlayerID());
                 }
                 // Set p4 territories
                 for(int i = *this->nbTerritories*(3/5); i < *this->nbTerritories*(4/5); i++){
-                    this->territories[i].setPosessor(p4->getPlayerID());
+                    this->territories[i].setPosessor(this->p4->getPlayerID());
                 }
                 // Set p5 territories
                 for(int i = *this->nbTerritories*(4/5); i < *this->nbTerritories; i++){
-                    this->territories[i].setPosessor(p5->getPlayerID());
+                    this->territories[i].setPosessor(this->p5->getPlayerID());
                 }
             }else if (*this->numOfPlayers == 6){
                 // Set p1 territories
                 for(int i = 0; i < *this->nbTerritories/6; i++){
-                    this->territories[i].setPosessor(p1->getPlayerID());
+                    this->territories[i].setPosessor(this->p1->getPlayerID());
                 }
                 // Set p2 territories
                 for(int i = *this->nbTerritories/6; i < *this->nbTerritories*(1/3); i++){
-                    this->territories[i].setPosessor(p2->getPlayerID());
+                    this->territories[i].setPosessor(this->p2->getPlayerID());
                 }
                 // Set p3 territories
                 for(int i = *this->nbTerritories*(1/3); i < *this->nbTerritories/2; i++){
-                    this->territories[i].setPosessor(p3->getPlayerID());
+                    this->territories[i].setPosessor(this->p3->getPlayerID());
                 }
                 // Set p4 territories
                 for(int i = *this->nbTerritories/2; i < *this->nbTerritories*(2/3); i++){
-                    this->territories[i].setPosessor(p4->getPlayerID());
+                    this->territories[i].setPosessor(this->p4->getPlayerID());
                 }
                 // Set p5 territories
                 for(int i = *this->nbTerritories*(2/3); i < *this->nbTerritories*(5/6); i++){
-                    this->territories[i].setPosessor(p5->getPlayerID());
+                    this->territories[i].setPosessor(this->p5->getPlayerID());
                 }
                 // Set p6 territories
                 for(int i = *this->nbTerritories*(5/6); i < *this->nbTerritories; i++){
-                    this->territories[i].setPosessor(p6->getPlayerID());
+                    this->territories[i].setPosessor(this->p6->getPlayerID());
                 }
             }
             std::cout << "Territories seperated" << std::endl;
@@ -201,30 +202,38 @@ void GameEngine::startupPhase(int state)
             }
 
             //b) determine randomly the order of play of the players in the game
-            int min = 1, max = *this->numOfPlayers;
+            int min = 1, max = *this->numOfPlayers, temp = 0;
 
             //gives the player their turn order
-            for(int i = min; i <= *this->numOfPlayers; i++)
-            {
-                int temp = 1 + (rand() % *this->numOfPlayers);
-                cout << temp << ", " <<  i << endl;               
-                if (temp == 1 && p1Order == 0){
-                    *this->p1Order = i;
-                } else if (temp == 2 && p2Order == 0){
-                    *this->p2Order = i;
-                } else if (temp == 3 && p3Order == 0){
-                    *this->p3Order = i;
-                } else if (temp == 4 && p4Order == 0){
-                    *this->p4Order = i;
-                } else if (temp == 5 && p5Order == 0){
-                    *this->p5Order = i;
-                } else if (temp == 6 && p6Order == 0){
-                    *this->p6Order = i;
+            //uses a Fisher–Yates shuffle Algorithm to randomise player turns
+            int array[*this->numOfPlayers];
+            for (int i = 1; i <= *this->numOfPlayers; i++){
+                array[i] = i;
+            }
+            for (int i = *this->numOfPlayers - 1; i > 0; i--)
+                {
+                    int j = rand() % (i + 1);
+                    
+                    temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
                 }
-            } 
-
-            // *this->p1Order = 1;
-            // *this->p2Order = 2;
+            for (int i = 1; i <= *this->numOfPlayers; i++){
+                int a = array[i];
+                if (i == 1){
+                    *this->p1Order = a;
+                } else if (i == 2){
+                    *this->p2Order = a;
+                } else if (i == 3){
+                    *this->p3Order = a;
+                } else if (i == 4){
+                    *this->p4Order = a;
+                } else if (i == 5){
+                    *this->p5Order = a;
+                } else if (i == 6){
+                    *this->p6Order = a;
+                }
+            }
 
             std::cout << "Player order:" << std::endl;
             for(int i = 1; i <= *this->numOfPlayers; i++)
@@ -284,31 +293,49 @@ void GameEngine::startupPhase(int state)
             }
 
             //draws cards for the hand
-            for (int i = 0; i < 2; i++)
+            for (int i = 1; i <= *this->numOfPlayers; i++)
             {
-                if(*this->p1Order == 1){                    
-                    Card a = deckA->draw();                                                    
-                    this->p1->getCards()->addCard(&a, i);                   
+                if(i == 1){                    
+                    Card a = deckA->draw();
+                    Card a1 = deckA->draw();                                                   
+                    this->p1->getCards()->addCard(&a, i);
+                    this->p1->getCards()->addCard(&a1, i+1);
+                    std::cout << "Player 1 successfully drew 2 cards" << std::endl;
                 }
-                if(*this->p2Order == 1){
+                if(i == 2){
                     Card b = deckA->draw();
+                    Card b1 = deckA->draw(); 
                     this->p1->getCards()->addCard(&b, i);
+                    this->p1->getCards()->addCard(&b1, i+1);
+                    std::cout << "Player 2 successfully drew 2 cards" << std::endl; 
                 }
-                if(*this->p3Order == 1){
+                if(i == 3){
                     Card c = deckA->draw();
+                    Card c1 = deckA->draw(); 
                     this->p1->getCards()->addCard(&c, i);
+                    this->p1->getCards()->addCard(&c1, i+1);
+                    std::cout << "Player 3 successfully drew 2 cards" << std::endl; 
                 }
-                if(*this->p4Order == 1){
+                if(i == 4){
                     Card d = deckA->draw();
+                    Card d1 = deckA->draw(); 
                     this->p1->getCards()->addCard(&d, i);
+                    this->p1->getCards()->addCard(&d1, i+1);
+                    std::cout << "Player 4 successfully drew 2 cards" << std::endl; 
                 } 
-                if(*this->p5Order == 1){
+                if(i == 5){
                     Card e = deckA->draw();
+                    Card e1 = deckA->draw(); 
                     this->p1->getCards()->addCard(&e, i);
+                    this->p1->getCards()->addCard(&e1, i+1);
+                    std::cout << "Player 5 successfully drew 2 cards" << std::endl; 
                 } 
-                if(*this->p6Order == 1){
+                if(i == 6){
                     Card f = deckA->draw();
+                    Card f1 = deckA->draw(); 
                     this->p1->getCards()->addCard(&f, i);
+                    this->p1->getCards()->addCard(&f1, i+1);
+                    std::cout << "Player 6 successfully drew 2 cards" << std::endl; 
                 }
 
             }
@@ -342,8 +369,10 @@ GameEngine::GameEngine()
     this->p4 = new Player();
     this->p5 = new Player();
     this->p6 = new Player();
-    this->deckA = new Deck();    
+    this->deckA = new Deck(); 
+    this->startupSuccess = new bool(false);   
 }
+
 
 // Destructor for game engine
 GameEngine::~GameEngine()
@@ -666,9 +695,13 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
     if (input == "validatemap")
     {
         engine->startupPhase(1);
-        std::cout << "\nSuccess!\n"
-                  << std::endl;
-        engine->TransitionTo(2);
+        if(*engine->startupSuccess == false)
+        {
+            engine->startupPhase(0);
+            return;
+        }
+            std::cout << "\nSuccess!\n" << std::endl;
+            engine->TransitionTo(2);
     }
     else if (input == "loadmap")
     {
