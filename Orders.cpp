@@ -120,7 +120,7 @@ std::ostream& operator<<(std::ostream &strm, const Deploy &a){
 /*Validate Order method*/
 bool Deploy::validate(){
     bool ptr = true;
-    //cout << *target->getPosessor() << ", " << getPlayer()->getPlayerID() << endl;
+    
     if (*target->getPosessor() != getPlayer()->getPlayerID()){ //if deploying to an enemy territory, return false
         ptr = false;
         cout << "DEPLOY INVALID: Cannot deploy to enemy territory!" << endl;
@@ -139,14 +139,8 @@ bool Deploy::validate(){
 /*Execute Order method*/
 void Deploy::execute(){
         bool valid = this->validate();
-        // cout << *armies << " armies, " << *target->getNumberOfSoldiers() << " # of soldiers" << endl;
-        // cout << "Math: " << (*target->getNumberOfSoldiers()) + (*armies) << endl;
-        //cout << valid << endl;
         if(valid){
             target->setNumberOfSoldiers((*target->getNumberOfSoldiers()) + (*armies)); //add armies to target
-          //cout << *target->getNumberOfSoldiers() << "target armies " << endl;
-
-          // cout <<(*target->getNumberOfSoldiers()) + (*armies)<< " target test " << endl;
             getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
             cout<< "DEPLOY EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " armies. Number of reinforcements left in pool: " << getPlayer()->getReinforcementPool() <<endl;
         }
@@ -239,7 +233,7 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 /*Validate Order method*/
 bool Advance::validate(){
     bool ptr = true;
-    //cout << *getArmies() << "->Armies, " << *source->getNumberOfSoldiers()<<"source armies, " <<*target->getNumberOfSoldiers()<< "target armies"<< endl;
+   
     if(*source->getPosessor() != getPlayer()->getPlayerID()){ //if source does not belong to player
             ptr = false;
            cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
@@ -249,8 +243,10 @@ bool Advance::validate(){
         cout << "INVALID ADVANCE: Negotiation between territories" << endl;
     }else if(*getArmies() > *source->getNumberOfSoldiers()){
         ptr = false;
-        cout<< *getArmies() << " armies; " << *source->getTerritoryName() << " source armies" << endl;
         cout << "INVALID ADVANCE: Too many armies!" << endl;
+    } else if(!(getPlayer()->getMap()->isAdjacent(*source, *target))){
+         ptr = false;
+         cout << "BOMB INVALID: terriotry is too far away"<< endl;
     }
     else{
         ptr = true;
@@ -262,7 +258,6 @@ bool Advance::validate(){
 /*Execute Order method*/
 void Advance::execute(){
     Deck* deck = new Deck;
-   // cout << *target->getNumberOfSoldiers() << ", " << *source->getNumberOfSoldiers() << ", " << *getArmies() << endl;
     if(validate()){
         cout << *target->getPosessor() << " ID, " << getPlayer()->getPlayerID() << " player id" << endl;
         if(*target->getPosessor() == getPlayer()->getPlayerID()){
@@ -376,15 +371,21 @@ std::ostream& operator<<(std::ostream &strm, const Bomb &a){
 bool Bomb::validate(){
     bool ptr = true;
     int* position = 0;
-    for(int i = 0; i < player->getSizeOfHand(); i++){
+    for(int i = 0; i < *getPlayer()->getCards()->counter; i++){
+        // cout << getPlayer()->getCards()->getCard(i)->getType() << endl;
        if(getPlayer()->getCards()->getCard(i)->getType() != Type::bomb){
         ptr = false;
+        cout<< "BOMB INVALID: Do not own this card" << endl;
        }
-       else if(getPlayer()->getCards()->getCard(i)->getType() == Type::bomb)
+       else if(getPlayer()->getCards()->getCard(i)->getType() == Type::bomb){
         ptr = true;
         *position = i;
+        //getPlayer()->getCards()->removeCard(position);
         cout << "BOMB VALIDATE: Card in hand."<< endl;
+       }
     }
+
+    cout<< "out for loop" << endl;
     if(ptr == false){
         cout<< "BOMB INVALID: you do not own this card" <<endl;
         return ptr;
@@ -393,27 +394,28 @@ bool Bomb::validate(){
         ptr = false;
         cout << "BOMB INVALID: cannot bomb your own territory"<< endl;
     }
-    // else if(!(map->isAdjacent(*source, *target))){
-    //     *ptr = false;
-    //     cout << "BOMB INVALID: terriotry is too far away"<< endl;
-    // }
     else if(getPlayer()->getNegotiateID() == *target->getPosessor()){
         ptr = false;
         cout << "BOMB INVALID: Negotiation between territories" << endl;
+    }else if(!(getPlayer()->getMap()->isAdjacent(*source, *target))){
+         ptr = false;
+         cout << "BOMB INVALID: terriotry is too far away"<< endl;
     }
     else{
         ptr = true;
         cout << "BOMB VALID"<< endl;
-        getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
 
 /*Execute Order method*/
 void Bomb::execute(){
-    if(validate() == true){
+    cout << "bomb exec" << endl;
+    if(validate()){
+        if(*target->getNumberOfSoldiers() == 0)
+            cout << "BOMB EXECUTE: 0 armies in " << *target->getTerritoryName() << endl;
         target->setNumberOfSoldiers(floor(*target->getNumberOfSoldiers()/2));
-        cout << "BOMB EXECUTE: " << target->getTerritoryName() << " was bombed, now has " << target->getNumberOfSoldiers() << " armies" << endl;
+        cout << "BOMB EXECUTE: " << *target->getTerritoryName() << " was bombed, now has " << *target->getNumberOfSoldiers() << " armies" << endl;
     }
 }
 
@@ -478,6 +480,7 @@ bool Blockade::validate(){
     bool ptr = true;
     for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
        if(getPlayer()->getCards()->getCard(i)->getType() != Type::blockade){
+        cout<< "BLOCKADE INVALID: Do not own this card" << endl;
         ptr = false;
        }
        else if(getPlayer()->getCards()->getCard(i)->getType() == Type::blockade)
@@ -497,7 +500,7 @@ bool Blockade::validate(){
     else{
         ptr = true;
         cout << "BLOCKADE VALID"<< endl;
-        getPlayer()->getCards()->removeCard(position);
+        //getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
@@ -507,7 +510,7 @@ void Blockade::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers()*2);
         target->setPosessor(-1); //-1 will be the neutral player
-        cout << "BLOCKADE EXECUTE: "<<target->getTerritoryName()<<" now belongs to neutral player and has " << target->getNumberOfSoldiers() << " armies" << endl;
+        cout << "BLOCKADE EXECUTE: "<< *target->getTerritoryName()<<" now belongs to neutral player and has " << *target->getNumberOfSoldiers() << " armies" << endl;
     }
 }
 
@@ -590,6 +593,7 @@ bool Airlift::validate(){
     bool ptr = true;
     for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
        if(getPlayer()->getCards()->getCard(i)->getType() != Type::airlift){
+        cout<< "AIRLIFT INVALID: Do not own this card" << endl;
         ptr = false;
        }
        else if(getPlayer()->getCards()->getCard(i)->getType() == Type::airlift)
@@ -609,7 +613,7 @@ bool Airlift::validate(){
     else{
         ptr = true;
         cout << "AIRLIFT VALID"<< endl;
-        getPlayer()->getCards()->removeCard(position);
+        //getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
@@ -620,7 +624,7 @@ void Airlift::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
         source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
-        cout << "AIRLIFT EXECUTE: " << target->getTerritoryName() << " now has " << target->getNumberOfSoldiers() << " and " << source->getTerritoryName() << " now has "<<source->getNumberOfSoldiers()<<endl;
+        cout << "AIRLIFT EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " and " << *source->getTerritoryName() << " now has "<< *source->getNumberOfSoldiers()<<endl;
     }
 }
 
@@ -693,6 +697,7 @@ bool Negotiate::validate(){
     bool ptr = true;
     for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
        if(getPlayer()->getCards()->getCard(i)->getType() != Type::blockade){
+        cout<< "NEGOTIATE INVALID: Do not own this card" << endl;
         ptr = false;
        }
        else if(getPlayer()->getCards()->getCard(i)->getType() == Type::blockade)
@@ -705,20 +710,21 @@ bool Negotiate::validate(){
         return ptr;
     }
     //If the target is the player issuing the order, then the order is invalid.
-    if(*target->getPosessor() != getPlayer()->getPlayerID()){
+    if(*target->getPosessor() == getPlayer()->getPlayerID()){
         ptr = false;
+        cout<< "NEGOTIATE INVALID: can't negotiate with yourself" <<endl;
     }
     else{
         ptr = true;
         cout << "NEGOTIATE VALID"<< endl;
-        getPlayer()->getCards()->removeCard(position);
+       // getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
 
 /*Execute Order method*/
 void Negotiate::execute(){
-    if(validate() == true){
+    if(validate()){
         getPlayer()->setNegotiateID(getEnemy()->getPlayerID());
         getEnemy()->setNegotiateID(getPlayer()->getPlayerID());
         cout << "NEGOTIATE EXECUTE: Player " << getPlayer()->getPlayerID() << " is in negotiation with " << getEnemy()->getPlayerID();

@@ -38,6 +38,7 @@ class Card
 		OrdersList *ol;// list of orders
 		int *ordersIndex;// Index of Orders
 		int *number = new int();
+
 		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
 };
 
@@ -83,7 +84,7 @@ class Hand
         void resize();
 		Card **hand;
 		Card* getCard(int i);
-		
+		int* counter;
 	private:
 		int *size;
 		string *name;

@@ -48,8 +48,8 @@ Player::Player(){
     this->adjacencyMatrix = NULL;
     this->map = NULL;
 
-    this->cards = NULL;
-    
+    //this->cards = new Hand;
+    this-> cards = new Hand;
     this->reinforcementPool = new int(0);
     this->negotiateId = new int (0);
     this->gotCard = new bool(false);
@@ -139,31 +139,34 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
         deploy->setPlayer(this);
         deploy->setTargetTerr(targetTerr);
         deploy->setArmies(nbOfArmies);
-        //cout << *targetTerr->getNumberOfSoldiers() << " in Player class" << endl; 
-        //cout << *this->playerID << " player id in player class" << endl;
+        
         this->ol->addOrder(deploy, *ordersIndex);
         (*ordersIndex)++;
-    }/*else*/ if(orderName == "Bomb"){
+    }
+    if(orderName == "Bomb"){
         Bomb *bomb = new Bomb();
         bomb->setTargetTerr(targetTerr);
         bomb->setSourceTerr(sourceTerr);
         bomb->setPlayer(this);
         this->ol->addOrder(bomb, *ordersIndex);
         (*ordersIndex)++;
-    }/*else */if(orderName == "Blockade"){
+    }
+    if(orderName == "Blockade"){
         Blockade *blockade = new Blockade();
         blockade->setPlayer(this);
         blockade->setTargetTerr(targetTerr);
         this->ol->addOrder(blockade, *ordersIndex);
         (*ordersIndex)++;
-    }/*else*/ if(orderName == "Negotiate"){
+    }
+     if(orderName == "Negotiate"){
         Negotiate *negotiate = new Negotiate();
         negotiate->setTargetTerr(targetTerr);
         negotiate->setPlayer(this);
         negotiate->setEnemy(enemy);
         this->ol->addOrder(negotiate, *ordersIndex);
         (*ordersIndex)++;
-    }/*else */if(orderName == "Airlift"){
+    }
+    if(orderName == "Airlift"){
         Airlift *airlift = new Airlift();
         airlift->setTargetTerr(targetTerr);
         airlift->setSourceTerr(sourceTerr);
@@ -171,7 +174,8 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
         airlift->setArmies(nbOfArmies);
         this->ol->addOrder(airlift, *ordersIndex);
         (*ordersIndex)++;
-    }/*else*/ if(orderName == "Advance"){
+    }
+     if(orderName == "Advance"){
         Advance *advance = new Advance();
         advance->setEnemy(enemy);
         advance->setPlayer(thisPlayer);
@@ -243,7 +247,7 @@ Territory* Player::toAttack(){
 // Print cards that the player owns
 void Player::printCards(){
     cout << "Printing out hand of cards for Player " << *playerID << endl;
-    for(int i = 0; i < *sizeOfHand; i++){
+    for(int i = 0; i < *getCards()->counter; i++){
         cout << cards->hand[i] << endl;
     }
 }
@@ -354,6 +358,10 @@ bool Player::getGotCard(){
     return *this->gotCard;
 }
 
+Map* Player::getMap(){
+    return this->map;
+}
+
 // Stream insertion operator
 std::ostream& operator<<(std::ostream &strm, const Player &p){
     return strm << "Player ID: " << *p.playerID;
@@ -375,3 +383,4 @@ Player& Player::operator=(const Player& p){
 
     return *this;
 }
+

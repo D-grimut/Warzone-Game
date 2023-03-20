@@ -71,6 +71,7 @@ class Player{
         int getOrdersIndex();
         int getNegotiateID();
         bool getGotCard();
+        Map* getMap();
         Player& operator=(const Player& p);
 };
 

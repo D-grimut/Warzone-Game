@@ -224,13 +224,15 @@ Hand::Hand()
 {
 	size = new int(5);
     hand = new Card *[*size];
+	counter = new int(0);
 }
 
 //overload, custom handsize (isn't used in the demo)
 Hand::Hand(int handSize)
 {
 	size = new int(handSize);
-    hand = new Card *[*size];
+   	hand = new Card *[*size];
+	counter = new int(0);
 }
 
 //copy constructor
@@ -267,6 +269,7 @@ void Hand::addCard(Card *card, int position){
     }
     else
         hand[position] = card;
+	*counter = *counter + 1;
 }
 
 void Hand::resize(){
@@ -281,14 +284,15 @@ void Hand::resize(){
 }
 
 void Hand::removeCard(int *position){
-    if(*position > *getSize()){
+    if(*position > *counter){
         cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
     }
-    for(int i = *position; i<*getSize(); i++){
+    for(int i = *position; i<*counter; i++){
         hand[i] = hand[i+1];
     }
     int* newSize = new int(*getSize() - 1);
     setSize(newSize);
+	*counter--;
 }
 
 void Hand::setSize(int* size){
