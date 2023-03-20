@@ -67,7 +67,7 @@ int main()
     cp->getCommand();
     cp->getCommand();
 
-    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("gamelog.txt");
+    FileCommandProcessorAdapter *test = new FileCommandProcessorAdapter("commands.txt");
     std::string str;
     test->attach(ol);
     while (str != "EOF")

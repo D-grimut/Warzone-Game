@@ -18,7 +18,7 @@ public:
     ObserverList();
     ObserverList(int);
     ~ObserverList();
-    ObserverList::ObserverList(const ObserverList &other);
+    ObserverList(const ObserverList &other);
 
     void add(Observer *);
     int getSize();
@@ -50,7 +50,7 @@ public:
 
     Subject();
     ~Subject();
-    Subject::Subject(const Subject &other);
+    Subject(const Subject &other);
 
     friend ostream &operator<<(ostream &os, const Subject &sub);
     Subject &operator=(const Subject &other);
@@ -60,7 +60,7 @@ class Observer
 {
 public:
     virtual void update(ILoggable *);
-    friend ostream &operator<<(ostream &os, const LogObserver &obs);
+    friend ostream &operator<<(ostream &os, const Observer &obs);
 };
 
 class LogObserver : public Observer
