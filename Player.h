@@ -10,6 +10,7 @@ using namespace std;
 
 class OrdersList;
 class Hand;
+class Orders;
 
 class Player{
     private:
@@ -26,20 +27,22 @@ class Player{
         Hand* cards;                    // List Of Cards
         int* reinforcementPool;
         int* negotiateId;
+        bool* gotCard;
+        // int* tInNa, tInSa, tInEu, tInAf, tInAs, tInOc;
         friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
     public:
         // Constructor with parameters, default constructor, and destructor
-        Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId);
+        Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId, bool* gotCard);
         Player();
         Player(const Player&);
         ~Player();
 
         // Methods
-        void ownedTerritories();    // Show all owned territories
-        void issueOrder();          // Create order and add it to array of orders
-        Territory* toDefend();      // Show territories to defend
-        Territory* toAttack();      // Show territories to attack
+        void ownedTerritories();                     // Show all owned territories
+        void issueOrder(string orderName, int* nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer);           // Create order and add it to array of orders
+        Territory* toDefend();                       // Show territories to defend
+        Territory* toAttack();                       // Show territories to attack
         void printCards();
         int nbTerritories();
         void printToAttToDef(Territory* arrOfDefOrAtt);
@@ -58,15 +61,17 @@ class Player{
         void setCards(Hand cards);
         void setReinforcementPool(int reinforcementPool);
         void setNegotiateID(int negotiateId);
-        
+        void setGotCard(bool gotCard);
         // Getters
         int getPlayerID();
-        OrdersList getOrdersList();
-        Hand getCards();
+        OrdersList* getOrdersList();
+        Hand* getCards();
         int getSizeOfHand();
         int getReinforcementPool();
+        int getOrdersIndex();
         int getNegotiateID();
-
+        bool getGotCard();
+        Map* getMap();
         Player& operator=(const Player& p);
 };
 

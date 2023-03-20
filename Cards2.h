@@ -6,16 +6,6 @@ using namespace std;
 
 class OrdersList;
 
-//all card types
-enum class Type {
-	bomb,
-	reinforcement, 
-	blockade,
-	airlift,
-	diplomacy,
-	null
-};
-
 //Card class
 class Card
 {
@@ -24,20 +14,19 @@ class Card
 		~Card();
 		Card(const Card& e);//copy constructor
 		Card& operator =(const Card& e);//assignment operator
-		Card(Type type);
+		Card(string type);
 		int getNumber();
 		void setNumber(int newNumber);
-		Type getType();
-		void setType(Type newType);
+		string getType();
+		void setType(string newType);
 		void play(Card card);
 		OrdersList getOrdersList();
 	private:
-		Type *type;
-		string* name;
+		string *type;
 		int* size;
 		OrdersList *ol;// list of orders
 		int *ordersIndex;// Index of Orders
-		int *number = new int();
+		int *number;
 
 		friend std::ostream& operator<<(std::ostream &strm, const Card &a);
 };
@@ -77,6 +66,7 @@ class Hand
 		Hand(const Hand& e);//copy contructor
 		Hand& operator =(const Hand& e);//assignment operator
 		Hand(int handSize);
+		int* getSize();
 		void addCard(Card *card, int position);
 		void removeCard(int *position);
         void setSize(int *size);

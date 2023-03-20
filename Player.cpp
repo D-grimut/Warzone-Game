@@ -7,7 +7,7 @@
 using namespace std;
 
 // Constructor of Player to initialize values
-    Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId){ 
+Player::Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId, bool* gotCard){  
     this->nbOfTerritories = new int(nbTerritories);
     this->playerID = new int(playerID);
     this->territories = territories;
@@ -23,10 +23,12 @@ using namespace std;
     this->adjacencyMatrix = adjacencyMatrix;
     this->map = map;
 
-    this->sizeOfHand = new int(6);
+    this->sizeOfHand = new int(0);
     this->cards = new Hand(*sizeOfHand);
     
     this->reinforcementPool = new int(reinforcementPool);
+    this->negotiateId = new int(0);
+    this->gotCard = new bool(false);
 }
 
 // Default Constructor
@@ -46,9 +48,11 @@ Player::Player(){
     this->adjacencyMatrix = NULL;
     this->map = NULL;
 
-    this->cards = NULL;
-    
+    //this->cards = new Hand;
+    this-> cards = new Hand;
     this->reinforcementPool = new int(0);
+    this->negotiateId = new int (0);
+    this->gotCard = new bool(false);
 }
 
 // Copy Constructor
@@ -63,7 +67,9 @@ Player::Player(const Player& p){
     this->adjacencyMatrix = p.adjacencyMatrix;
     this->map = p.map;
     this->cards = p.cards;
-    //NbArmies
+    this->reinforcementPool = new int(*p.reinforcementPool);
+    this->negotiateId = 0;
+    this->gotCard = new bool(p.gotCard);
 }
 
 // Destructor
@@ -100,6 +106,8 @@ Player::~Player(){
 
     delete this->reinforcementPool;
     this->reinforcementPool = NULL;
+
+    
 }
 
 // Method to show owned Territories that the player owns
@@ -125,67 +133,58 @@ int Player::nbTerritories(){
 
 // Method to create orders and adds them to the OrdersList array that the Player owns
 // Prints out the list of orders after creating it
-void Player::issueOrder(){
-    int choice;
-    cout << "What order would you like to create: " << endl;
-    cout << "1. Deploy\n2. Bomb\n3. Blockade\n4. Negotiate\n5. Airlift\n6. Advance\nChoice: ";
-    cin >> choice;
-
-    switch (choice){
-        case 1:
-        {
-            Order *deploy = new Deploy();
-            this->ol->addOrder(deploy, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 2:
-        {
-            Order *bomb = new Bomb();
-            this->ol->addOrder(bomb, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 3:
-        {
-            Order *blockade = new Blockade();
-            this->ol->addOrder(blockade, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 4:
-        {
-            Order *negotiate = new Negotiate();
-            this->ol->addOrder(negotiate, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 5:
-        {
-            Order *airlift = new Airlift();
-            this->ol->addOrder(airlift, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            break;
-        }
-        case 6:
-        {
-            Order *advance = new Advance();
-            this->ol->addOrder(advance, *ordersIndex);
-            (*ordersIndex)++;
-            ol->showList(*ordersIndex);
-            //if(possesor id == this.id)
-            //add card
-            //draw() then add to hand
-            break;
-        }
-        default:
-            cout << "Bad choice... Exiting the function" << endl; 
-    }        
+void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer){
+    if(orderName == "Deploy"){
+        Deploy *deploy = new Deploy();
+        deploy->setPlayer(this);
+        deploy->setTargetTerr(targetTerr);
+        deploy->setArmies(nbOfArmies);
+        
+        this->ol->addOrder(deploy, *ordersIndex);
+        (*ordersIndex)++;
+    }
+    if(orderName == "Bomb"){
+        Bomb *bomb = new Bomb();
+        bomb->setTargetTerr(targetTerr);
+        bomb->setSourceTerr(sourceTerr);
+        bomb->setPlayer(this);
+        this->ol->addOrder(bomb, *ordersIndex);
+        (*ordersIndex)++;
+    }
+    if(orderName == "Blockade"){
+        Blockade *blockade = new Blockade();
+        blockade->setPlayer(this);
+        blockade->setTargetTerr(targetTerr);
+        this->ol->addOrder(blockade, *ordersIndex);
+        (*ordersIndex)++;
+    }
+     if(orderName == "Negotiate"){
+        Negotiate *negotiate = new Negotiate();
+        negotiate->setTargetTerr(targetTerr);
+        negotiate->setPlayer(this);
+        negotiate->setEnemy(enemy);
+        this->ol->addOrder(negotiate, *ordersIndex);
+        (*ordersIndex)++;
+    }
+    if(orderName == "Airlift"){
+        Airlift *airlift = new Airlift();
+        airlift->setTargetTerr(targetTerr);
+        airlift->setSourceTerr(sourceTerr);
+        airlift->setPlayer(this);
+        airlift->setArmies(nbOfArmies);
+        this->ol->addOrder(airlift, *ordersIndex);
+        (*ordersIndex)++;
+    }
+     if(orderName == "Advance"){
+        Advance *advance = new Advance();
+        advance->setEnemy(enemy);
+        advance->setPlayer(thisPlayer);
+        advance->setTargetTerr(targetTerr);
+        advance->setSourceTerr(sourceTerr);
+        advance->setArmies(nbOfArmies);
+        this->ol->addOrder(advance, *ordersIndex);
+        (*ordersIndex)++;
+    }     
 }
 
 // Method that finds Territories to defend and adds them to a new array
@@ -248,7 +247,7 @@ Territory* Player::toAttack(){
 // Print cards that the player owns
 void Player::printCards(){
     cout << "Printing out hand of cards for Player " << *playerID << endl;
-    for(int i = 0; i < *sizeOfHand; i++){
+    for(int i = 0; i < *getCards()->counter; i++){
         cout << cards->hand[i] << endl;
     }
 }
@@ -322,17 +321,21 @@ void Player::setNegotiateID(int negotiate){
     *this->negotiateId = negotiate;
 }
 
+void Player::setGotCard(bool gotCard){
+    *this->gotCard = gotCard;
+}
+
 // Getters
 int Player::getPlayerID(){
     return *this->playerID;
 }
 
-OrdersList Player::getOrdersList(){
-    return *this->ol;
+OrdersList* Player::getOrdersList(){
+    return this->ol;
 }
 
-Hand Player::getCards(){
-    return *this->cards;
+Hand* Player::getCards(){
+    return this->cards;
 }
 
 int Player::getSizeOfHand(){
@@ -343,8 +346,20 @@ int Player::getReinforcementPool(){
     return *this->reinforcementPool;
 }
 
+int Player::getOrdersIndex(){
+    return *this->ordersIndex;
+}
+
 int Player::getNegotiateID(){
     return *this->negotiateId;
+}
+
+bool Player::getGotCard(){
+    return *this->gotCard;
+}
+
+Map* Player::getMap(){
+    return this->map;
 }
 
 // Stream insertion operator
@@ -368,3 +383,4 @@ Player& Player::operator=(const Player& p){
 
     return *this;
 }
+

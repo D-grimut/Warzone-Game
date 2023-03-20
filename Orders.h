@@ -6,8 +6,9 @@
 #include "Player.h"
 using namespace std;
 
-//Player neutral = new Player(-1,)
 class Player;
+//Player neutral = new Player(-1,)
+
 //Order class (PARENT)
 class Order {
     public:
@@ -15,7 +16,7 @@ class Order {
         ~Order();
         Order(const Order& e); //copy constructor
         Order& operator =(const Order& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute() = 0; //Execute
         virtual string* description(); //Shows which order it is
         string* getName();
@@ -31,11 +32,11 @@ class Deploy : public Order {
         ~Deploy();
         Deploy(const Deploy& e); //copy constructor
         Deploy& operator =(const Deploy& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
-            Territory getTragetTerr();
+            Territory* getTragetTerr();
             int* getArmies();
             Player* getPlayer();
         //Setters
@@ -44,7 +45,7 @@ class Deploy : public Order {
             void setPlayer(Player* player);
     private:
         string* name; //used for description
-        Territory target; //Territory to deploy armies to
+        Territory* target; //Territory to deploy armies to
         int* armies; //number of armies to deploy
         Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Deploy &a);
@@ -52,17 +53,17 @@ class Deploy : public Order {
 
 //Advance class
 class Advance : public Order {
-    public:
+     public:
         Advance();
         ~Advance();
         Advance(const Advance& e); //copy constructor
         Advance& operator =(const Advance& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
-            Territory getTargetTerr();
-            Territory getSourceTerr();
+            Territory* getTargetTerr();
+            Territory* getSourceTerr();
             int* getArmies();
             Player* getPlayer();
             Player* getEnemy();
@@ -73,8 +74,8 @@ class Advance : public Order {
             void setPlayer(Player* player);
             void setEnemy(Player* enemy);
     private:
-        Territory source; //source terriotry
-        Territory target; //terriotry to advance to
+        Territory* source; //source terriotry
+        Territory* target; //terriotry to advance to
         int* armies; //number of armies to advance
         string* name; //used for description
         Player* player;
@@ -89,22 +90,21 @@ class Bomb : public Order {
         ~Bomb();
         Bomb(const Bomb& e); //copy constructor
         Bomb& operator =(const Bomb& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
-            Territory getTargetTerr();
-            Territory getSourceTerr();
+            Territory* getTargetTerr();
             Player* getPlayer();
+            Territory* getSourceTerr();
         //Setters
-            void setTargetTerr(Territory target);
-            void setSourceTerr(Territory source);
+            void setTargetTerr(Territory* target);
             void setPlayer(Player* player);
+            void setSourceTerr(Territory* source);
     private:
-        Territory target; //target territory to bomb
-        Territory source;
-        int* playerID; //player id issuing the order
-        Player* player;
+        Territory* target; //target territory to bomb
+        Territory* source;
+        Player* player; //player id issuing the order
         string* name; //used for description
         friend std::ostream& operator<<(std::ostream &strm, const Bomb &a);
 };
@@ -116,18 +116,17 @@ class Blockade : public Order {
         ~Blockade();
         Blockade(const Blockade& e); //copy constructor
         Blockade& operator =(const Blockade& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
-            Territory getTargetTerr();
+            Territory* getTargetTerr();
             Player* getPlayer();
         //Setters
-            void setTargetTerr(Territory target);
+            void setTargetTerr(Territory* target);
             void setPlayer(Player* player);
     private:
-        Territory target; //terriotry to blockade
-        int* playerID; //player id issuing order
+        Territory* target; //terriotry to blockade
         Player* player;
         friend std::ostream& operator<<(std::ostream &strm, const Blockade &a);
         string* name; //used for description
@@ -140,15 +139,16 @@ class Airlift : public Order {
         ~Airlift();
         Airlift(const Airlift& e); //copy constructor
         Airlift& operator =(const Airlift& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
 
         //Getters
-            Territory getTargetTerr();
-            Territory getSourceTerr();
+            Territory* getTargetTerr();
+            Territory* getSourceTerr();
             int* getArmies();
             Player* getPlayer();
+
         //Setters
             void setTargetTerr(Territory* target);
             void setSourceTerr(Territory* source);
@@ -156,10 +156,10 @@ class Airlift : public Order {
             void setPlayer(Player* player);
 
     private:
-        Territory source; //terriotry sending armies
-        Territory target; //terriotry receiving armies
+        Territory* source; //terriotry sending armies
+        Territory* target; //terriotry receiving armies
         int* armies; //number of armies being sent
-        Player* player;
+        Player* player; // player issuing order
         friend std::ostream& operator<<(std::ostream &strm, const Airlift &a);
         string* name; //used for description
 };
@@ -171,21 +171,21 @@ class Negotiate : public Order {
         ~Negotiate();
         Negotiate(const Negotiate& e); //copy constructor
         Negotiate& operator =(const Negotiate& e); //asignmnet operator
-        virtual bool* validate(); //Validate boolean, (virtual for polymorphism)
+        virtual bool validate(); //Validate boolean, (virtual for polymorphism)
         virtual void execute(); //Execute
         virtual string* description(); //Shows which order it is
         //Getters
-            Territory getTargetTerr();
             Player* getPlayer();
+            Territory* getTargetTerr();
             Player* getEnemy();
         //Setters
-            void setTargetTerr(Territory target);  
             void setPlayer(Player* player);
+            void setTargetTerr(Territory* target);  
             void setEnemy(Player* enemy);
           
     private:
-        Territory target; //territory to negotiate with
-        Player* player;
+        Territory* target; //territory to negotiate with
+        Player* player; //player id issuing order
         Player* enemy;
         friend std::ostream& operator<<(std::ostream &strm, const Negotiate &a);
         string* name; //used for description
@@ -209,6 +209,7 @@ public:
     void execute(); //not implemented, prints that it is being called
     void resize();
     Order* getOrder(int i);
+    int* end;
 private:
     friend std::ostream& operator<<(std::ostream &strm, const OrdersList &a);
     Order** orders; //vecotr created

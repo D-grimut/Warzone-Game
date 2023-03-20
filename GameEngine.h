@@ -11,7 +11,6 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
-    void startupPhase(int state);
 
 private:
     int *current_state; // current state : int or string?
@@ -115,6 +114,7 @@ public:
     ~ExecuteOrderState();
     ExecuteOrderState(const ExecuteOrderState &copy);
     void ExecuteOrderInput(const std::string &input);
+    void executeOrderPhase(Player *playerList[], int nbOfPlayers);
 
 private:
     GameEngine *engine;
@@ -131,4 +131,15 @@ public:
 
 private:
     GameEngine *engine;
+};
+
+class MainGameState
+{
+    public: 
+        MainGameState(GameEngine *engine);
+        ~MainGameState();
+        MainGameState(const MainGameState &copy);
+        void mainGameLoop(Player *playerList[], int nbOfPlayers, Map* map);
+    private:
+        GameEngine *engine;
 };

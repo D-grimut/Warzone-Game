@@ -1,214 +1,8 @@
 // GameEngine.cpp
 #include "GameEngine.h"
-#include "Map.h"
-#include "Cards.h"
-#include "Orders.h"
 #include "Player.h"
-
-class Player;
-/*
-This section is dedicated to Assignment 2 part 2
-*/
-
-// Runs the startup for the game
-
-/*
-If your reading this I'm probably butchering my explination, sorry about that.
-TODO: Implement/Fix 4b), 4c) and 4d)
-
-
-This function essentially deals with what our p1 driver programs were already doing, this
-leads me to a few questions:
-4.c), does a army count already exist somewhere?
- */
-void GameEngine::startupPhase(int state)
-{
-    int numOfPlayers = 0; //will be used to keep track of the number of players
-    MapLoader *validMap;
-    Map *map;
-    Territory* territories;
-    Territory*** adjacencyMatrix;
-    int nbTerritories;
-    int negotiateID;
-    int reinforcementPool;
-    Player *p1, *p2, *p3, *p4, *p5, *p6;
-    Deck *deckA = new Deck();
-
-    if (state == 0)
-        {
-            //1.Use the MapLoader function to select a map
-            MapLoader *validMap = new MapLoader("europe.map");
-            Map *map = validMap->getMap();
-        }
-        else if (state == 1)
-        {
-            //2.Use validate map to validate the map
-            map->validate(); 
-            //This is tecnically part of 1. but it's placed here since it doesn't make sense to do this before validation
-            Territory* territories = map->getCountries();
-            Territory*** adjacencyMatrix = map->getAdjacencyMatrix();
-            int nbTerritories = *validMap->getMap()->getNbTerritories();
-            
-        }
-        else if (state == 2)
-        {
-            //3. Adds player
-            if(numOfPlayers == 0){
-                Player *p1 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-                numOfPlayers++;
-            }else if (numOfPlayers == 1){
-                Player *p2 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-                numOfPlayers++;
-            }else if (numOfPlayers == 2){
-                Player *p3 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-                numOfPlayers++;
-            }else if (numOfPlayers == 3){
-                Player *p4 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-                numOfPlayers++;
-            }else if (numOfPlayers == 4){
-                Player *p5 = new Player(numOfPlayers+1, territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-            numOfPlayers++;
-            }else if (numOfPlayers == 5){
-                Player *p6 = new Player((numOfPlayers+1), territories, nbTerritories, adjacencyMatrix, map, reinforcementPool, negotiateID); 
-                numOfPlayers++;
-            }
-        }
-        else if (state == 3)
-        {
-            //4.a) fairly distribute all the territories to the players
-            if(numOfPlayers == 2){
-                // Set p1 territories
-                for(int i = 0; i < nbTerritories/2; i++){
-                    territories[i].setPosessor(p1->getPlayerID());
-                }
-                // Set p2 territories
-                for(int i = nbTerritories/2; i < nbTerritories; i++){
-                    territories[i].setPosessor(p2->getPlayerID());
-                }
-            }else if (numOfPlayers == 3){
-                // Set p1 territories
-                for(int i = 0; i < nbTerritories/3; i++){
-                    territories[i].setPosessor(p1->getPlayerID());
-                }
-                // Set p2 territories
-                for(int i = nbTerritories/3; i < nbTerritories*(2/3); i++){
-                    territories[i].setPosessor(p2->getPlayerID());
-                }
-                // Set p3 territories
-                for(int i = nbTerritories*(2/3); i < nbTerritories; i++){
-                    territories[i].setPosessor(p3->getPlayerID());
-                }
-            }else if (numOfPlayers == 4){
-                // Set p1 territories
-                for(int i = 0; i < nbTerritories/4; i++){
-                    territories[i].setPosessor(p1->getPlayerID());
-                }
-                // Set p2 territories
-                for(int i = nbTerritories/4; i < nbTerritories/2; i++){
-                    territories[i].setPosessor(p2->getPlayerID());
-                }
-                // Set p3 territories
-                for(int i = nbTerritories/2; i < nbTerritories*(3/4); i++){
-                    territories[i].setPosessor(p3->getPlayerID());
-                }
-                // Set p4 territories
-                for(int i = nbTerritories*(3/4); i < nbTerritories; i++){
-                    territories[i].setPosessor(p4->getPlayerID());
-                }
-            }else if (numOfPlayers == 5){
-                // Set p1 territories
-                for(int i = 0; i < nbTerritories/5; i++){
-                    territories[i].setPosessor(p1->getPlayerID());
-                }
-                // Set p2 territories
-                for(int i = nbTerritories/5; i < nbTerritories*(2/5); i++){
-                    territories[i].setPosessor(p2->getPlayerID());
-                }
-                // Set p3 territories
-                for(int i = nbTerritories*(2/5); i < nbTerritories*(3/5); i++){
-                    territories[i].setPosessor(p3->getPlayerID());
-                }
-                // Set p4 territories
-                for(int i = nbTerritories*(3/5); i < nbTerritories*(4/5); i++){
-                    territories[i].setPosessor(p4->getPlayerID());
-                }
-                // Set p5 territories
-                for(int i = nbTerritories*(4/5); i < nbTerritories; i++){
-                    territories[i].setPosessor(p5->getPlayerID());
-                }
-            }else if (numOfPlayers == 6){
-                // Set p1 territories
-                for(int i = 0; i < nbTerritories/6; i++){
-                    territories[i].setPosessor(p1->getPlayerID());
-                }
-                // Set p2 territories
-                for(int i = nbTerritories/6; i < nbTerritories*(1/3); i++){
-                    territories[i].setPosessor(p2->getPlayerID());
-                }
-                // Set p3 territories
-                for(int i = nbTerritories*(1/3); i < nbTerritories/2; i++){
-                    territories[i].setPosessor(p3->getPlayerID());
-                }
-                // Set p4 territories
-                for(int i = nbTerritories/2; i < nbTerritories*(2/3); i++){
-                    territories[i].setPosessor(p4->getPlayerID());
-                }
-                // Set p5 territories
-                for(int i = nbTerritories*(2/3); i < nbTerritories*(5/6); i++){
-                    territories[i].setPosessor(p5->getPlayerID());
-                }
-                // Set p6 territories
-                for(int i = nbTerritories*(5/6); i < nbTerritories; i++){
-                    territories[i].setPosessor(p6->getPlayerID());
-                }
-            }
-            
-
-        }else if (state == 4){
-            //b) determine randomly the order of play of the players in the game
-            int min = 1, max = numOfPlayers;
-
-            //gives the player their turn order
-            for(int i = min; i <= numOfPlayers; i++)
-            {
-                //write this out >:)
-            } 
-
-            //c) give 50 initial armies to the players, which are placed in their respective reinforcement pool
-            //this one is really easy to implement, I'm just not if the reinforcement pool exists
-            //
-
-            //loop through numOfPlayers and assign them 50 troops
-
-            //d) let each player draw 2 initial cards from the deck using the deck’s draw() method
-            //fill the deck with cards to draw from
-            for (int i = (0); i < 10; i++){
-                if (i < 2){
-                    deckA->setDeck(i, Type::airlift);
-                } else if (i < 4) {
-                    deckA->setDeck(i, Type::blockade);
-                } else if (i < 6) {
-                    deckA->setDeck(i, Type::bomb);
-                } else if (i < 8) {
-                    deckA->setDeck(i, Type::diplomacy);
-                } else {
-                    deckA->setDeck(i, Type::reinforcement);
-                }
-            }
-            //draws cards for the hand
-            for (int i = 0; i < 2; i++)
-               {
-                //struggling to figure out how to properly call the players hand
-                Card abc = *deckA->draw();
-                //p1->setCards(); //doesn't work due to setCards() being a of class Hand, this is a easy fix by calling a specific card in their hand
-                //handA->hand[i] = deckA->draw();
-                }
-
-            //e) switch the game to the play phase //explain this better!
-            //This happens automatically, the reason is that it's already implemented into the game engine system
-        }
-
-}
+#include "Orders.h"
+#include <cmath>
 
 /*
 This section is for all the constructors used for each class
@@ -332,11 +126,15 @@ AssignReinforcementState::~AssignReinforcementState()
 
 // Method to calculate the armies that a player can use to reinforce
 void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayers){
+    //Ask Daniel about the "Owns all territories in continent" bonus
     for(int i = 0; i < nbOfPlayers; i++){
         int *nbOfTer = new int(pArr[i]->nbTerritories());
         int reinArm = floor(*nbOfTer/3);
+        if(reinArm < 3){
+            reinArm = 3;
+        }
         pArr[i]->setReinforcementPool(reinArm);
-        std::cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
+        cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
     }
 }
 
@@ -362,50 +160,262 @@ IssueOrderState::~IssueOrderState()
 }
 
 void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
-    /*
-    Need:
-    deploy
-    advance
-    
-    */
+    //Reset negotiateID to 0
+    for(int i = 0; i < nbOfPlayers; i++){
+        pArr[i]->setNegotiateID(0);
+    }
+
+    //Beginning of round
    for(int i = 0; i < nbOfPlayers; i++){
+        cout << "---------------------------------------------------------------------------------" << endl;
+        cout << "PLAYER " << i << "'s TURN: "<< endl;
+        //Current players territories to attack
         Territory* toAtt = pArr[i]->toAttack();
         pArr[i]->printToAttToDef(toAtt);
         int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
-        // cout << "Give a priority list of territories to invade e.g. 0,1,2: " << endl;
-        // for(int j = 0; j < nbOfToAtt; j++){
-        //     cout << j << ". " << *toAtt[j].getTerritoryName() << endl;
-        // }
-
-        // string prioAtt;
-        // cout << "Priority list: ";
-        // cin >> prioAtt;
-
+        
+        //Current players territories owned
         Territory* toDef = pArr[i]->toDefend();
         pArr[i]->printToAttToDef(toDef);
         int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
-        // cout << "Give a priority list of territories to defend e.g. 0,1,2: " << endl;
-        // for(int j = 0; j < nbOfToDef; j++){
-        //     cout << j << ". " << *toDef[j].getTerritoryName() << endl;
-        // }
+        
+        //Getting number of armies to deploy.
+        int nbOfRein = pArr[i]->getReinforcementPool();
 
-        // string prioDef;
-        // cout << "Priority list: ";
-        // cin >> prioDef;
-        //if(cin is Deploy)
-        while(pArr[i]->getReinforcementPool() !=0){
-            cout << "Reinforcement pool has " <<pArr[i]->getReinforcementPool() << " armies left. Where would you like to deploy?" <<endl;
+        //setting values to pass to orders
+        string targetTerr, sourceTerr, cardOrder;
+        int counterDep, toAttPossesor;
+        int* nbOfArmies = new int(0);
+        Territory* target;
+        Territory* source;
+        Player* enemy;
+        int enemyIndex = -1;
+        bool invalidName = true;
 
-            cout<< "How many armies? " << endl;
+        //--------------------------------------------
+        //DEPLOY
+        while(nbOfRein != 0){
+            cout << "You have " << nbOfRein << " left to deploy" << endl;
+            pArr[i]->printToAttToDef(toDef);
+            cout << "Enter the country you would like to deploy armies to: ";
+            cin >> targetTerr;
+            cout << "Enter the amount of armies to send: ";
+            cin >> *nbOfArmies;
+
+            while(nbOfRein - *nbOfArmies < 0 || *nbOfArmies <= 0){
+                cout << "Please enter a valid amount of armies to deploy: ";
+                cin >> *nbOfArmies;
+            }
+            //Check validity of name
+            while(invalidName){
+                for(int j = 0; j < nbOfToDef; j++){
+                    if(targetTerr == *toDef[j].getTerritoryName()){
+                        target = &toDef[j];
+                        invalidName = false;
+                        break;
+                    }
+                }
+                if(invalidName == true){
+                    cout << "You have inputed an incorrect name. Please write a correct territory name: ";
+                    cin >> targetTerr;
+                } 
+            }
+            invalidName = true;
+            //Add order to order list.
+            pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
+            nbOfRein = nbOfRein - *nbOfArmies;
         }
-       
-        cout << "What would you like to do next? Options: " <<endl;
-        cout << "Cards available: " << endl;
-        
-        
 
-        //Advance
+        //-----------------------------------------
+        //ADVANCE
+
+        bool isAdvancing = true;
+        int choice;
+        do{
+            cout << "Would you like to advance?\n1. Yes\n2. No\nChoice: ";
+            cin >> choice;
+            if(choice == 1){
+                pArr[i]->printToAttToDef(toDef);
+                cout << "Which territory would you like to take armies from: ";
+                cin >> sourceTerr;
+
+                pArr[i]->printToAttToDef(toDef);
+                pArr[i]->printToAttToDef(toAtt);
+                cout << "Which territory would you like to advance to: ";
+                cin >> targetTerr;
+                cout << "How many armies would you like to move: ";
+                cin >> *nbOfArmies;
+
+                //SOURCE TERRITORY
+               invalidName = true;
+               while(invalidName){
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            // delete source;
+                            source = &toDef[j];
+                            invalidName = false;
+                            break;
+                        }
+                    }
+                    if(invalidName == true){
+                        cout << "You have inputed an incorrect name. Please write a correct source territory name: ";
+                        cin >> sourceTerr;
+                    }
+               }
+              //TARGET TERRIOTRY
+               invalidName = true;
+                while(invalidName){
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            // delete target;
+                            target = &toAtt[j];
+                            invalidName = false;
+                            toAttPossesor = *toAtt[j].getPosessor();
+                            for(int k = 0; k < nbOfPlayers; k++){
+                                if(toAttPossesor == pArr[k]->getPlayerID()){
+                                    enemy = pArr[k];
+                                }
+                            }
+                        }
+                    }
+                    if(invalidName == true){
+                        for(int j = 0; j < nbOfToDef; j++){
+                        if(targetTerr == *toDef[j].getTerritoryName()){
+                            target = &toDef[j];
+                            invalidName = false;
+                            enemy = pArr[i];
+                            break;
+                        }
+                    }
+                    }
+                    if(invalidName == true){
+                        cout << "You have inputted an incorrect name. Please write a correct target territory name: ";
+                        cin >> targetTerr;
+                    }
+                }
+
+                pArr[i]->issueOrder("Advance", nbOfArmies, target, source, enemy, pArr[i]);
+                }
+                else if(choice == 2){
+                    isAdvancing = false;
+                }
+        }while(isAdvancing);
+
+        bool validCardOrder = true;
+        if(*pArr[i]->getCards()->getCounter() == 0){
+            cout << "You have no cards to create a new order..." << endl;
+        }else{
+            do{
+                cout << "Select a card in your hand to create an order: " << endl;
+                cout << "Choice: ";
+                for(int k = 0; k < *pArr[i]->getCards()->getCounter(); k++){
+                    cout << pArr[i]->getCards()->getCard(k)<<endl;
+                } 
+                cin >> cardOrder;
+
+                if(cardOrder == "Bomb"){
+                     cout << "Territories to attack: " << endl;
+                    pArr[i]->printToAttToDef(toDef);
+                    cout << "Which territory would you like to send a bomb from: ";
+                    cin >> sourceTerr;
+
+                    pArr[i]->printToAttToDef(toAtt);
+                    cout << "Which territory would you like to target: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            source = &toDef[j];
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            target = &toAtt[j];
+                            break;
+                        }
+                    }
+                    pArr[i]->issueOrder("Bomb", 0, target, source, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }
+                else if(cardOrder == "Blockade"){
+                    cout << "Which territory would you like to blockade: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            source = &toDef[j];
+                            break;
+                        }
+                    }
+                    pArr[i]->issueOrder("Blockade", 0, target, nullptr, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }
+                else if(cardOrder == "Airlift"){
+                    pArr[i]->printToAttToDef(toDef);
+                    cout << "Which territory would you like to take armies from: " <<endl;
+                    cin >> sourceTerr;
+                    cout << "Which territory would you like to advance to: ";
+                    cin >> targetTerr;
+                    cout << "How many armies would you like to move: ";
+                    cin >> *nbOfArmies;
+
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(sourceTerr == *toDef[j].getTerritoryName()){
+                            source = &toDef[j];
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < nbOfToDef; j++){
+                        if(targetTerr == *toDef[j].getTerritoryName()){
+                            target = &toDef[j];
+                            break;
+                        }
+                    }
+
+                    pArr[i]->issueOrder("Airlift", nbOfArmies, target, source, nullptr, pArr[i]);
+                    validCardOrder = false;
+                }else if(cardOrder == "Negotiate"){
+                    pArr[i]->printToAttToDef(toAtt);
+                    cout << "Which territory would you like to negotiate with: ";
+                    cin >> targetTerr;
+
+                    for(int j = 0; j < nbOfToAtt; j++){
+                        if(targetTerr == *toAtt[j].getTerritoryName()){
+                            target = &toAtt[j];
+                            toAttPossesor = *toAtt[j].getPosessor();
+                            for(int k = 0; k < nbOfPlayers; k++){
+                                if(toAttPossesor == pArr[k]->getPlayerID()){
+                                    enemy = pArr[k];
+                                    cout << enemy->getPlayerID() << endl;
+                                    enemyIndex = j;
+                                }
+                            }
+                        }
+                    }
+                    if(enemyIndex == -1){
+                        cout << "INVALID: Can't negotiate with yourself" <<endl;
+                        break;
+                    }
+
+                    pArr[i]->issueOrder("Negotiate", 0, target, nullptr, enemy, pArr[i]);
+                    validCardOrder = false;
+                }else{
+                    cout << "Invalid order... Try again";
+                }
+            }while(validCardOrder);            
+        }
+        cout << "END OF TURN: ORDERS MADE " << endl;
+        OrdersList* ol = pArr[i]->getOrdersList();
+        int listSize = pArr[i]->getOrdersIndex();
+        ol->showList(listSize);
    }
+}
+
+void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers){
+    for(int i = 0; i < nbOfPlayers; i++){
+        pArr[i]->getOrdersList()->execute();
+    }
 }
 
 // Constructor for execute order state
@@ -579,7 +589,6 @@ void StartState::StartInput(const std::string &input)
 {
     if (input == "loadmap")
     {
-        engine->startupPhase(0);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(1);
@@ -601,7 +610,6 @@ void MapLoadedState::MapLoadedInput(const std::string &input)
 {
     if (input == "validatemap")
     {
-        engine->startupPhase(1);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(2);
@@ -633,7 +641,6 @@ void MapValidatedState::ValidateInput(const std::string &input)
 {
     if (input == "addplayer")
     {
-        engine->startupPhase(2);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(3);
@@ -655,14 +662,12 @@ void PlayersAddedState::PlayersAddedInput(const std::string &input)
 {
     if (input == "assigncountries")
     {
-        engine->startupPhase(3);
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(4);
     }
     else if (input == "addplayer")
     {
-        engine->startupPhase(2);
         std::cout << "\nPlayer added\n"
                   << std::endl;
         engine->Commands();
@@ -796,26 +801,54 @@ void WinState::WinInput(const std::string &input)
 }
 
 
-/*
-Player1:
-1- return list of toDefend and toAttack (create prio for countries to defend and attack)
-2- we call a function to see # of armies that a player owns and calls the deploy order until player has no armies left
-3- call the advance order to move armies on the board (either defend or attack)
-4- cards (ffs)
+// Constructor for issue order state
+MainGameState::MainGameState(GameEngine *engine)
+{
+    this->engine = engine;
+}
 
-Player2:
-1- return list of toDefend and toAttack (create prio for countries to defend and attack)
-2- we call a function to see # of armies that a player owns and calls the deploy order until player has no armies left
-3- call the advance order to move armies on the board (either defend or attack)
-4- cards (ffs)
+// Copy constructor for issue order state
+MainGameState::MainGameState(const MainGameState &copy)
+{
+    this->engine = new GameEngine(*copy.engine);
+}
 
+// Destructor for issue order state
+MainGameState::~MainGameState()
+{
+    delete engine;
+    engine = nullptr;
+}
 
-mainGameLoop():
-	while(noWinner):
-		for(all the players{p1, p2}):
-			p1.reinforcementPhase();
-		for(all the players{p1, p2}):
-			p1.isseOrdersPhase();
-		for(all the players{p1, p2}):
-			p1.ordersExecutionPhase();
-*/
+void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
+    GameEngine* engine = new GameEngine();
+    AssignReinforcementState* rein = new AssignReinforcementState(engine);
+    IssueOrderState* issu = new IssueOrderState(engine);
+    ExecuteOrderState* exec = new ExecuteOrderState(engine);
+
+    Territory* terrArr = map->getCountries();
+    int nbTerritories = *map->getNbTerritories();
+    bool isRunning = true;
+
+    while(isRunning){
+        for(int i = 0; i < nbOfPlayers; i++){
+            Territory* toDef = pArr[i]->toDefend();
+            int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
+            if(nbOfToDef == nbTerritories){
+                cout << "Player " << pArr[i]->getPlayerID() << " has won the game!" << endl;
+                isRunning = false;
+                engine->TransitionTo(8);
+                exit(0);
+            }else if(pArr[i]->getPlayerID() == -1){
+                continue;
+            }else if(nbOfToDef == 0){
+                cout << "Player " << pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
+                pArr[i]->setPlayerID(-1);
+            }
+        }
+
+        rein->reinforcementPhase(pArr, nbOfPlayers);
+        issu->issueOrdersPhase(pArr, nbOfPlayers);
+        exec->executeOrderPhase(pArr, nbOfPlayers);
+    }
+}

@@ -79,19 +79,6 @@ Map::~Map(){
     this->adjacencyMatrix = NULL;
 }
 
-bool Map::isAdjacent(Territory terr1, Territory terr2){
-    for(int i = 0; i < *this->getNbTerritories() ; i++){
-        if(*adjacencyMatrix[i][0]->getTerritoryName() == *terr1.getTerritoryName() ){
-            for(int j = 0; j < *this->getNbTerritories(); j++){
-                if(*adjacencyMatrix[i][j]->getTerritoryName() == *terr2.getTerritoryName() && adjacencyMatrix[i][j] != nullptr){
-                    return true;
-                }
-            }
-        }                   
-    }
-    return false;
-}
-
 //Adds edge between two nodes
 void Map::addEdge(int x, int y, Territory* tx, Territory* ty){  
     if(this->adjacencyMatrix[x][y] != nullptr){
@@ -122,6 +109,19 @@ void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
             dfs(i, visited, visitedCon, ct, cc);
         }
     }
+}
+
+bool Map::isAdjacent(Territory terr1, Territory terr2){
+    for(int i = 0; i < *this->getNbTerritories() ; i++){
+        if(adjacencyMatrix[i][0]->getTerritoryName() == terr1.getTerritoryName() ){
+            for(int j = 0; j <*this->getNbTerritories(); j++){
+                if(adjacencyMatrix[i][j]->getTerritoryName() == terr2.getTerritoryName() && adjacencyMatrix[i][j] != nullptr){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 //Validate validates if map object is a valid map
