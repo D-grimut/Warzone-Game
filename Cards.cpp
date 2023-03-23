@@ -8,14 +8,41 @@
 Deck::Deck()
 {
 	this->deck = new Card[100];
+	for(int i = 0; i < 100; i ++){
+		if(i % 4 == 0)
+			deck[i].setType("bomb");
+		else if (i % 4 == 1){
+			deck[i].setType("blockade");
+		}
+		else if (i % 4 == 2){
+			deck[i].setType("diplomacy");
+		}else {
+			deck[i].setType("airlift");
+		}
+	}
 	this->inHand = new int[100]; //This checks if a card is being used or not
 	this->currentDeckSize = new int(100);
+	srand(time(NULL));
 }
 
 //overload, custom amount of cards (unused for demo and unfinished)
 Deck::Deck(int deckSize)
 {
+	srand(time(NULL));
 	this->deck = new Card[deckSize];
+	for(int i = 0; i < deckSize; i ++){
+		if(i % 4 == 0)
+			deck[i].setType("bomb");
+		else if (i % 4 == 1){
+			deck[i].setType("blockade");
+		}
+		else if (i % 4 == 2){
+			deck[i].setType("diplomacy");
+		}else {
+			deck[i].setType("airlift");
+		}
+	}
+	
 	this->inHand = new int[deckSize];
 	this->currentDeckSize = new int((int)deckSize);
 }
@@ -86,7 +113,7 @@ Card* Deck::draw()
 		*random = rand() % getCurrentDeckSize();
 	}
 	inHand[*random] = 1; // sets the card as taken
-	Card *a = new Card(deck[*random]);
+	Card *a = new Card(this->deck[*random].getType());
 	a->setNumber(*random);
 	return a; // returns the card
 }
@@ -95,8 +122,8 @@ Card* Deck::draw()
 //default constructor
 Card::Card()
 {
-	this->type = new string("blockade");	
-	this->number = new int();
+	this->type = new string("bomb");	
+	this->number = new int(-1);
 
 	size = new int(10);
 
@@ -107,7 +134,7 @@ Card::Card()
 Card::Card(string type1)
 {
 	this->type = new string(type1);
-	this->number = new int();
+	this->number = new int(-1);
 	size = new int(10);
     this->ol = new OrdersList(size);
 	this->ordersIndex = new int(0);
@@ -116,10 +143,10 @@ Card::Card(string type1)
 //copy constructor
 Card::Card(const Card& e)
 {
-	type = e.type;
-	number = e.number;
-	ol = e.ol;
-	ordersIndex = e.ordersIndex;
+	*this->type = *e.type;
+	*this->number = *e.number;
+	*this->ol = *e.ol;
+	*this->ordersIndex = *e.ordersIndex;
 }	
 
 //insertion operator
@@ -248,15 +275,15 @@ void Hand::resize(){
 }
 
 void Hand::removeCard(int *position){
-    if(*position > *counter){
+    if(*position > *getCounter()){
         cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
     }
-    for(int i = *position; i<*counter; i++){
+    for(int i = *position; i<*getCounter(); i++){
         hand[i] = hand[i+1];
     }
-    int* newSize = new int(*getSize() - 1);
-    setSize(newSize);
-	*counter--;
+	cout << *position << " position to remove card" << endl;
+	int* newCounter = new int(*getCounter() - 1);
+	setCounter(newCounter);
 }
 
 void Hand::setSize(int* size){

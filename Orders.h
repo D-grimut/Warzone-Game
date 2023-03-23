@@ -4,6 +4,7 @@
 #include <math.h>  
 #include "Map.h"
 #include "Player.h"
+#include "Cards.h"
 using namespace std;
 
 class Player;
@@ -67,12 +68,15 @@ class Advance : public Order {
             int* getArmies();
             Player* getPlayer();
             Player* getEnemy();
+            Deck* getDeck();
         //Setters
             void setTargetTerr(Territory* targTerr);
             void setSourceTerr(Territory* sourceTerr);
             void setArmies(int* numArmies);
             void setPlayer(Player* player);
             void setEnemy(Player* enemy);
+            void setDeck(Deck *&deck);
+        
     private:
         Territory* source; //source terriotry
         Territory* target; //terriotry to advance to
@@ -80,6 +84,7 @@ class Advance : public Order {
         string* name; //used for description
         Player* player;
         Player* enemy;
+        Deck* deck;
         friend std::ostream& operator<<(std::ostream &strm, const Advance &a);
 };
 

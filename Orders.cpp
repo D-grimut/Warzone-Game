@@ -8,6 +8,7 @@ using namespace std;
 
 //ORDER Class (PARENT)
 
+
 /*Default Constructor*/
 Order::Order(){
     name = new string("0");
@@ -60,7 +61,6 @@ Deploy::Deploy(){
     this->armies = new int(0);
     this->target = new Territory;
     this->player = new Player;
-
 } 
 
 /*Copy Constructor*/
@@ -141,7 +141,13 @@ void Deploy::execute(){
         bool valid = this->validate();
         if(valid){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + (*armies)); //add armies to target
-            getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
+            //getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
+            Territory* newArr = getPlayer()->toDefend();
+            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArr); i++){
+                if(target->getTerritoryName() == newArr[i].getTerritoryName()){
+                    newArr[i].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+                }
+            }
             cout<< "DEPLOY EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " armies. Number of reinforcements left in pool: " << getPlayer()->getReinforcementPool() <<endl;
         }
         else
@@ -192,6 +198,11 @@ Player* Advance::getPlayer(){
 Player* Advance::getEnemy(){
     return this->enemy;
 }
+
+Deck* Advance::getDeck(){
+    return this->deck;
+}
+
 /* Setters */
 void Advance::setSourceTerr(Territory* sourceTerr){
     source = sourceTerr;
@@ -212,6 +223,10 @@ void Advance::setArmies(int* armies1){
 
 void Advance::setPlayer(Player* player){
     this->player = player;
+}
+
+void Advance::setDeck(Deck *&deck){
+    this->deck = deck;
 }
 
 /*Description: Returns name of order*/
@@ -256,7 +271,6 @@ bool Advance::validate(){
 
 /*Execute Order method*/
 void Advance::execute(){
-    Deck* deck = new Deck;
     if(validate()){
         if(*target->getPosessor() == *getPlayer()->getPlayerID()){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *source->getNumberOfSoldiers());
@@ -280,23 +294,43 @@ void Advance::execute(){
                 target->setPosessor(*getPlayer()->getPlayerID());
                 target->setNumberOfSoldiers(*source->getNumberOfSoldiers());
                 source->setNumberOfSoldiers(0);
+                Territory* newArrDef = getPlayer()->toDefend();
+                for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArrDef); i++){
+                    if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                        newArrDef[i].setPosessor(*getPlayer()->getPlayerID());
+                        newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+                    }
+                    if(source->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                        newArrDef[i].setNumberOfSoldiers(0);
+                    }
+                }
+               
                 cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " was conquered! "<< endl;
                 if(getPlayer()->getGotCard() == false){
-                    // Card* newCard = deck->draw();
-                    getPlayer()->getCards()->addCard(deck->draw(), (*getPlayer()->getCards()->getCounter() + 1));
-                    // getPlayer()->setGotCard(true);
-                    // cout <<getPlayer()->getPlayerID() << " has received a new card " << endl;
+                    getPlayer()->getCards()->addCard(getDeck()->draw(), (*getPlayer()->getCards()->getCounter() + 1));
+                    getPlayer()->setGotCard(true);
+                    cout <<*getPlayer()->getPlayerID() << " has received a new card " << endl;
                 }
                 else if(getPlayer()->getGotCard() == true){
-                    cout <<getPlayer()->getPlayerID() << " has already recieved a card this turn." << endl;
+                    cout <<*getPlayer()->getPlayerID() << " has already recieved a card this turn." << endl;
                 }
             }
             else if(*source->getNumberOfSoldiers() == 0){
                 source->setPosessor(*target->getPosessor());
                 source->setNumberOfSoldiers(*target->getNumberOfSoldiers());
                 target->setNumberOfSoldiers(0);
+                Territory* newArrDef = getEnemy()->toDefend();
+                for(int i = 0; i < getEnemy()->nbOfTerToAttToDef(newArrDef); i++){
+                    if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                        newArrDef[i].setNumberOfSoldiers(0);
+                    }
+                    if(source->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                        newArrDef[i].setPosessor(*getEnemy()->getPlayerID());
+                        newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+                    }
+                }
                 cout << "ADAVANCE EXECUTE: "<< *source->getTerritoryName() << " was taken by enemy!"<< endl;
-                //getEnemy()->getCards()->addCard(deck->draw(), (*getEnemy()->getCards()->getCounter()+1));
+                getEnemy()->getCards()->addCard(deck->draw(), (*getEnemy()->getCards()->getCounter()+1));
             }
         }
     }
@@ -367,17 +401,13 @@ std::ostream& operator<<(std::ostream &strm, const Bomb &a){
 
 /*Validate Order method*/
 bool Bomb::validate(){
-    bool ptr = true;
+    bool ptr = false;
     int* position = 0;
     
     for(int i = 0; i < *getPlayer()->getCards()->getCounter(); i++){
-       if(getPlayer()->getCards()->getCard(i)->getType() != "bomb"){
-        ptr = false;
-       }
-       else if(getPlayer()->getCards()->getCard(i)->getType() == "bomb"){
+    if(getPlayer()->getCards()->getCard(i)->getType() == "bomb"){
         ptr = true;
         position = new int(i);
-        //getPlayer()->getCards()->removeCard(position);
         cout << "BOMB VALIDATE: Card in hand."<< endl;
        }
     }
@@ -400,6 +430,7 @@ bool Bomb::validate(){
     else{
         ptr = true;
         cout << "BOMB VALID"<< endl;
+        getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
@@ -472,15 +503,11 @@ std::ostream& operator<<(std::ostream &strm, const Blockade &a){
 /*Validate Order method*/
 bool Blockade::validate(){
     int* position = 0;
-    bool ptr = true;
-    for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
-       if(getPlayer()->getCards()->getCard(i)->getType() != "blockade"){
-        cout<< "BLOCKADE INVALID: Do not own this card" << endl;
-        ptr = false;
-       }
-       else if(getPlayer()->getCards()->getCard(i)->getType() == "blockade")
+    bool ptr = false;
+    for(int i = 0; i < *getPlayer()->getCards()->getCounter(); i++){
+        if(getPlayer()->getCards()->getCard(i)->getType() == "blockade")
         ptr = true;
-        *position = i;
+        position =new int(i);
         cout << "BLOCKADE VALIDATE: Card in hand."<< endl;
     }
     if(ptr == false){
@@ -495,6 +522,7 @@ bool Blockade::validate(){
     else{
         ptr = true;
         cout << "BLOCKADE VALID"<< endl;
+        getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
@@ -503,8 +531,14 @@ bool Blockade::validate(){
 void Blockade::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers()*2);
-
         target->setPosessor(-1); //-1 will be the neutral player
+        Territory* newArrDef = getPlayer()->toDefend();
+            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArrDef); i++){
+                if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                    newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers()*2);
+                    newArrDef[i].setPosessor(-1);
+                }
+            }
         cout << "BLOCKADE EXECUTE: "<< *target->getTerritoryName()<<" now belongs to neutral player and has " << *target->getNumberOfSoldiers() << " armies" << endl;
     }
 }
@@ -585,17 +619,15 @@ std::ostream& operator<<(std::ostream &strm, const Airlift &a){
 /*Validate Order method*/
 bool Airlift::validate(){
     int* position = 0;
-    bool ptr = true;
-    for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
-       if(getPlayer()->getCards()->getCard(i)->getType() != "airlift"){
-        cout<< "AIRLIFT INVALID: Do not own this card" << endl;
-        ptr = false;
-       }
-       else if(getPlayer()->getCards()->getCard(i)->getType() == "airlift")
+    bool ptr = false;
+    for(int i = 0; i < *getPlayer()->getCards()->getCounter(); i++){
+        if(getPlayer()->getCards()->getCard(i)->getType() == "airlift"){
         ptr = true;
-        *position = i;
+        position = new int(i);
         cout << "AIRLIFT VALIDATE: Card in hand."<< endl;
+        }
     }
+ 
     if (ptr == false){
         cout<< "AIRLIFT INVALID: you do not own this card" <<endl;
         return ptr;
@@ -611,7 +643,7 @@ bool Airlift::validate(){
     else{
         ptr = true;
         cout << "AIRLIFT VALID"<< endl;
-        //getPlayer()->getCards()->removeCard(position);
+        getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }
@@ -622,7 +654,17 @@ void Airlift::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
         source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
+        Territory* newArrDef = getPlayer()->toDefend();
+            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArrDef); i++){
+                if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                    newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
+                }
+                if(source->getTerritoryName() == newArrDef[i].getTerritoryName()){
+                    newArrDef[i].setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
+                }
+            }
         cout << "AIRLIFT EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " and " << *source->getTerritoryName() << " now has "<< *source->getNumberOfSoldiers()<<endl;
+        
     }
 }
 
@@ -692,15 +734,11 @@ std::ostream& operator<<(std::ostream &strm, const Negotiate &a){
 /*Validate Order method*/
 bool Negotiate::validate(){
     int* position = 0;
-    bool ptr = true;
-    for(int i = 0; i < getPlayer()->getSizeOfHand(); i++){
-       if(getPlayer()->getCards()->getCard(i)->getType() != "diplomacy"){
-        cout<< "NEGOTIATE INVALID: Do not own this card" << endl;
-        ptr = false;
-       }
-       else if(getPlayer()->getCards()->getCard(i)->getType() == "diplomacy")
+    bool ptr = false;
+    for(int i = 0; i < *getPlayer()->getCards()->getCounter(); i++){
+        if(getPlayer()->getCards()->getCard(i)->getType() == "diplomacy")
         ptr = true;
-        *position = i;
+        position = new int(i);
         cout << "NEGOTIATE CARD VALIDATE: Card in hand."<< endl;
     }
     if(ptr == false){
@@ -715,7 +753,7 @@ bool Negotiate::validate(){
     else{
         ptr = true;
         cout << "NEGOTIATE VALID"<< endl;
-       // getPlayer()->getCards()->removeCard(position);
+        getPlayer()->getCards()->removeCard(position);
     }
     return ptr;
 }

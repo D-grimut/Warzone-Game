@@ -154,12 +154,12 @@ IssueOrderState::~IssueOrderState()
     engine = nullptr;
 }
 
-void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
+void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &deck){
     for(int i = 0; i < nbOfPlayers; i++){
         int* zer = new int(0);
         pArr[i]->setNegotiateID(zer);
     }
-
+    
    for(int i = 0; i < nbOfPlayers; i++){
     cout << "----------------------------------------------------- "<<endl;
         cout << "PLAYER " << (i+1) << " TURN" << endl;
@@ -211,7 +211,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 } 
             }
             invalidName = true;
-            pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr);
+            pArr[i]->issueOrder("Deploy", nbOfArmies, target, nullptr, nullptr, nullptr, deck);
             nbOfRein = nbOfRein - *nbOfArmies;
         }
 
@@ -284,7 +284,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                     }
                 }
 
-                pArr[i]->issueOrder("Advance", nbOfArmies, target, source, enemy, pArr[i]);
+                pArr[i]->issueOrder("Advance", nbOfArmies, target, source, enemy, pArr[i], deck);
                 }
                 else if(choice == 2){
                     isAdvancing = false;
@@ -327,7 +327,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                             break;
                         }
                     }
-                    pArr[i]->issueOrder("Bomb", 0, target, source, nullptr, pArr[i]);
+                    pArr[i]->issueOrder("Bomb", 0, target, source, nullptr, pArr[i], deck);
                     validCardOrder = false;
                 }else if(cardOrder == "blockade"){
                     cout << "Which territory would you like to blockade: ";
@@ -339,7 +339,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                             break;
                         }
                     }
-                    pArr[i]->issueOrder("Blockade", 0, target, nullptr, nullptr, pArr[i]);
+                    pArr[i]->issueOrder("Blockade", 0, target, nullptr, nullptr, pArr[i], deck);
                     validCardOrder = false;
                 }else if(cardOrder == "airlift"){
                     pArr[i]->printToAttToDef(toDef);
@@ -363,7 +363,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                         }
                     }
 
-                    pArr[i]->issueOrder("Airlift", nbOfArmies, target, source, nullptr, pArr[i]);
+                    pArr[i]->issueOrder("Airlift", nbOfArmies, target, source, nullptr, pArr[i], deck);
                     validCardOrder = false;
                 }else if(cardOrder == "diplomacy"){
                     pArr[i]->printToAttToDef(toAtt);
@@ -387,7 +387,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                         break;
                     }
 
-                    pArr[i]->issueOrder("Negotiate", 0, target, nullptr, enemy, pArr[i]);
+                    pArr[i]->issueOrder("Negotiate", 0, target, nullptr, enemy, pArr[i], deck);
                     validCardOrder = false;
                 }else{
                     cout << "Invalid order... Try again";
@@ -830,7 +830,7 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
     Territory* terrArr = map->getCountries();
     int nbTerritories = *map->getNbTerritories();
     bool isRunning = true;
-
+    Deck* deck = new Deck();
     while(isRunning){
         int* num = new int(-1);
         for(int i = 0; i < nbOfPlayers; i++){
@@ -849,7 +849,7 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
             }
         }
         rein->reinforcementPhase(pArr, nbOfPlayers);
-        issu->issueOrdersPhase(pArr, nbOfPlayers);
+        issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
         exec->executeOrderPhase(pArr, nbOfPlayers);
     }
 }

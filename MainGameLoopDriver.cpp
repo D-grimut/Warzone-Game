@@ -11,7 +11,7 @@ int main(){
     MainGameState *mgs = new MainGameState(engine);
 
     // Load map, store map, store all territories, get number of territories
-    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\Downloads\\School\\345\\Dom\\europe.map");
+    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\OneDrive\\Documents\\GitHub\\Warzone-Game\\Warzone-Game\\europe.map");
 
     Map *map = ml->getMap();
 
@@ -22,15 +22,15 @@ int main(){
     int nbTerritories = *ml->getMap()->getNbTerritories();
 
     bool gotCard = false;
-
+   Deck* deck = new Deck();
     // Create a new player with playerID = 1 and playerID = 2 and territories
     Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
-        Card* card1 = new Card("blockade");
-        Card* card2 = new Card("bomb");
-        Card* card3 = new Card("airlift");
-        Card* card4 = new Card("diplomacy");
+        Card* card1 = new Card(deck->draw()->getType());
+        Card* card2 = new Card(deck->draw()->getType());
+        Card* card3 = new Card(deck->draw()->getType());
+        Card* card4 = new Card(deck->draw()->getType());
 
         Hand* hand1 = new Hand(2);
         Hand* hand2 = new Hand(2);
@@ -40,7 +40,8 @@ int main(){
         p2->getCards()->addCard(card3, 1);
         p2->getCards()->addCard(card4, 2);
 
-  
+ 
+
     const int nbOfPlayers = 2;
     Player *pArr[nbOfPlayers] = {p1, p2};
 
@@ -56,6 +57,11 @@ int main(){
         territories[i].setNumberOfSoldiers(0);
     }
 
-mgs->mainGameLoop(pArr, nbOfPlayers, map);
+    p1->initToAttack();
+    p1->initToDefend();
+    p2->initToAttack();
+    p2->initToDefend();
+
+    mgs->mainGameLoop(pArr, nbOfPlayers, map);
     return 0;
 }

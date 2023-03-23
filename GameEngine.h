@@ -100,7 +100,7 @@ public:
     ~IssueOrderState();
     IssueOrderState(const IssueOrderState &copy);
     void IssueOrderInput(const std::string &input);
-    void issueOrdersPhase(Player *playerList[], int nbOfPlayers);
+    void issueOrdersPhase(Player *playerList[], int nbOfPlayers, Deck* &deck);
 
 private:
     GameEngine *engine;
