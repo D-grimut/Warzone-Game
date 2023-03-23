@@ -122,11 +122,8 @@ AssignReinforcementState::~AssignReinforcementState()
     engine = nullptr;
 }
 
-
-
 // Method to calculate the armies that a player can use to reinforce
 void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayers){
-    //Ask Daniel about the "Owns all territories in continent" bonus
     for(int i = 0; i < nbOfPlayers; i++){
         int *nbOfTer = new int(pArr[i]->nbTerritories());
         int reinArm = floor(*nbOfTer/3);
@@ -137,8 +134,6 @@ void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayer
         cout << *pArr[i] << " has " << pArr[i]->getReinforcementPool() << " armies" << endl;
     }
 }
-
-
 
 // Constructor for issue order state
 IssueOrderState::IssueOrderState(GameEngine *engine)
@@ -161,17 +156,19 @@ IssueOrderState::~IssueOrderState()
 
 void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
     for(int i = 0; i < nbOfPlayers; i++){
-        pArr[i]->setNegotiateID(0);
+        int* zer = new int(0);
+        pArr[i]->setNegotiateID(zer);
     }
 
    for(int i = 0; i < nbOfPlayers; i++){
+    cout << "----------------------------------------------------- "<<endl;
+        cout << "PLAYER " << (i+1) << " TURN" << endl;
         Territory* toAtt = pArr[i]->toAttack();
-        pArr[i]->printToAttToDef(toAtt);
         int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
         
 
         Territory* toDef = pArr[i]->toDefend();
-        pArr[i]->printToAttToDef(toDef);
+       // pArr[i]->printToAttToDef(toDef);
         int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
         
         int nbOfRein = pArr[i]->getReinforcementPool();
@@ -179,8 +176,8 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         string targetTerr, sourceTerr, cardOrder;
         int counterDep, toAttPossesor;
         int* nbOfArmies = new int(0);
-        Territory* target/* = new Territory*/;
-        Territory* source /*= new Territory*/;
+        Territory* target;
+        Territory* source;
         Player* enemy;
         int enemyIndex = -1;
         bool invalidName = true;
@@ -188,6 +185,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         //--------------------------------------------
         //DEPLOY
         while(nbOfRein != 0){
+            pArr[i]->printToAttToDef(toDef);
             cout << "You have " << nbOfRein << " left to deploy" << endl;
             cout << "Enter the country you would like to deploy armies to: ";
             cin >> targetTerr;
@@ -200,11 +198,8 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
             }
 
             while(invalidName){
-
                 for(int j = 0; j < nbOfToDef; j++){
-
                     if(targetTerr == *toDef[j].getTerritoryName()){
-                        // delete target;
                         target = &toDef[j];
                         invalidName = false;
                         break;
@@ -222,9 +217,6 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
 
         //-----------------------------------------
         //ADVANCE
-        OrdersList* ol = pArr[i]->getOrdersList();
-        int listSize = pArr[i]->getOrdersIndex();
-        ol->showList(listSize);
 
         bool isAdvancing = true;
         int choice;
@@ -232,13 +224,14 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
             cout << "Would you like to advance?\n1. Yes\n2. No\nChoice: ";
             cin >> choice;
             if(choice == 1){
-                cout << "Territories to attack: " << endl;
-                pArr[i]->printToAttToDef(toAtt);
                 cout << "Territories to defend: " << endl;
-                pArr[i]->printToAttToDef(toDef);
-
+                    pArr[i]->printToAttToDef(toDef);
                 cout << "Which territory would you like to take armies from: ";
                 cin >> sourceTerr;
+                cout << "Territories to attack: " << endl;
+                    pArr[i]->printToAttToDef(toAtt);
+                cout << "Territories to defend: " << endl;
+                    pArr[i]->printToAttToDef(toDef);
                 cout << "Which territory would you like to advance to: ";
                 cin >> targetTerr;
                 cout << "How many armies would you like to move: ";
@@ -250,7 +243,6 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                     for(int j = 0; j < nbOfToDef; j++){
     
                         if(sourceTerr == *toDef[j].getTerritoryName()){
-                            // delete source;
                             source = &toDef[j];
                             invalidName = false;
                             break;
@@ -266,12 +258,11 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 while(invalidName){
                     for(int j = 0; j < nbOfToAtt; j++){
                         if(targetTerr == *toAtt[j].getTerritoryName()){
-                            // delete target;
                             target = &toAtt[j];
                             invalidName = false;
                             toAttPossesor = *toAtt[j].getPosessor();
                             for(int k = 0; k < nbOfPlayers; k++){
-                                if(toAttPossesor == pArr[k]->getPlayerID()){
+                                if(toAttPossesor == *pArr[k]->getPlayerID()){
                                     enemy = pArr[k];
                                 }
                             }
@@ -288,7 +279,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                     }
                     }
                     if(invalidName == true){
-                        cout << "You have inputted an incorrect name. Please write a correct target territory name: ";
+                        cout << "You have inputed an incorrect name. Please write a correct target territory name: ";
                         cin >> targetTerr;
                     }
                 }
@@ -301,16 +292,19 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
         }while(isAdvancing);
 
         bool validCardOrder = true;
-        //if(pArr[i]->getSizeOfHand() == 0){ ALESSIO DEMO
-        if(pArr[i]->getSizeOfHand() == 0){
-            cout << "You have no cards to create a new order..." << endl;
+        if(*pArr[i]->getCards()->getCounter() == 0){
+            cout << "\nYou have no cards to create a new order..." << endl;
         }else{
             do{
                 cout << "Select a card in your hand to create an order: " << endl;
-                cout << "Choice: ";
+                cout << "Choice: " << endl;
+                cout << *pArr[i]->getCards()->getCounter() << " cards in hand" << endl;
+                for(int j = 0; j < *pArr[i]->getCards()->getCounter(); j++){
+                    cout <<(j+1)<< ": " << pArr[i]->getCards()->getCard(j)->getType() << endl;
+                }
                 cin >> cardOrder;
 
-                if(cardOrder == "Bomb"){
+                if(cardOrder == "bomb"){
                      cout << "Territories to attack: " << endl;
                     pArr[i]->printToAttToDef(toDef);
                     cout << "Which territory would you like to send a bomb from: ";
@@ -335,19 +329,19 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                     }
                     pArr[i]->issueOrder("Bomb", 0, target, source, nullptr, pArr[i]);
                     validCardOrder = false;
-                }else if(cardOrder == "Blockade"){
+                }else if(cardOrder == "blockade"){
                     cout << "Which territory would you like to blockade: ";
                     cin >> targetTerr;
 
                     for(int j = 0; j < nbOfToDef; j++){
-                        if(sourceTerr == *toDef[j].getTerritoryName()){
-                            source = &toDef[j];
+                        if(targetTerr == *toDef[j].getTerritoryName()){
+                            target = &toDef[j];
                             break;
                         }
                     }
                     pArr[i]->issueOrder("Blockade", 0, target, nullptr, nullptr, pArr[i]);
                     validCardOrder = false;
-                }else if(cardOrder == "Airlift"){
+                }else if(cardOrder == "airlift"){
                     pArr[i]->printToAttToDef(toDef);
                     cout << "Which territory would you like to take armies from: " <<endl;
                     cin >> sourceTerr;
@@ -371,7 +365,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
 
                     pArr[i]->issueOrder("Airlift", nbOfArmies, target, source, nullptr, pArr[i]);
                     validCardOrder = false;
-                }else if(cardOrder == "Negotiate"){
+                }else if(cardOrder == "diplomacy"){
                     pArr[i]->printToAttToDef(toAtt);
                     cout << "Which territory would you like to negotiate with: ";
                     cin >> targetTerr;
@@ -381,9 +375,8 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                             target = &toAtt[j];
                             toAttPossesor = *toAtt[j].getPosessor();
                             for(int k = 0; k < nbOfPlayers; k++){
-                                if(toAttPossesor == pArr[k]->getPlayerID()){
+                                if(toAttPossesor == *pArr[k]->getPlayerID()){
                                     enemy = pArr[k];
-                                    cout << enemy->getPlayerID() << endl;
                                     enemyIndex = j;
                                 }
                             }
@@ -401,15 +394,28 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers){
                 }
             }while(validCardOrder);            
         }
-        ol = pArr[i]->getOrdersList();
-        listSize = pArr[i]->getOrdersIndex();
+        cout << "Orders issued: " << endl;
+        OrdersList* ol = pArr[i]->getOrdersList();
+        int listSize = pArr[i]->getOrdersIndex();
         ol->showList(listSize);
+        cout << "END OF ISSUE TURN" << endl;
+        cout << "----------------------------------------------------- "<<endl;
    }
 }
 
 void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers){
     for(int i = 0; i < nbOfPlayers; i++){
+         cout<< "--------------------------------------------------" << endl;
+        cout<< "PLAYER " << i+1 << " EXECUTION:" << endl;
+        pArr[i]->getOrdersList()->showList(pArr[i]->getOrdersIndex());
         pArr[i]->getOrdersList()->execute();
+        for(int j = 0; j < pArr[i]->getOrdersIndex(); j++){
+            int* position = new int(j);
+            pArr[i]->getOrdersList()->removeOrder(position);
+        }
+        pArr[i]->setOrdersIndex(0);
+        cout<< "--------------------------------------------------" << endl;
+
     }
 }
 
@@ -826,6 +832,7 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
     bool isRunning = true;
 
     while(isRunning){
+        int* num = new int(-1);
         for(int i = 0; i < nbOfPlayers; i++){
             Territory* toDef = pArr[i]->toDefend();
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
@@ -834,14 +841,13 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
                 isRunning = false;
                 engine->TransitionTo(8);
                 exit(0);
-            }else if(pArr[i]->getPlayerID() == -1){
+            }else if(*pArr[i]->getPlayerID() == -1){
                 continue;
             }else if(nbOfToDef == 0){
                 cout << "Player " << pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
-                pArr[i]->setPlayerID(-1);
+                pArr[i]->setPlayerID(num);
             }
         }
-
         rein->reinforcementPhase(pArr, nbOfPlayers);
         issu->issueOrdersPhase(pArr, nbOfPlayers);
         exec->executeOrderPhase(pArr, nbOfPlayers);

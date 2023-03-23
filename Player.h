@@ -49,7 +49,7 @@ class Player{
         int nbOfTerToAttToDef(Territory* arrOfDefOrAtt);
 
         // Setters
-        void setPlayerID(int playerID);
+        void setPlayerID(int* playerID);
         void setTerritories(Territory territories);
         void setOl(OrdersList ol);
         void setNbOfTerritories(int nbOfTerritories);
@@ -60,16 +60,16 @@ class Player{
         void setMap(Map map);
         void setCards(Hand cards);
         void setReinforcementPool(int reinforcementPool);
-        void setNegotiateID(int negotiateId);
+        void setNegotiateID(int* negotiateId);
         void setGotCard(bool gotCard);
         // Getters
-        int getPlayerID();
+        int* getPlayerID();
         OrdersList* getOrdersList();
         Hand* getCards();
         int getSizeOfHand();
         int getReinforcementPool();
         int getOrdersIndex();
-        int getNegotiateID();
+        int* getNegotiateID();
         bool getGotCard();
         Map* getMap();
         Player& operator=(const Player& p);

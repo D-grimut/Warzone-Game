@@ -111,11 +111,16 @@ void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
     }
 }
 
-bool Map::isAdjacent(Territory terr1, Territory terr2){
+bool Map::isAdjacent(Territory* terr1, Territory* terr2){
     for(int i = 0; i < *this->getNbTerritories() ; i++){
-        if(adjacencyMatrix[i][0]->getTerritoryName() == terr1.getTerritoryName() ){
+        if(this->adjacencyMatrix[i][0]== nullptr)
+            continue;
+        else if(*this->adjacencyMatrix[i][0]->getTerritoryName() == *terr1->getTerritoryName() && this->adjacencyMatrix[i][0]!= nullptr){
             for(int j = 0; j <*this->getNbTerritories(); j++){
-                if(adjacencyMatrix[i][j]->getTerritoryName() == terr2.getTerritoryName() && adjacencyMatrix[i][j] != nullptr){
+                if(this->adjacencyMatrix[i][j]== nullptr){
+                    continue;
+                }
+                else if(*adjacencyMatrix[i][j]->getTerritoryName() == *terr2->getTerritoryName() && adjacencyMatrix[i][j] != nullptr){
                     return true;
                 }
             }
@@ -526,8 +531,8 @@ Territory& Territory::operator=(const Territory& t) {
 
 std::ostream& operator<<(std::ostream &strm, const Territory &t){
 
-    return strm << "The territorie name: " << *t.TerritoryName << " , is occupied: " << *t.isFree << ", amnt of soldiers: " << *t.numberOfSoldiers
-                << ", amount to invade: " << *t.amntToInvade << ", id of player possesing it: " << *t.posessor << endl;
+    return strm << "The territorie name: " << *t.TerritoryName << " , is occupied: " << *t.isFree << ", amnt of soldiers: " << *(t.numberOfSoldiers)
+                << ", amount to invade: " << *t.amntToInvade << ", id of player possesing it: " << *(t.posessor) << endl;
 }
 
 //Getters

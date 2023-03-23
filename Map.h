@@ -66,7 +66,7 @@ public:
     Map(const Map& og);
     ~Map();
 
-    bool isAdjacent(Territory terr1, Territory terr2);
+    bool isAdjacent(Territory* terr1, Territory* terr2);
     void addEdge(int x, int y, Territory*, Territory*);  
     void toString();     
     bool validate();

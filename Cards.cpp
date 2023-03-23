@@ -95,7 +95,7 @@ Card* Deck::draw()
 //default constructor
 Card::Card()
 {
-	this->type = new Type(Type::blockade);	
+	this->type = new string("blockade");	
 	this->number = new int();
 
 	size = new int(10);
@@ -104,9 +104,9 @@ Card::Card()
 	this->ordersIndex = new int(0);
 }
 //overload, changes the type of the card
-Card::Card(Type type1)
+Card::Card(string type1)
 {
-	this->type = new Type(type1);
+	this->type = new string(type1);
 	this->number = new int();
 	size = new int(10);
     this->ol = new OrdersList(size);
@@ -145,15 +145,15 @@ void Card::setNumber(int newNumber)
 }
 
 //returns the type of the card
-Type Card::getType()
+string Card::getType()
 {
 	return *type;
 }
 
 //sets the type of the card
-void Card::setType(Type newType)
+void Card::setType(string newType)
 {
-	this->type = new Type(newType);
+	this->type = new string(newType);
 }
 
 //plays the card by making it a order and removing it from hand
@@ -178,44 +178,7 @@ Card::~Card(){}
 // instertion operator
 std::ostream &operator<<(std::ostream &strm, const Card &a)
 {
-	string type = "";
-	switch (*a.type)
-	{
-	case Type::bomb:
-	{
-		type = "bomb";
-		break;
-	}
-
-	case Type::reinforcement:
-	{
-		type = "reinforcement";
-		break;
-	}
-
-	case Type::blockade:
-	{
-		type = "blockade";
-		break;
-	}
-
-	case Type::airlift:
-	{
-		type = "airlift";
-		break;
-	}
-
-	case Type::diplomacy:
-	{
-		type = "diplomacy";
-		break;
-	}
-
-	default:
-		type = "no type";		
-	}
-
-	return strm << "Card: " << type << endl;
+	return strm << "Card: " << a.type << endl;
 }
 
 //Parent: Hand
@@ -269,7 +232,8 @@ void Hand::addCard(Card *card, int position){
     }
     else
         hand[position] = card;
-	*counter = *counter + 1;
+	int* newCounter = new int((*counter +1));
+	this->setCounter(newCounter);
 }
 
 void Hand::resize(){
@@ -302,3 +266,12 @@ void Hand::setSize(int* size){
 Card* Hand::getCard(int i){
     return hand[i];
 }
+
+int* Hand::getCounter(){
+	return this->counter;
+}
+
+void Hand::setCounter(int* counter){
+	this->counter = counter;
+}
+

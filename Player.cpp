@@ -48,7 +48,6 @@ Player::Player(){
     this->adjacencyMatrix = NULL;
     this->map = NULL;
 
-    //this->cards = new Hand;
     this-> cards = new Hand;
     this->reinforcementPool = new int(0);
     this->negotiateId = new int (0);
@@ -189,7 +188,6 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
 
 // Method that finds Territories to defend and adds them to a new array
 Territory* Player::toDefend(){
-    cout << "Territories to defend: " << endl;
     for(int i = 0; i < *nbOfTerritories; i++){
         toDefArr[i].setPosessor(-1); 
     }
@@ -206,7 +204,6 @@ Territory* Player::toDefend(){
 // Method that checks neighboring countries near owned territories that are not owned by the Player
 // Returns an array of these neighboring countries 
 Territory* Player::toAttack(){
-    cout << "Territories to attack: " << endl;
     for(int i = 0; i < *nbOfTerritories; i++){
         toAttArr[i].setPosessor(-1); 
     }
@@ -247,7 +244,7 @@ Territory* Player::toAttack(){
 // Print cards that the player owns
 void Player::printCards(){
     cout << "Printing out hand of cards for Player " << *playerID << endl;
-    for(int i = 0; i < *getCards()->counter; i++){
+    for(int i = 0; i < *getCards()->getCounter(); i++){
         cout << cards->hand[i] << endl;
     }
 }
@@ -273,8 +270,8 @@ int Player::nbOfTerToAttToDef(Territory* arrOfDefOrAtt){
 }
 
 // Setters
-void Player::setPlayerID(int playerID){
-    *this->playerID = playerID;
+void Player::setPlayerID(int* playerID){
+    this->playerID = playerID;
 }
 
 void Player::setTerritories(Territory territories){
@@ -317,8 +314,8 @@ void Player::setReinforcementPool(int reinforcementPool){
     *this->reinforcementPool = reinforcementPool;
 }
 
-void Player::setNegotiateID(int negotiate){
-    *this->negotiateId = negotiate;
+void Player::setNegotiateID(int* negotiate){
+    this->negotiateId = negotiate;
 }
 
 void Player::setGotCard(bool gotCard){
@@ -326,8 +323,8 @@ void Player::setGotCard(bool gotCard){
 }
 
 // Getters
-int Player::getPlayerID(){
-    return *this->playerID;
+int* Player::getPlayerID(){
+    return this->playerID;
 }
 
 OrdersList* Player::getOrdersList(){
@@ -350,8 +347,8 @@ int Player::getOrdersIndex(){
     return *this->ordersIndex;
 }
 
-int Player::getNegotiateID(){
-    return *this->negotiateId;
+int* Player::getNegotiateID(){
+    return this->negotiateId;
 }
 
 bool Player::getGotCard(){
@@ -369,7 +366,7 @@ std::ostream& operator<<(std::ostream &strm, const Player &p){
 
 // Assignment operator
 Player& Player::operator=(const Player& p){
-    this->setPlayerID(*p.playerID);
+    this->setPlayerID(p.playerID);
     this->setTerritories(*p.territories);
     this->setOl(*p.ol);
     this->setNbOfTerritories(*p.nbOfTerritories);
