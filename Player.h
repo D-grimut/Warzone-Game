@@ -57,8 +57,8 @@ class Player{
         void setOl(OrdersList ol);
         void setNbOfTerritories(int nbOfTerritories);
         void setOrdersIndex(int ordersIndex);
-        void setToDefArr(Territory toDefArr);
-        void setToAttArr(Territory toAttArr);
+        void setToDefArr(Territory* toDefArr);
+        void setToAttArr(Territory* toAttArr);
         void setAdjacencyMatrix(Territory** adjacencyMatrix);
         void setMap(Map map);
         void setCards(Hand cards);

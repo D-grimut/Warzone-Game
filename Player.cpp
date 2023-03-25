@@ -344,12 +344,12 @@ void Player::setOrdersIndex(int ordersIndex){
     *this->ordersIndex = ordersIndex;
 }
 
-void Player::setToDefArr(Territory toDefArr){
-    *this->toDefArr = toDefArr;
+void Player::setToDefArr(Territory* toDefArr){
+    this->toDefArr = toDefArr;
 }
 
-void Player::setToAttArr(Territory toAttArr){
-    *this->toAttArr = toAttArr;
+void Player::setToAttArr(Territory* toAttArr){
+    this->toAttArr = toAttArr;
 }
 
 void Player::setAdjacencyMatrix(Territory** adjacencyMatrix){
@@ -425,8 +425,8 @@ Player& Player::operator=(const Player& p){
     this->setOl(*p.ol);
     this->setNbOfTerritories(*p.nbOfTerritories);
     this->setOrdersIndex(*p.ordersIndex);
-    this->setToDefArr(*p.toDefArr);
-    this->setToAttArr(*p.toAttArr);
+    this->setToDefArr(p.toDefArr);
+    this->setToAttArr(p.toAttArr);
     this->setAdjacencyMatrix(*p.adjacencyMatrix);
     this->setMap(*p.map);
     this->setCards(*p.cards);

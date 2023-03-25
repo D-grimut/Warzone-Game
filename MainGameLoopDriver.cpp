@@ -27,7 +27,7 @@ int main(){
     Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
-        Card* card1 = new Card(deck->draw()->getType());
+        Card* card1 = new Card("bomb");
         Card* card2 = new Card(deck->draw()->getType());
         Card* card3 = new Card(deck->draw()->getType());
         Card* card4 = new Card(deck->draw()->getType());
@@ -35,10 +35,10 @@ int main(){
         Hand* hand1 = new Hand(2);
         Hand* hand2 = new Hand(2);
 
-        p1->getCards()->addCard(card1, 1);
-        p1->getCards()->addCard(card2, 2);
-        p2->getCards()->addCard(card3, 1);
-        p2->getCards()->addCard(card4, 2);
+        //p1->getCards()->addCard(card1, 1);
+        // p1->getCards()->addCard(card2, 2);
+        //p2->getCards()->addCard(card1, 1);
+        // p2->getCards()->addCard(card4, 2);
 
  
 
