@@ -1,6 +1,0 @@
-#include <iostream>
-
-int main(int argc, char const *argv[]){
-    cout << "This is a boiler plate, we will merge our final project here (or maybe not), either way welcome to our Github!" << endl;
-    return 0;
-}

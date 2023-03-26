@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Orders.h"
 #include "Cards.h"
+#include "PlayerStrategies.h"
 using namespace std;
 
 class OrdersList;
@@ -15,6 +16,7 @@ class Orders;
 
 class Player{
     private:
+        PlayerStrategy* strat;          //PLayer Strategy
         int* playerID;                  // The player's ID
         Territory* territories;         // Array of Territories
         OrdersList* ol;                 // List of Orders
@@ -65,6 +67,8 @@ class Player{
         void setReinforcementPool(int reinforcementPool);
         void setNegotiateID(int* negotiateId);
         void setGotCard(bool gotCard);
+        void setStrategy(PlayerStrategy* ps);
+
         // Getters
         int* getPlayerID();
         OrdersList* getOrdersList();
