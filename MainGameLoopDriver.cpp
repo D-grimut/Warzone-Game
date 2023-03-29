@@ -11,7 +11,7 @@ int main(){
     MainGameState *mgs = new MainGameState(engine);
 
     // Load map, store map, store all territories, get number of territories
-    MapLoader *ml = new MapLoader("C:\\Users\\aless\\github_desktop\\Warzone-Game\\europe.map");
+    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\OneDrive\\Documents\\GitHub\\Warzone-Game\\Warzone-Game\\europe.map");
 
     Map *map = ml->getMap();
 
@@ -28,17 +28,17 @@ int main(){
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
         Card* card1 = new Card("bomb");
-        Card* card2 = new Card(deck->draw()->getType());
-        Card* card3 = new Card(deck->draw()->getType());
-        Card* card4 = new Card(deck->draw()->getType());
+        Card* card2 = new Card("diplomacy");
+        Card* card3 = new Card("blockade");
+        Card* card4 = new Card("airlift");
 
         Hand* hand1 = new Hand(2);
         Hand* hand2 = new Hand(2);
 
-        //p1->getCards()->addCard(card1, 1);
-        // p1->getCards()->addCard(card2, 2);
-        //p2->getCards()->addCard(card1, 1);
-        // p2->getCards()->addCard(card4, 2);
+        p1->getCards()->addCard(card1, 1);
+        p1->getCards()->addCard(card2, 2);
+        p2->getCards()->addCard(card3, 1);
+        p2->getCards()->addCard(card4, 2);
 
  
 

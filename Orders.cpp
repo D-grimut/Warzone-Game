@@ -148,13 +148,6 @@ void Deploy::execute(){
         if(valid){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + (*armies)); //add armies to target
             getPlayer()->setReinforcementPool(getPlayer()->getReinforcementPool() - *armies); //remove armies from origin
-            // Territory* newArr = getPlayer()->toDefend();
-            // for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArr); i++){
-            //     if(*target->getTerritoryName() == *newArr[i].getTerritoryName()){
-            //         newArr[i].setNumberOfSoldiers(*target->getNumberOfSoldiers());
-            //     }
-            // }
-            // getPlayer()->setToDefArr(newArr);
             getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
             cout<< "DEPLOY EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " armies. Number of reinforcements left in pool: " << getPlayer()->getReinforcementPool() <<endl;
         }
@@ -284,18 +277,8 @@ void Advance::execute(){
         if(*target->getPosessor() == *getPlayer()->getPlayerID()){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
             source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
-            Territory* defArr = getPlayer()->toDefend();
-            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(defArr); i++){
-                if(*target->getTerritoryName() == *defArr[i].getTerritoryName()){
-                    defArr[i].setNumberOfSoldiers(*target->getNumberOfSoldiers());
-                }
-            }
-            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(defArr); i++){
-                if(*source->getTerritoryName() == *defArr[i].getTerritoryName()){
-                    defArr[i].setNumberOfSoldiers(*source->getNumberOfSoldiers());
-                }
-            }
-            getPlayer()->setToDefArr(defArr);
+            getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+            getPlayer()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers(*source->getNumberOfSoldiers());
             cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " now has "<< *target->getNumberOfSoldiers()<< endl;
         }
         else if(*target->getPosessor() != *getPlayer()->getPlayerID()){
@@ -305,22 +288,24 @@ void Advance::execute(){
                 defendKill = rand() % 100;
                 attackKill = rand() % 100;
                 if(defendKill < 70){
-                    source->setNumberOfSoldiers(*source->getNumberOfSoldiers() -1);
-                    int arm = *this->armies - 1;
-
+                    int sold = (*source->getNumberOfSoldiers() -1);
+                    source->setNumberOfSoldiers(sold);
+                    int* army = new int ((*getArmies() -1));
+                    setArmies(army);
                 }
                 if(attackKill < 60){
                     target->setNumberOfSoldiers(*target->getNumberOfSoldiers() -1);
                 }
             }
             if(*target->getNumberOfSoldiers() == 0){ //this player gets territory
-                int* tempId = new int(*getPlayer()->getPlayerID()); //DELETE IT AFTER FYI
-                target->setPosessor(*tempId); 
-                int* tempNumOfSold = new int(*source->getNumberOfSoldiers());//DELETE IT AFTER FYI
-                target->setNumberOfSoldiers(*tempNumOfSold);
-                source->setNumberOfSoldiers(0);
+                target->setPosessor(*getPlayer()->getPlayerID()); 
+                //int* tempNumOfSold = new int(*source->getNumberOfSoldiers());//DELETE IT AFTER FYI
+                target->setNumberOfSoldiers(*source->getNumberOfSoldiers());
+
                 getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setPosessor(*getPlayer()->getPlayerID());
-                getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*source->getNumberOfSoldiers());
+                getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*getArmies());
+                getPlayer()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers((*source->getNumberOfSoldiers()-*getArmies()));
+
                 cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " was conquered! "<< endl;
                 cout << "Target id " << *target->getPosessor() << endl;
                 if(getPlayer()->getGotCard() == false){
@@ -338,21 +323,11 @@ void Advance::execute(){
                 int* tempNumOfSold = new int(*target->getNumberOfSoldiers());//DELETE IT AFTER FYI
                 source->setNumberOfSoldiers(*tempNumOfSold);
                 target->setNumberOfSoldiers(0);
-                // Territory* newArrDef = getEnemy()->toDefend();
-                // Territory* newArrAtt = getEnemy()->toAttack();
-                // for(int i = 0; i < getEnemy()->nbOfTerToAttToDef(newArrAtt); i++){
-                //     if(*source->getTerritoryName() == *newArrAtt[i].getTerritoryName()){
-                //         newArrDef[i].setPosessor(*tempId);
-                //         newArrDef[i].setNumberOfSoldiers(*tempNumOfSold);
-                //     }
-                // }
-                // for(int i = 0; i< getEnemy()->nbOfTerToAttToDef(newArrDef); i++){
-                //     if(*target->getTerritoryName() == *newArrDef[i].getTerritoryName()){
-                //         newArrAtt[i].setNumberOfSoldiers(0);
-                //     }
-                // }
-                // getEnemy()->setToAttArr(newArrAtt);
-                // getEnemy()->setToDefArr(newArrDef);
+
+                getEnemy()->getMap()->getCountries()[*source->getTerritoryId()].setPosessor(*getEnemy()->getPlayerID());
+                getEnemy()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+                getEnemy()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(0);
+
                 cout << "ADAVANCE EXECUTE: "<< *source->getTerritoryName() << " was taken by enemy!"<< endl;
                 getEnemy()->getCards()->addCard(deck->draw(), (*getEnemy()->getCards()->getCounter()+1));
             }
@@ -465,13 +440,7 @@ void Bomb::execute(){
         if(*target->getNumberOfSoldiers() == 0)
             cout << "BOMB EXECUTE: 0 armies in " << *target->getTerritoryName() << endl;
         target->setNumberOfSoldiers(floor(*target->getNumberOfSoldiers()/2));
-
-        Territory* newAttDef = getPlayer()->toAttack();
-        for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newAttDef); i++){
-            if(target->getTerritoryName() == newAttDef[i].getTerritoryName()){
-                newAttDef[i].setNumberOfSoldiers(floor(*target->getNumberOfSoldiers()/2));
-            }
-        }
+        getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
         cout << "BOMB EXECUTE: " << *target->getTerritoryName() << " was bombed, now has " << *target->getNumberOfSoldiers() << " armies" << endl;
     }
 }
@@ -536,10 +505,11 @@ bool Blockade::validate(){
     int* position = 0;
     bool ptr = false;
     for(int i = 0; i < *getPlayer()->getCards()->getCounter(); i++){
-        if(getPlayer()->getCards()->getCard(i)->getType() == "blockade")
-        ptr = true;
-        position =new int(i);
-        cout << "BLOCKADE VALIDATE: Card in hand."<< endl;
+        if(getPlayer()->getCards()->getCard(i)->getType() == "blockade"){
+            ptr = true;
+            position =new int(i);
+            cout << "BLOCKADE VALIDATE: Card in hand."<< endl;
+        }
     }
     if(ptr == false){
         cout<< "BLOCKADE INVALID: you do not own this card" <<endl;
@@ -563,13 +533,8 @@ void Blockade::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers()*2);
         target->setPosessor(-1); //-1 will be the neutral player
-        Territory* newArrDef = getPlayer()->toDefend();
-            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArrDef); i++){
-                if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
-                    newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers()*2);
-                    newArrDef[i].setPosessor(-1);
-                }
-            }
+        getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+        getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setPosessor(-1);
         cout << "BLOCKADE EXECUTE: "<< *target->getTerritoryName()<<" now belongs to neutral player and has " << *target->getNumberOfSoldiers() << " armies" << endl;
     }
 }
@@ -685,15 +650,8 @@ void Airlift::execute(){
     if(validate() == true){
         target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
         source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
-        Territory* newArrDef = getPlayer()->toDefend();
-            for(int i = 0; i < getPlayer()->nbOfTerToAttToDef(newArrDef); i++){
-                if(target->getTerritoryName() == newArrDef[i].getTerritoryName()){
-                    newArrDef[i].setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
-                }
-                if(source->getTerritoryName() == newArrDef[i].getTerritoryName()){
-                    newArrDef[i].setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
-                }
-            }
+            getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
+            getPlayer()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers(*source->getNumberOfSoldiers());
         cout << "AIRLIFT EXECUTE: " << *target->getTerritoryName() << " now has " << *target->getNumberOfSoldiers() << " and " << *source->getTerritoryName() << " now has "<< *source->getNumberOfSoldiers()<<endl;
         
     }
