@@ -199,7 +199,8 @@ Territory* Player::toDefend(){
     //         counter++;
     //     }     
     // }
-    return toDefArr;
+    // return toDefArr;
+    return initToDefend();
 }
 
 // Method that finds Territories to defend and adds them to a new array
@@ -254,7 +255,8 @@ Territory* Player::toAttack(){
     //         }
     //     }
     // }
-    return toAttArr;
+    return initToAttack();
+    // return toAttArr;
 }
 
 Territory* Player::initToAttack(){
@@ -262,7 +264,7 @@ Territory* Player::initToAttack(){
         toAttArr[i].setPosessor(-1); 
     }
     int counter = 0;
-    Territory* allTerritories = map->getCountries();
+    Territory* allTerritories = this->territories;//map->getCountries();
 
     for(int i = 0; i < *map->getNbTerritories(); i++){
         if(*allTerritories[i].getPosessor() != *this->playerID){

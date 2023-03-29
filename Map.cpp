@@ -112,19 +112,8 @@ void Map::dfs(int node, bool* visited, bool* visitedCon, int& ct, int& cc){
 }
 
 bool Map::isAdjacent(Territory* terr1, Territory* terr2){
-    for(int i = 0; i < *this->getNbTerritories() ; i++){
-        if(this->adjacencyMatrix[i][0]== nullptr)
-            continue;
-        else if(*this->adjacencyMatrix[i][0]->getTerritoryName() == *terr1->getTerritoryName() && this->adjacencyMatrix[i][0]!= nullptr){
-            for(int j = 0; j <*this->getNbTerritories(); j++){
-                if(this->adjacencyMatrix[i][j]== nullptr){
-                    continue;
-                }
-                else if(*adjacencyMatrix[i][j]->getTerritoryName() == *terr2->getTerritoryName() && adjacencyMatrix[i][j] != nullptr){
-                    return true;
-                }
-            }
-        }
+    if(this->adjacencyMatrix[*terr1->getTerritoryId()][*terr2->getTerritoryId()] != nullptr){
+        return true;
     }
     return false;
 }
