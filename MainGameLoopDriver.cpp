@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Orders.h"
 #include "Cards.h"
+#include "PlayerStrategies.h"
 
 int main(){
 
@@ -11,7 +12,7 @@ int main(){
     MainGameState *mgs = new MainGameState(engine);
 
     // Load map, store map, store all territories, get number of territories
-    MapLoader *ml = new MapLoader("C:\\Users\\rhian\\OneDrive\\Documents\\GitHub\\Warzone-Game\\Warzone-Game\\europe.map");
+    MapLoader *ml = new MapLoader("europe.map");
 
     Map *map = ml->getMap();
 
@@ -26,6 +27,14 @@ int main(){
     // Create a new player with playerID = 1 and playerID = 2 and territories
     Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
+    
+    PlayerStrategy* ps1 = new HumanPlayerStrategy();
+    PlayerStrategy* ps2 = new HumanPlayerStrategy();
+    
+    p1->setStrategy(ps1);
+    p2->setStrategy(ps2);
+
+    cout << "here3" << endl;
 
         Card* card1 = new Card("bomb");
         Card* card2 = new Card("diplomacy");

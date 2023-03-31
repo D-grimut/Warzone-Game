@@ -30,6 +30,8 @@ Player::Player(int playerID, Territory* territories, int nbTerritories, Territor
     this->reinforcementPool = new int(reinforcementPool);
     this->negotiateId = new int(0);
     this->gotCard = new bool(false);
+
+    this->strat = nullptr;
 }
 
 // Default Constructor
@@ -53,6 +55,8 @@ Player::Player(){
     this->reinforcementPool = new int(0);
     this->negotiateId = new int (0);
     this->gotCard = new bool(false);
+
+    this->strat = nullptr;
 }
 
 // Copy Constructor
@@ -105,9 +109,7 @@ Player::~Player(){
     this->cards = NULL;
 
     delete this->reinforcementPool;
-    this->reinforcementPool = NULL;
-
-    
+    this->reinforcementPool = NULL;    
 }
 
 // Method to show owned Territories that the player owns
@@ -134,74 +136,18 @@ int Player::nbTerritories(){
 // Method to create orders and adds them to the OrdersList array that the Player owns
 // Prints out the list of orders after creating it
 void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck){
-    strat->issueOrders(orderName, nbOfArmies, targetTerr, sourceTerr, enemy, thisPlayer, deck); 
-    // if(orderName == "Deploy"){
-    //     Deploy *deploy = new Deploy();
-    //     deploy->setPlayer(this);
-    //     deploy->setTargetTerr(targetTerr);
-    //     deploy->setArmies(nbOfArmies);
-    //     this->ol->addOrder(deploy, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }
-    // if(orderName == "Bomb"){
-    //     Bomb *bomb = new Bomb();
-    //     bomb->setTargetTerr(targetTerr);
-    //     bomb->setSourceTerr(sourceTerr);
-    //     bomb->setPlayer(this);
-    //     this->ol->addOrder(bomb, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }
-    // if(orderName == "Blockade"){
-    //     Blockade *blockade = new Blockade();
-    //     blockade->setPlayer(this);
-    //     blockade->setTargetTerr(targetTerr);
-    //     this->ol->addOrder(blockade, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }
-    //  if(orderName == "Negotiate"){
-    //     Negotiate *negotiate = new Negotiate();
-    //     negotiate->setTargetTerr(targetTerr);
-    //     negotiate->setPlayer(this);
-    //     negotiate->setEnemy(enemy);
-    //     this->ol->addOrder(negotiate, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }
-    // if(orderName == "Airlift"){
-    //     Airlift *airlift = new Airlift();
-    //     airlift->setTargetTerr(targetTerr);
-    //     airlift->setSourceTerr(sourceTerr);
-    //     airlift->setPlayer(this);
-    //     airlift->setArmies(nbOfArmies);
-    //     this->ol->addOrder(airlift, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }
-    //  if(orderName == "Advance"){
-    //     Advance *advance = new Advance();
-    //     advance->setEnemy(enemy);
-    //     advance->setPlayer(thisPlayer);
-    //     advance->setTargetTerr(targetTerr);
-    //     advance->setSourceTerr(sourceTerr);
-    //     advance->setArmies(nbOfArmies);
-    //     advance->setDeck(deck);
-    //     this->ol->addOrder(advance, *ordersIndex);
-    //     (*ordersIndex)++;
-    // }       
+    strat->issueOrders(orderName, nbOfArmies, targetTerr, sourceTerr, enemy, thisPlayer, deck, this, *this->ordersIndex);       
 }
 
 // Method that finds Territories to defend and adds them to a new array
 Territory* Player::toDefend(){
-    // for(int i = 0; i < *nbOfTerritories; i++){
-    //     toDefArr[i].setPosessor(-1); 
-    // }
-    // int counter = 0;
-    // for(int i = 0; i < *nbOfTerritories; i++){
-    //     if(*territories[i].getPosessor() == *this->playerID){
-    //         toDefArr[counter] = territories[i];
-    //         counter++;
-    //     }     
-    // }
-    // return toDefArr;
-    return initToDefend();
+    return strat->toDeffend(this);
+}
+
+// Method that checks neighboring countries near owned territories that are not owned by the Player
+// Returns an array of these neighboring countries 
+Territory* Player::toAttack(){    
+    return strat->toAttack(this);    
 }
 
 // Method that finds Territories to defend and adds them to a new array
@@ -219,53 +165,12 @@ Territory* Player::initToDefend(){
     return toDefArr;
 }
 
-// Method that checks neighboring countries near owned territories that are not owned by the Player
-// Returns an array of these neighboring countries 
-Territory* Player::toAttack(){
-    // for(int i = 0; i < *nbOfTerritories; i++){
-    //     toAttArr[i].setPosessor(-1); 
-    // }
-    // int counter = 0;
-    // Territory* allTerritories = map->getCountries();
-
-    // for(int i = 0; i < *map->getNbTerritories(); i++){
-    //     if(*allTerritories[i].getPosessor() != *this->playerID){
-    //         continue;
-    //     }
-    //      for(int j = 0; j < *map->getNbTerritories(); j++){
-    //         if(j == i){
-    //             continue;
-    //         }
-
-    //         if(adjacencyMatrix[i][j] == nullptr){
-    //             continue;
-    //         }
-
-    //         if(*allTerritories[j].getPosessor() == *this->playerID){
-    //             continue;
-    //         }
-
-    //         for(int k = 0; k <= counter; k++){
-    //             if(*toAttArr[k].getPosessor() == -1){
-    //                 toAttArr[k] = allTerritories[j];
-    //                 counter++;
-    //                 break;
-    //             }else if(*toAttArr[k].getTerritoryName() == *allTerritories[j].getTerritoryName()){
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-    return initToAttack();
-    // return toAttArr;
-}
-
 Territory* Player::initToAttack(){
     for(int i = 0; i < *nbOfTerritories; i++){
         toAttArr[i].setPosessor(-1); 
     }
     int counter = 0;
-    Territory* allTerritories = this->territories;//map->getCountries();
+    Territory* allTerritories = this->territories;
 
     for(int i = 0; i < *map->getNbTerritories(); i++){
         if(*allTerritories[i].getPosessor() != *this->playerID){
@@ -328,7 +233,9 @@ int Player::nbOfTerToAttToDef(Territory* arrOfDefOrAtt){
 
 // Setters
 void Player::setStrategy(PlayerStrategy* ps){
-    delete strat;
+    if(strat != nullptr){
+        delete strat;
+    }    
     strat = ps;
 }
 void Player::setPlayerID(int* playerID){

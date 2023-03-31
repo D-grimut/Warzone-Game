@@ -9,6 +9,7 @@
 #include "PlayerStrategies.h"
 using namespace std;
 
+class PlayerStrategy;
 class OrdersList;
 class Hand;
 class Deck;
@@ -16,16 +17,10 @@ class Orders;
 
 class Player{
     private:
-        PlayerStrategy* strat;          //PLayer Strategy
-        int* playerID;                  // The player's ID
-        Territory* territories;         // Array of Territories
-        OrdersList* ol;                 // List of Orders
-        int* nbOfTerritories;           // Number of Territories
-        int* ordersIndex;               // Index of Orders
-        Territory* toDefArr;            // Array of Territories to defend
-        Territory* toAttArr;            // Array of Territories to attack
-        Territory*** adjacencyMatrix;   // 2D-array of territories
-        Map* map;                       // Map object
+        PlayerStrategy* strat;          //Player Strategy
+        int* playerID;                  // The player's ID       
+        OrdersList* ol;                 // List of Orders       
+        int* ordersIndex;               // Index of Orders 
         int* sizeOfHand;
         Hand* cards;                    // List Of Cards
         int* reinforcementPool;
@@ -47,7 +42,13 @@ class Player{
         Territory* toDefend();                       // Show territories to defend
         Territory* initToDefend();
         Territory* toAttack();  
-        Territory* initToAttack();                       // Show territories to attack
+        Territory* initToAttack();                      // Show territories to attack
+        Territory* toDefArr;                            // Array of Territories to defend
+        Territory* toAttArr;                            // Array of Territories to attack
+        int* nbOfTerritories;                           // Number of Territories
+        Territory* territories;                         // Array of Territories
+        Territory*** adjacencyMatrix;                   // 2D-array of territories
+        Map* map;                                       // Map object
         void printCards();
         int nbTerritories();
         void printToAttToDef(Territory* arrOfDefOrAtt);
