@@ -190,7 +190,18 @@ void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr
 
 // Method that finds Territories to defend and adds them to a new array
 Territory* Player::toDefend(){
-    return strat->toDeffend();
+    // for(int i = 0; i < *nbOfTerritories; i++){
+    //     toDefArr[i].setPosessor(-1); 
+    // }
+    // int counter = 0;
+    // for(int i = 0; i < *nbOfTerritories; i++){
+    //     if(*territories[i].getPosessor() == *this->playerID){
+    //         toDefArr[counter] = territories[i];
+    //         counter++;
+    //     }     
+    // }
+    // return toDefArr;
+    return initToDefend();
 }
 
 // Method that finds Territories to defend and adds them to a new array
@@ -210,8 +221,43 @@ Territory* Player::initToDefend(){
 
 // Method that checks neighboring countries near owned territories that are not owned by the Player
 // Returns an array of these neighboring countries 
-Territory* Player::toAttack(){    
-    return strat->toAttack();
+Territory* Player::toAttack(){
+    // for(int i = 0; i < *nbOfTerritories; i++){
+    //     toAttArr[i].setPosessor(-1); 
+    // }
+    // int counter = 0;
+    // Territory* allTerritories = map->getCountries();
+
+    // for(int i = 0; i < *map->getNbTerritories(); i++){
+    //     if(*allTerritories[i].getPosessor() != *this->playerID){
+    //         continue;
+    //     }
+    //      for(int j = 0; j < *map->getNbTerritories(); j++){
+    //         if(j == i){
+    //             continue;
+    //         }
+
+    //         if(adjacencyMatrix[i][j] == nullptr){
+    //             continue;
+    //         }
+
+    //         if(*allTerritories[j].getPosessor() == *this->playerID){
+    //             continue;
+    //         }
+
+    //         for(int k = 0; k <= counter; k++){
+    //             if(*toAttArr[k].getPosessor() == -1){
+    //                 toAttArr[k] = allTerritories[j];
+    //                 counter++;
+    //                 break;
+    //             }else if(*toAttArr[k].getTerritoryName() == *allTerritories[j].getTerritoryName()){
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+    return initToAttack();
+    // return toAttArr;
 }
 
 Territory* Player::initToAttack(){
@@ -219,7 +265,7 @@ Territory* Player::initToAttack(){
         toAttArr[i].setPosessor(-1); 
     }
     int counter = 0;
-    Territory* allTerritories = map->getCountries();
+    Territory* allTerritories = this->territories;//map->getCountries();
 
     for(int i = 0; i < *map->getNbTerritories(); i++){
         if(*allTerritories[i].getPosessor() != *this->playerID){
