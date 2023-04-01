@@ -25,34 +25,34 @@ int main(){
     bool gotCard = false;
    Deck* deck = new Deck();
     // Create a new player with playerID = 1 and playerID = 2 and territories
-    Player *p1 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
-    Player *p2 = new Player(2, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
+    Player *p1 = new Player(0, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
+    Player *p2 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     
     PlayerStrategy* ps1 = new HumanPlayerStrategy();
-    PlayerStrategy* ps2 = new HumanPlayerStrategy();
+    PlayerStrategy* ps2 = new AggressivePlayerStrategy();
     
     p1->setStrategy(ps1);
     p2->setStrategy(ps2);
 
     cout << "here3" << endl;
 
-        Card* card1 = new Card("bomb");
-        Card* card2 = new Card("diplomacy");
-        Card* card3 = new Card("blockade");
-        Card* card4 = new Card("airlift");
+        // Card* card1 = new Card("bomb");
+        // Card* card2 = new Card("diplomacy");
+        // Card* card3 = new Card("blockade");
+        // Card* card4 = new Card("airlift");
 
-        Hand* hand1 = new Hand(2);
-        Hand* hand2 = new Hand(2);
+        // Hand* hand1 = new Hand(2);
+        // Hand* hand2 = new Hand(2);
 
-        p1->getCards()->addCard(card1, 1);
-        p1->getCards()->addCard(card2, 2);
-        p2->getCards()->addCard(card3, 1);
-        p2->getCards()->addCard(card4, 2);
+        // p1->getCards()->addCard(card1, 1);
+        // p1->getCards()->addCard(card2, 2);
+        // p2->getCards()->addCard(card3, 1);
+        // p2->getCards()->addCard(card4, 2);
 
  
 
     const int nbOfPlayers = 2;
-    Player *pArr[nbOfPlayers] = {p1, p2};
+    Player *pArr[nbOfPlayers] = {p2, p1};
 
     //Set first half of territories so that Player 1 owns it
     for(int i = 0; i < nbTerritories/2; i++){

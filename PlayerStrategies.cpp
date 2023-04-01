@@ -1,6 +1,6 @@
 #include "PlayerStrategies.h"
+#include <algorithm>
 
-//Human Class - TODO W/ DOM
 HumanPlayerStrategy::HumanPlayerStrategy(){
     this->type = new string("Human");
 }
@@ -117,6 +117,106 @@ Territory* HumanPlayerStrategy::toDeffend(Player* p){
     return p->toDefArr;
 }
 
+//Aggresive Class
+AggressivePlayerStrategy::AggressivePlayerStrategy(){
+    this->type = new string("Aggresive");
+}
+
+AggressivePlayerStrategy::~AggressivePlayerStrategy(){
+    delete this->type;
+    this->type = NULL;
+}
+
+void AggressivePlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+                                            Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
+                                                
+    if(orderName == "Deploy"){
+        Deploy *deploy = new Deploy();
+        deploy->setPlayer(p);
+        deploy->setTargetTerr(targetTerr);
+        deploy->setArmies(nbOfArmies);
+        p->getOrdersList()->addOrder(deploy, ordersIndex);
+        ordersIndex++;
+    }  
+    if(orderName == "Advance"){
+        Advance *advance = new Advance();
+        cout << "here advance" << endl;
+        advance->setEnemy(enemy);
+        advance->setPlayer(thisPlayer);
+        advance->setTargetTerr(targetTerr);
+        advance->setSourceTerr(sourceTerr);
+        advance->setArmies(nbOfArmies);
+        advance->setDeck(deck);
+        p->getOrdersList()->addOrder(advance, ordersIndex);
+        cout << "here" << endl;
+        ordersIndex++;
+    }    
+}
+
+Territory* AggressivePlayerStrategy::toAttack(Player* p){
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        p->toAttArr[i].setPosessor(-1); 
+    }
+    int counter = 0;
+    Territory* allTerritories = p->territories;
+
+    for(int i = 0; i < *p->map->getNbTerritories(); i++){
+        if(*allTerritories[i].getPosessor() != *p->getPlayerID()){
+            continue;
+        }
+         for(int j = 0; j < *p->map->getNbTerritories(); j++){
+            if(j == i){
+                continue;
+            }
+
+            if(p->adjacencyMatrix[i][j] == nullptr){
+                continue;
+            }
+
+            if(*allTerritories[j].getPosessor() == *p->getPlayerID()){
+                continue;
+            }
+
+            for(int k = 0; k <= counter; k++){
+                if(*p->toAttArr[k].getPosessor() == -1){
+                    p->toAttArr[k] = allTerritories[j];
+                    counter++;
+                    break;
+                }else if(*p->toAttArr[k].getTerritoryName() == *allTerritories[j].getTerritoryName()){
+                    break;
+                }
+            }
+        }
+    }
+    return p->toAttArr;
+}
+
+Territory* AggressivePlayerStrategy::toDeffend(Player* p){
+ for(int i = 0; i < *p->nbOfTerritories; i++){
+        p->toDefArr[i].setPosessor(-1); 
+    }
+    int counter = 0;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        if(*p->territories[i].getPosessor() == *p->getPlayerID()){
+            p->toDefArr[counter] = p->territories[i];
+            counter++;
+        }     
+    }
+    Territory temp;  
+   
+    for(int i = 0; i < counter; i++){
+        for(int j = i; j < counter; j++){
+            if(*p->toDefArr[i].getNumberOfSoldiers() < *p->toDefArr[j].getNumberOfSoldiers()){
+                temp = p->toDefArr[i];
+                p->toDefArr[i] = p->toDefArr[j];
+                p->toDefArr[j] = temp;
+            }
+        }   
+    } 
+
+    return p->toDefArr;   
+}
+
 //Cheater Class
 CheaterPlayerStrategy::CheaterPlayerStrategy(){
     this->type = new string("Cheater");
@@ -137,29 +237,6 @@ Territory* CheaterPlayerStrategy::toAttack(Player* p){
 }
 
 Territory* CheaterPlayerStrategy::toDeffend(Player* p){
-    return NULL;
-}
-
-//Aggresive Class
-AggressivePlayerStrategy::AggressivePlayerStrategy(){
-    this->type = new string("Aggresive");
-}
-
-AggressivePlayerStrategy::~AggressivePlayerStrategy(){
-    delete this->type;
-    this->type = NULL;
-}
-
-void AggressivePlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
-                                            Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
-
-}
-
-Territory* AggressivePlayerStrategy::toAttack(Player* p){
-    return NULL;
-}
-
-Territory* AggressivePlayerStrategy::toDeffend(Player* p){
     return NULL;
 }
 

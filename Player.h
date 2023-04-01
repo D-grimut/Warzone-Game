@@ -16,8 +16,7 @@ class Deck;
 class Orders;
 
 class Player{
-    private:
-        PlayerStrategy* strat;          //Player Strategy
+    private:        
         int* playerID;                  // The player's ID       
         OrdersList* ol;                 // List of Orders       
         int* ordersIndex;               // Index of Orders 
@@ -49,6 +48,7 @@ class Player{
         Territory* territories;                         // Array of Territories
         Territory*** adjacencyMatrix;                   // 2D-array of territories
         Map* map;                                       // Map object
+        PlayerStrategy* strat;                          //Player Strategy
         void printCards();
         int nbTerritories();
         void printToAttToDef(Territory* arrOfDefOrAtt);

@@ -13,6 +13,8 @@ class Deck;
 
 class PlayerStrategy{
 public:
+
+    string* type;
     virtual Territory* toAttack(Player* p) = 0;
     virtual Territory* toDeffend(Player* p) = 0;
     virtual void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
@@ -24,8 +26,7 @@ class HumanPlayerStrategy: public PlayerStrategy{
 public:
     HumanPlayerStrategy();
     ~HumanPlayerStrategy();
-
-    string* type;
+    
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
     void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
@@ -38,7 +39,6 @@ public:
     AggressivePlayerStrategy();
     ~AggressivePlayerStrategy();
 
-    string* type;
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
     void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
@@ -51,7 +51,6 @@ public:
     BenevolentPlayerStrategy();
     ~BenevolentPlayerStrategy();
 
-    string* type;
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
     void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
@@ -64,7 +63,6 @@ public:
     NeutralPlayerStrategy();
     ~NeutralPlayerStrategy();
 
-    string* type;
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
     void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
@@ -77,7 +75,6 @@ public:
     CheaterPlayerStrategy();
     ~CheaterPlayerStrategy();
 
-    string* type;
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
     void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
