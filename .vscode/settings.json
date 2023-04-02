@@ -4,6 +4,7 @@
         "xstring": "cpp",
         "ostream": "cpp",
         "cmath": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "new": "cpp"
     }
 }
