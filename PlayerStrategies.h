@@ -17,7 +17,7 @@ public:
     string* type;
     virtual Territory* toAttack(Player* p) = 0;
     virtual Territory* toDeffend(Player* p) = 0;
-    virtual void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+    virtual void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                             Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) = 0;
 };
 
@@ -29,7 +29,7 @@ public:
     
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
-    void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+    void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                     Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) override;
 };
 
@@ -41,7 +41,7 @@ public:
 
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
-    void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+    void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                     Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) override;
 };
 
@@ -53,7 +53,7 @@ public:
 
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
-    void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
+    void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
                     Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) override;
 };
 
@@ -65,7 +65,7 @@ public:
 
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
-    void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
+    void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
                     Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) override;
 };
 
@@ -77,6 +77,6 @@ public:
 
     Territory* toAttack(Player* p) override;
     Territory* toDeffend(Player* p) override;
-    void issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
+    void issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, 
                     Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex) override;
 };

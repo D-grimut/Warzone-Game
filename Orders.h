@@ -72,7 +72,7 @@ class Advance : public Order {
         //Setters
             void setTargetTerr(Territory* targTerr);
             void setSourceTerr(Territory* sourceTerr);
-            void setArmies(int* numArmies);
+            void setArmies(int numArmies);
             void setPlayer(Player* player);
             void setEnemy(Player* enemy);
             void setDeck(Deck *&deck);

@@ -135,7 +135,7 @@ int Player::nbTerritories(){
 
 // Method to create orders and adds them to the OrdersList array that the Player owns
 // Prints out the list of orders after creating it
-void Player::issueOrder(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck){
+void Player::issueOrder(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck){
     strat->issueOrders(orderName, nbOfArmies, targetTerr, sourceTerr, enemy, thisPlayer, deck, this, *this->ordersIndex);       
 }
 
@@ -282,8 +282,8 @@ void Player::setReinforcementPool(int reinforcementPool){
     *this->reinforcementPool = reinforcementPool;
 }
 
-void Player::setNegotiateID(int* negotiate){
-    this->negotiateId = negotiate;
+void Player::setNegotiateID(int negotiate){
+    *this->negotiateId = negotiate;
 }
 
 void Player::setGotCard(bool gotCard){

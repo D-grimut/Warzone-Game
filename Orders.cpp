@@ -218,8 +218,8 @@ void Advance::setEnemy(Player* enemy){
     this->enemy = enemy;
 }
 
-void Advance::setArmies(int* armies1){
-    *this->armies = *armies1;
+void Advance::setArmies(int armies1){
+    *this->armies = armies1;
 }
 
 void Advance::setPlayer(Player* player){

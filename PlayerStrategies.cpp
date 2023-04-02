@@ -10,7 +10,7 @@ HumanPlayerStrategy::~HumanPlayerStrategy(){
     this->type = NULL;
 }
 
-void HumanPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, 
+void HumanPlayerStrategy::issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, 
                                         Player* enemy, Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
     if(orderName == "Deploy"){
         Deploy *deploy = new Deploy();
@@ -127,7 +127,7 @@ AggressivePlayerStrategy::~AggressivePlayerStrategy(){
     this->type = NULL;
 }
 
-void AggressivePlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+void AggressivePlayerStrategy::issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                             Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
                                                 
     if(orderName == "Deploy"){
@@ -225,7 +225,7 @@ CheaterPlayerStrategy::~CheaterPlayerStrategy(){
     this->type = NULL;
 }
 
-void CheaterPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+void CheaterPlayerStrategy::issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                         Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
     if(orderName == "Advance"){
         Advance *advance = new Advance();        
@@ -302,7 +302,7 @@ BenevolentPlayerStrategy::~BenevolentPlayerStrategy(){
     this->type = NULL;
 }
 
-void BenevolentPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+void BenevolentPlayerStrategy::issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                             Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
     if(orderName == "Deploy"){
         Deploy *deploy = new Deploy();
@@ -365,7 +365,7 @@ NeutralPlayerStrategy::~NeutralPlayerStrategy(){
     this->type = NULL;
 }
 
-void NeutralPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
+void NeutralPlayerStrategy::issueOrders(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                         Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
 
 }

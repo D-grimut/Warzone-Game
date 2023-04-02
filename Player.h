@@ -37,7 +37,7 @@ class Player{
 
         // Methods
         void ownedTerritories();                     // Show all owned territories
-        void issueOrder(string orderName, int* nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck);           // Create order and add it to array of orders
+        void issueOrder(string orderName, int nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck);           // Create order and add it to array of orders
         Territory* toDefend();                       // Show territories to defend
         Territory* initToDefend();
         Territory* toAttack();  
@@ -66,7 +66,7 @@ class Player{
         void setMap(Map map);
         void setCards(Hand cards);
         void setReinforcementPool(int reinforcementPool);
-        void setNegotiateID(int* negotiateId);
+        void setNegotiateID(int negotiateId);
         void setGotCard(bool gotCard);
         void setStrategy(PlayerStrategy* ps);
 
