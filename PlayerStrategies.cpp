@@ -229,15 +229,71 @@ CheaterPlayerStrategy::~CheaterPlayerStrategy(){
 
 void CheaterPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                         Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
-
+    if(orderName == "Advance"){
+        Advance *advance = new Advance();
+        cout << "here advance" << endl;
+        advance->setEnemy(enemy);
+        advance->setPlayer(thisPlayer);
+        advance->setTargetTerr(targetTerr);
+        advance->setSourceTerr(sourceTerr);
+        advance->setArmies(nbOfArmies);
+        advance->setDeck(deck);
+        p->getOrdersList()->addOrder(advance, ordersIndex);
+        cout << "here" << endl;
+        ordersIndex++;
+    }                                           
 }
 
 Territory* CheaterPlayerStrategy::toAttack(Player* p){
-    return NULL;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        p->toAttArr[i].setPosessor(-1); 
+    }
+    int counter = 0;
+    Territory* allTerritories = p->territories;
+
+    for(int i = 0; i < *p->map->getNbTerritories(); i++){
+        if(*allTerritories[i].getPosessor() != *p->getPlayerID()){
+            continue;
+        }
+         for(int j = 0; j < *p->map->getNbTerritories(); j++){
+            if(j == i){
+                continue;
+            }
+
+            if(p->adjacencyMatrix[i][j] == nullptr){
+                continue;
+            }
+
+            if(*allTerritories[j].getPosessor() == *p->getPlayerID()){
+                continue;
+            }
+
+            for(int k = 0; k <= counter; k++){
+                if(*p->toAttArr[k].getPosessor() == -1){
+                    p->toAttArr[k] = allTerritories[j];
+                    counter++;
+                    break;
+                }else if(*p->toAttArr[k].getTerritoryName() == *allTerritories[j].getTerritoryName()){
+                    break;
+                }
+            }
+        }
+    }
+    return p->toAttArr;
 }
 
 Territory* CheaterPlayerStrategy::toDeffend(Player* p){
-    return NULL;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        p->toDefArr[i].setPosessor(-1); 
+    }
+    int counter = 0;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        if(*p->territories[i].getPosessor() == *p->getPlayerID()){
+            p->toDefArr[counter] = p->territories[i];
+            counter++;
+        }     
+    }
+    return p->toDefArr;
 }
 
 //Benevolent Class
@@ -252,15 +308,57 @@ BenevolentPlayerStrategy::~BenevolentPlayerStrategy(){
 
 void BenevolentPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                             Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
-
+    if(orderName == "Deploy"){
+        Deploy *deploy = new Deploy();
+        deploy->setPlayer(p);
+        deploy->setTargetTerr(targetTerr);
+        deploy->setArmies(nbOfArmies);
+        p->getOrdersList()->addOrder(deploy, ordersIndex);
+        ordersIndex++;
+    }
+    if(orderName == "Advance"){
+        Advance *advance = new Advance();
+        cout << "here advance" << endl;
+        advance->setEnemy(enemy);
+        advance->setPlayer(thisPlayer);
+        advance->setTargetTerr(targetTerr);
+        advance->setSourceTerr(sourceTerr);
+        advance->setArmies(nbOfArmies);
+        advance->setDeck(deck);
+        p->getOrdersList()->addOrder(advance, ordersIndex);
+        cout << "here" << endl;
+        ordersIndex++;
+    } 
 }
 
 Territory* BenevolentPlayerStrategy::toAttack(Player* p){
-    return NULL;
+    return p->toAttArr;
 }
 
 Territory* BenevolentPlayerStrategy::toDeffend(Player* p){
-    return NULL;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        p->toDefArr[i].setPosessor(-1); 
+    }
+    int counter = 0;
+    for(int i = 0; i < *p->nbOfTerritories; i++){
+        if(*p->territories[i].getPosessor() == *p->getPlayerID()){
+            p->toDefArr[counter] = p->territories[i];
+            counter++;
+        }     
+    }
+    Territory temp;  
+   
+    for(int i = 0; i < counter; i++){
+        for(int j = i; j < counter; j++){
+            if(*p->toDefArr[i].getNumberOfSoldiers() > *p->toDefArr[j].getNumberOfSoldiers()){
+                temp = p->toDefArr[i];
+                p->toDefArr[i] = p->toDefArr[j];
+                p->toDefArr[j] = temp;
+            }
+        }   
+    } 
+
+    return p->toDefArr;  
 }
 
 //Neutral Class
@@ -279,10 +377,10 @@ void NeutralPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Terri
 }
 
 Territory* NeutralPlayerStrategy::toAttack(Player* p){
-    return NULL;
+    return p->toAttArr;
 }
 
 Territory* NeutralPlayerStrategy::toDeffend(Player* p){
-    return NULL;
+    return p->toDefArr;
 }
 

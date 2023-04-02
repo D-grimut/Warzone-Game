@@ -28,8 +28,8 @@ int main(){
     Player *p1 = new Player(0, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     
-    PlayerStrategy* ps1 = new HumanPlayerStrategy();
-    PlayerStrategy* ps2 = new AggressivePlayerStrategy();
+    PlayerStrategy* ps1 = new BenevolentPlayerStrategy();
+    PlayerStrategy* ps2 = new CheaterPlayerStrategy();
     
     p1->setStrategy(ps1);
     p2->setStrategy(ps2);
@@ -64,6 +64,10 @@ int main(){
     for(int i = nbTerritories/2; i < nbTerritories; i++){
         territories[i].setPosessor(*p2->getPlayerID());
         territories[i].setNumberOfSoldiers(0);
+    }
+
+    for(int i = 0; i < nbTerritories; i++){
+        cout << territories[i] << endl;
     }
 
     p1->initToAttack();

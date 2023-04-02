@@ -161,6 +161,9 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
     }
     
    for(int i = 0; i < nbOfPlayers; i++){
+    if(*pArr[i]->strat->type == "Neutral"){
+        continue;
+    }
     cout << "----------------------------------------------------- "<<endl;
         cout << "PLAYER " << (i+1) << " TURN" << endl;
         Territory* toAtt = pArr[i]->toAttack();
@@ -182,9 +185,8 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
 
         //--------------------------------------------
         //DEPLOY
-        while(nbOfRein != 0){
-
-            if(*pArr[i]->strat->type == "Aggresive"){                
+        while(nbOfRein != 0 && *pArr[i]->strat->type != "Cheater"){
+            if(*pArr[i]->strat->type == "Aggresive" || *pArr[i]->strat->type == "Benevolent"){                
 
                 target = &toDef[0];
                 pArr[i]->printToAttToDef(toDef);
@@ -231,8 +233,18 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
         bool isAdvancing = true;
         int choice;
         do{
-
-            if(*pArr[i]->strat->type == "Aggresive"){
+            if(*pArr[i]->strat->type == "Cheater"){
+                // pArr[i]->printToAttToDef(pArr[i]->toAttack());
+                // pArr[i]->printToAttToDef(pArr[i]->toDefend());
+                for(int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++){
+                    if(pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0])){                                      
+                        pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);                     
+                        break;
+                    }                    
+                }
+                break;
+            }
+            else if(*pArr[i]->strat->type == "Aggresive"){
                 
                 bool foundEnemy = false;                
 
@@ -246,7 +258,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
                 }
 
                 if(!foundEnemy){
-                    for(int j = 0; i < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefArr); j++){
+                    for(int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefArr); j++){
                         if(pArr[i]->map->isAdjacent(&pArr[i]->toDefArr[j], &pArr[i]->toDefend()[0])){
                             pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(),&pArr[i]->toDefArr[j], &pArr[i]->toDefend()[0], pArr[i], pArr[i], deck);
                             break;
@@ -255,6 +267,14 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
                 }  
 
                 break;              
+            }else if(*pArr[i]->strat->type == "Benevolent"){
+                for(int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefend()); j++){
+                    if(pArr[i]->map->isAdjacent(&pArr[i]->toDefArr[j], &pArr[i]->toDefArr[0]) && *pArr[i]->toDefArr[j].getNumberOfSoldiers() > 0){
+                        pArr[i]->issueOrder("Advance", pArr[i]->toDefArr[j].getNumberOfSoldiers(), &pArr[i]->toDefArr[0], &pArr[i]->toDefArr[j], pArr[i], pArr[i], deck);
+                        break;
+                    }                    
+                }
+                break;
             }
 
             cout << "Would you like to advance?\n1. Yes\n2. No\nChoice: ";

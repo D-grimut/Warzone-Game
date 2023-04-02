@@ -249,7 +249,8 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 /*Validate Order method*/
 bool Advance::validate(){    
     bool ptr = true;
-    cout << *source->getPosessor() << endl;
+    cout << "I THINK YOURE MESSING WITH ME " << *source->getPosessor() << endl;
+    cout << "I THINK YOURE MESSING WITH ME 2 " << *source << endl; 
     if(*source->getPosessor() != *getPlayer()->getPlayerID()){ //if source does not belong to player
             ptr = false;
            cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
@@ -278,11 +279,21 @@ void Advance::execute(){
         if(*target->getPosessor() == *getPlayer()->getPlayerID()){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
             source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
+            cout << *target->getTerritoryName() << " is the name " << *target->getNumberOfSoldiers() << " is the num of sold" << endl;
+            cout << *source->getTerritoryName() << " is the name " << *source->getNumberOfSoldiers() << " is the num of sold" << endl;
             getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
             getPlayer()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers(*source->getNumberOfSoldiers());
             cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " now has "<< *target->getNumberOfSoldiers()<< endl;
         }
         else if(*target->getPosessor() != *getPlayer()->getPlayerID()){
+            if(*enemy->strat->type == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy());
+            }else if(*getPlayer()->strat->type == "Cheater"){
+                getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setPosessor(*getPlayer()->getPlayerID());
+                cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " was conquered! "<< endl;
+                cout << "Target id " << *target->getPosessor() << endl;
+                return;
+            }
            int defendKill = 0;
            int attackKill = 0;
            while(*target->getNumberOfSoldiers() > 0 && *source->getNumberOfSoldiers() > 0){
@@ -848,8 +859,11 @@ void OrdersList::moveOrder(int* position1, int* position2){
 }
 
 void OrdersList::removeOrder(int* position){
+        if(*getSize() <= 0){
+            return;
+        }
         if(*position > *getSize()){
-            cout << "Invalid remove, please enter a number less than: " << getSize() <<endl;
+            cout << "Invalid remove, please enter a number less than: " << *getSize() <<endl;
         }
         for(int i = *position; i<*getSize(); i++){
             orders[i] = orders[i+1];
