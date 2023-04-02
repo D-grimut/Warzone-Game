@@ -165,7 +165,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
         continue;
     }
     cout << "----------------------------------------------------- "<<endl;
-        cout << "PLAYER " << (i+1) << " TURN" << endl;
+        cout << "PLAYER " << (i) << " TURN" << endl;
         Territory* toAtt = pArr[i]->toAttack();
         int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
         
@@ -234,13 +234,21 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
         int choice;
         do{
             if(*pArr[i]->strat->type == "Cheater"){
-                // pArr[i]->printToAttToDef(pArr[i]->toAttack());
-                // pArr[i]->printToAttToDef(pArr[i]->toDefend());
+                bool found = false;
+
                 for(int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++){
-                    if(pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0])){                                      
-                        pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);                     
+                    for(int s = 0; s < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefend()); s++){
+
+                        if(pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[s])){                                      
+                            pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[s].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[s], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);                     
+                            found = true;
+                            break;
+                        } 
+                    }   
+
+                    if(found){
                         break;
-                    }                    
+                    }                
                 }
                 break;
             }
@@ -460,16 +468,18 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck* &d
 }
 
 void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers){
-    for(int i = 0; i < nbOfPlayers; i++){
-         cout<< "--------------------------------------------------" << endl;
-        cout<< "PLAYER " << i+1 << " EXECUTION:" << endl;
+    for(int i = 0; i < nbOfPlayers; i++){       
+        cout<< "PLAYER " << i << " EXECUTION:" << endl;
         pArr[i]->getOrdersList()->showList(pArr[i]->getOrdersIndex());
-        pArr[i]->getOrdersList()->execute();       
+        pArr[i]->getOrdersList()->execute();             
 
         for(int j = 0; j < pArr[i]->getOrdersIndex(); j++){
             int* position = new int(j);
-            pArr[i]->getOrdersList()->removeOrder(position);
+            pArr[i]->getOrdersList()->removeOrder(position);            
         }
+
+         
+        *pArr[i]->getOrdersList()->end = 0;
         pArr[i]->setOrdersIndex(0);
         cout<< "--------------------------------------------------" << endl;
 
@@ -894,14 +904,14 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map* map){
             Territory* toDef = pArr[i]->toDefend();
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
             if(nbOfToDef == nbTerritories){
-                cout << "Player " << pArr[i]->getPlayerID() << " has won the game!" << endl;
+                cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                 isRunning = false;
                 engine->TransitionTo(8);
                 exit(0);
             }else if(*pArr[i]->getPlayerID() == -1){
                 continue;
             }else if(nbOfToDef == 0){
-                cout << "Player " << pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
+                cout << "Player " << *pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
                 pArr[i]->setPlayerID(num);
             }
         }

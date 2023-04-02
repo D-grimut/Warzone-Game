@@ -139,16 +139,14 @@ void AggressivePlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Te
         ordersIndex++;
     }  
     if(orderName == "Advance"){
-        Advance *advance = new Advance();
-        cout << "here advance" << endl;
+        Advance *advance = new Advance();        
         advance->setEnemy(enemy);
         advance->setPlayer(thisPlayer);
         advance->setTargetTerr(targetTerr);
         advance->setSourceTerr(sourceTerr);
         advance->setArmies(nbOfArmies);
         advance->setDeck(deck);
-        p->getOrdersList()->addOrder(advance, ordersIndex);
-        cout << "here" << endl;
+        p->getOrdersList()->addOrder(advance, ordersIndex);        
         ordersIndex++;
     }    
 }
@@ -230,16 +228,14 @@ CheaterPlayerStrategy::~CheaterPlayerStrategy(){
 void CheaterPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy,
                                         Player* thisPlayer, Deck *&deck, Player* p, int& ordersIndex){
     if(orderName == "Advance"){
-        Advance *advance = new Advance();
-        cout << "here advance" << endl;
+        Advance *advance = new Advance();        
         advance->setEnemy(enemy);
         advance->setPlayer(thisPlayer);
         advance->setTargetTerr(targetTerr);
         advance->setSourceTerr(sourceTerr);
         advance->setArmies(nbOfArmies);
         advance->setDeck(deck);
-        p->getOrdersList()->addOrder(advance, ordersIndex);
-        cout << "here" << endl;
+        p->getOrdersList()->addOrder(advance, ordersIndex);        
         ordersIndex++;
     }                                           
 }
@@ -317,16 +313,14 @@ void BenevolentPlayerStrategy::issueOrders(string orderName, int *nbOfArmies, Te
         ordersIndex++;
     }
     if(orderName == "Advance"){
-        Advance *advance = new Advance();
-        cout << "here advance" << endl;
+        Advance *advance = new Advance();        
         advance->setEnemy(enemy);
         advance->setPlayer(thisPlayer);
         advance->setTargetTerr(targetTerr);
         advance->setSourceTerr(sourceTerr);
         advance->setArmies(nbOfArmies);
         advance->setDeck(deck);
-        p->getOrdersList()->addOrder(advance, ordersIndex);
-        cout << "here" << endl;
+        p->getOrdersList()->addOrder(advance, ordersIndex);        
         ordersIndex++;
     } 
 }

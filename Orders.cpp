@@ -248,9 +248,7 @@ std::ostream& operator<<(std::ostream &strm, const Advance &a){
 
 /*Validate Order method*/
 bool Advance::validate(){    
-    bool ptr = true;
-    cout << "I THINK YOURE MESSING WITH ME " << *source->getPosessor() << endl;
-    cout << "I THINK YOURE MESSING WITH ME 2 " << *source << endl; 
+    bool ptr = true; 
     if(*source->getPosessor() != *getPlayer()->getPlayerID()){ //if source does not belong to player
             ptr = false;
            cout<< "INVALID ADVANCE: source territory does not belong to you!" << endl;
@@ -278,12 +276,11 @@ void Advance::execute(){
     if(validate()){        
         if(*target->getPosessor() == *getPlayer()->getPlayerID()){
             target->setNumberOfSoldiers(*target->getNumberOfSoldiers() + *getArmies());
-            source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());
-            cout << *target->getTerritoryName() << " is the name " << *target->getNumberOfSoldiers() << " is the num of sold" << endl;
-            cout << *source->getTerritoryName() << " is the name " << *source->getNumberOfSoldiers() << " is the num of sold" << endl;
+            source->setNumberOfSoldiers(*source->getNumberOfSoldiers() - *getArmies());           
             getPlayer()->getMap()->getCountries()[*target->getTerritoryId()].setNumberOfSoldiers(*target->getNumberOfSoldiers());
             getPlayer()->getMap()->getCountries()[*source->getTerritoryId()].setNumberOfSoldiers(*source->getNumberOfSoldiers());
-            cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " now has "<< *target->getNumberOfSoldiers()<< endl;
+            cout << "ADAVANCE EXECUTE: "<< *target->getTerritoryName() << " now has "<< *target->getNumberOfSoldiers()<< endl;   
+                    
         }
         else if(*target->getPosessor() != *getPlayer()->getPlayerID()){
             if(*enemy->strat->type == "Neutral"){
@@ -344,7 +341,7 @@ void Advance::execute(){
                 getEnemy()->getCards()->addCard(deck->draw(), (*getEnemy()->getCards()->getCounter()+1));
             }
         }
-    }
+    }   
 }
 
 /*-------------------------------------------------------------------------*/
@@ -903,7 +900,7 @@ void OrdersList::validate(){
 
 void OrdersList::execute(){
     
-    for(int i = 0; i < *this->end; i++){        
+    for(int i = 0; i < *this->end; i++){  
         orders[i]->execute();
     }
 }

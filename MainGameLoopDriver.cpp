@@ -28,13 +28,11 @@ int main(){
     Player *p1 = new Player(0, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     
-    PlayerStrategy* ps1 = new BenevolentPlayerStrategy();
-    PlayerStrategy* ps2 = new CheaterPlayerStrategy();
+    PlayerStrategy* ps1 = new AggressivePlayerStrategy();
+    PlayerStrategy* ps2 = new BenevolentPlayerStrategy();
     
-    p1->setStrategy(ps1);
-    p2->setStrategy(ps2);
-
-    cout << "here3" << endl;
+    p1->setStrategy(ps2);
+    p2->setStrategy(ps1);
 
         // Card* card1 = new Card("bomb");
         // Card* card2 = new Card("diplomacy");
@@ -49,10 +47,9 @@ int main(){
         // p2->getCards()->addCard(card3, 1);
         // p2->getCards()->addCard(card4, 2);
 
- 
 
     const int nbOfPlayers = 2;
-    Player *pArr[nbOfPlayers] = {p2, p1};
+    Player *pArr[nbOfPlayers] = {p1, p2};
 
     //Set first half of territories so that Player 1 owns it
     for(int i = 0; i < nbTerritories/2; i++){
@@ -64,10 +61,6 @@ int main(){
     for(int i = nbTerritories/2; i < nbTerritories; i++){
         territories[i].setPosessor(*p2->getPlayerID());
         territories[i].setNumberOfSoldiers(0);
-    }
-
-    for(int i = 0; i < nbTerritories; i++){
-        cout << territories[i] << endl;
     }
 
     p1->initToAttack();
