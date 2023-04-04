@@ -127,6 +127,10 @@ void AssignReinforcementState::reinforcementPhase(Player *pArr[], int nbOfPlayer
 {
     for (int i = 0; i < nbOfPlayers; i++)
     {
+        if (*pArr[i]->getPlayerID() < 0)
+        {
+            continue;
+        }
         int *nbOfTer = new int(pArr[i]->nbTerritories());
         int reinArm = floor(*nbOfTer / 3);
         if (reinArm < 3)
@@ -161,12 +165,20 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck *&d
 {
     for (int i = 0; i < nbOfPlayers; i++)
     {
+        if (*pArr[i]->getPlayerID() < 0)
+        {
+            continue;
+        }
         int *zer = new int(-1);
         pArr[i]->setNegotiateID(zer);
     }
 
     for (int i = 0; i < nbOfPlayers; i++)
     {
+        if (*pArr[i]->getPlayerID() < 0)
+        {
+            continue;
+        }
         if (*pArr[i]->strat->type == "Neutral")
         {
             continue;
@@ -545,20 +557,16 @@ void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers)
 {
     for (int i = 0; i < nbOfPlayers; i++)
     {
+        if (*pArr[i]->getPlayerID() < 0)
+        {
+            continue;
+        }
         cout << "PLAYER " << i << " EXECUTION:" << endl;
         pArr[i]->getOrdersList()->showList(pArr[i]->getOrdersIndex());
         pArr[i]->getOrdersList()->execute();
 
-        // for (int j = 0; j < pArr[i]->getOrdersIndex(); j++)
-        // {
-        //     int *position = new int(j);
-        //     pArr[i]->getOrdersList()->removeOrder(position);
-        //     delete position;
-        // }
-
         pArr[i]->getOrdersList()->removeOrder();
 
-        //*pArr[i]->getOrdersList()->end = 0;
         pArr[i]->setOrdersIndex(0);
         cout << "--------------------------------------------------" << endl;
     }
@@ -965,14 +973,13 @@ MainGameState::~MainGameState()
     engine = nullptr;
 }
 
-void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map *map)
+void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map)
 {
     GameEngine *engine = new GameEngine();
     AssignReinforcementState *rein = new AssignReinforcementState(engine);
     IssueOrderState *issu = new IssueOrderState(engine);
     ExecuteOrderState *exec = new ExecuteOrderState(engine);
 
-    // Territory* terrArr = map->getCountries();
     int nbTerritories = *map->getNbTerritories();
     bool isRunning = true;
     Deck *deck = new Deck();
@@ -981,6 +988,10 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map *map)
         int *num = new int(-1);
         for (int i = 0; i < nbOfPlayers; i++)
         {
+            if (*pArr[i]->getPlayerID() < 0)
+            {
+                continue;
+            }
             Territory *toDef = pArr[i]->toDefend();
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
             if (nbOfToDef == nbTerritories)
@@ -990,7 +1001,7 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map *map)
                 engine->TransitionTo(8);
                 exit(0);
             }
-            else if (*pArr[i]->getPlayerID() == -1)
+            else if (*pArr[i]->getPlayerID() < 0)
             {
                 continue;
             }
@@ -1000,8 +1011,28 @@ void MainGameState::mainGameLoop(Player *pArr[], int nbOfPlayers, Map *map)
                 pArr[i]->setPlayerID(num);
             }
         }
+        int counter = 0;
+        for (int i = 0; i < nbOfPlayers; i++)
+        {
+            if (*pArr[i]->getPlayerID() < 0)
+            {
+                counter++;
+            }
+        }
+        if (counter == nbOfPlayers - 1)
+        {
+            for (int i = 0; i < nbOfPlayers; i++)
+            {
+                if (*pArr[i]->getPlayerID() != -1)
+                {
+                    cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
+                }
+            }
+            exit(0);
+        }
         rein->reinforcementPhase(pArr, nbOfPlayers);
         issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
         exec->executeOrderPhase(pArr, nbOfPlayers);
+        delete num;
     }
 }

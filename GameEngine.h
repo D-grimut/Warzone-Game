@@ -100,7 +100,7 @@ public:
     ~IssueOrderState();
     IssueOrderState(const IssueOrderState &copy);
     void IssueOrderInput(const std::string &input);
-    void issueOrdersPhase(Player *playerList[], int nbOfPlayers, Deck* &deck);
+    void issueOrdersPhase(Player *playerList[], int nbOfPlayers, Deck *&deck);
 
 private:
     GameEngine *engine;
@@ -135,11 +135,12 @@ private:
 
 class MainGameState
 {
-    public: 
-        MainGameState(GameEngine *engine);
-        ~MainGameState();
-        MainGameState(const MainGameState &copy);
-        void mainGameLoop(Player *playerList[], int nbOfPlayers, Map* map);
-    private:
-        GameEngine *engine;
+public:
+    MainGameState(GameEngine *engine);
+    ~MainGameState();
+    MainGameState(const MainGameState &copy);
+    void mainGameLoop(Player *playerList[], int &nbOfPlayers, Map *map);
+
+private:
+    GameEngine *engine;
 };
