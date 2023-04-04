@@ -29,8 +29,8 @@ int main()
     Player *p1 = new Player(0, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
     Player *p2 = new Player(1, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
-    PlayerStrategy *ps1 = new CheaterPlayerStrategy();
-    PlayerStrategy *ps2 = new BenevolentPlayerStrategy();
+    PlayerStrategy *ps1 = new AggressivePlayerStrategy();
+    PlayerStrategy *ps2 = new AggressivePlayerStrategy();
 
     p1->setStrategy(ps1);
     p2->setStrategy(ps2);

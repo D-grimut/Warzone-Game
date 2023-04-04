@@ -1026,23 +1026,29 @@ void OrdersList::moveOrder(int *position1, int *position2)
     }
 }
 
-void OrdersList::removeOrder(int *position)
+void OrdersList::removeOrder()
 {
-    if (*getSize() <= 0)
+    // if (*getSize() <= 0)
+    // {
+    //     return;
+    // }
+    // if (*position > *getSize())
+    // {
+    //     cout << "Invalid remove, please enter a number less than: " << *getSize() << endl;
+    // }
+    // for (int i = *position; i < *getSize(); i++)
+    // {
+    //     orders[i] = orders[i + 1];
+    // }
+    // int *newSize = new int(*getSize() - 1);
+    // setSize(newSize);
+    // *this->end = *this->end - 1;
+
+    for (int i = 0; i < *this->end; i++)
     {
-        return;
+        orders[i] = nullptr;
     }
-    if (*position > *getSize())
-    {
-        cout << "Invalid remove, please enter a number less than: " << *getSize() << endl;
-    }
-    for (int i = *position; i < *getSize(); i++)
-    {
-        orders[i] = orders[i + 1];
-    }
-    int *newSize = new int(*getSize() - 1);
-    setSize(newSize);
-    *this->end = *this->end - 1;
+    *this->end = 0;
 }
 
 void OrdersList::showList(int x)

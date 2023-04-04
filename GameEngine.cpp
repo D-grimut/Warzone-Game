@@ -549,13 +549,16 @@ void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers)
         pArr[i]->getOrdersList()->showList(pArr[i]->getOrdersIndex());
         pArr[i]->getOrdersList()->execute();
 
-        for (int j = 0; j < pArr[i]->getOrdersIndex(); j++)
-        {
-            int *position = new int(j);
-            pArr[i]->getOrdersList()->removeOrder(position);
-        }
+        // for (int j = 0; j < pArr[i]->getOrdersIndex(); j++)
+        // {
+        //     int *position = new int(j);
+        //     pArr[i]->getOrdersList()->removeOrder(position);
+        //     delete position;
+        // }
 
-        *pArr[i]->getOrdersList()->end = 0;
+        pArr[i]->getOrdersList()->removeOrder();
+
+        //*pArr[i]->getOrdersList()->end = 0;
         pArr[i]->setOrdersIndex(0);
         cout << "--------------------------------------------------" << endl;
     }
