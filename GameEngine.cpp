@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Orders.h"
 #include <cmath>
+#include <algorithm>
+#include <cctype>
 #include "FileCommandProcessorAdapter.h"
 
 /*
@@ -639,11 +641,12 @@ void GameEngine::Play()
         {
             FileCommandProcessorAdapter *pc = new FileCommandProcessorAdapter("commands.txt");
             string s = "";
-            while(s != "EOF"){
+            while (s != "EOF")
+            {
                 s = pc->readCommand();
                 cout << s << endl;
             }
-            //Printing all commands stored by the Command Processor - FOR DEMO
+            // Printing all commands stored by the Command Processor - FOR DEMO
             cout << *pc << endl;
 
             break;
@@ -659,14 +662,19 @@ void GameEngine::Play()
     } while (choice != "read" || choice != "write");
 
     // loop that keeps the game running, ends when the state is 8 aka. "End"
-    while (*Engine->getState() != 8)
+    while (*Engine->getState() != 8 && *Engine->getState() != -1)
     {
         Engine->Commands();
         string input = Engine->cp->getCommand();
 
+        // entering tournmanet mode
+        if (input == "tournament")
+        {
+            break;
+        }
+
         if (*Engine->getState() == 0)
         {
-
             Engine->cp->validate("CANNOT USE THE COMMAND. Start state does not support the command: ", input, "loadmap", false, [start_state](string input)
                                  { return start_state->StartInput(input); });
         }
@@ -707,15 +715,137 @@ void GameEngine::Play()
         }
     }
 
+    cout << "Lets process your inputs" << endl;
+    int M = 0, P = 0, G = 0, D = 0;
+    if (Engine->cp->tournamentValidation(M, P, G, D, "Your input is out of bounds"))
+    {
+        cout << "Tournament approved" << endl;
+    }
+
+    Map **maps = new Map *[M];
+    PlayerStrategy **players = new PlayerStrategy *[P];
+
+    cout << "Select your maps: " << endl;
+    for (int i = 0; i < M; i++)
+    {
+        string name;
+        cout << "Map " << i << " is: ";
+        cin >> name;
+        name = name + ".map";
+
+        MapLoader ml(name);
+
+        if (!ml.getMap()->validate())
+        {
+            cout << "Your map is invalid" << endl;
+            i--;
+        }
+        else
+        {
+            maps[i] = ml.getMap();
+        }
+    }
+
+    cout << "Select your players: " << endl;
+    for (int i = 0; i < P; i++)
+    {
+        string playertype;
+        cout << "Player " << i << " is: ";
+        cin >> playertype;
+        std::transform(playertype.begin(), playertype.end(), playertype.begin(), [](unsigned char c)
+                       { return std::tolower(c); });
+
+        if (playertype != "neutral" && playertype != "cheater" && playertype != "aggressive" && playertype != "benevolent")
+        {
+            cout << "Invalid Player" << endl;
+            i--;
+        }
+        else if (playertype == "neutral")
+        {
+            players[i] = new NeutralPlayerStrategy();
+        }
+        else if (playertype == "cheater")
+        {
+            players[i] = new CheaterPlayerStrategy();
+        }
+        else if (playertype == "aggressive")
+        {
+            players[i] = new AggressivePlayerStrategy();
+        }
+        else if (playertype == "benevolent")
+        {
+            players[i] = new BenevolentPlayerStrategy();
+        }
+    }
+
+    // to fix
+    for (int i = 0; i < M; i++)
+    {
+        // load the map
+        Territory *territories = maps[i]->getCountries();
+        Territory ***adjacencyMatrix = maps[i]->getAdjacencyMatrix();
+        int nbTerritories = *maps[i]->getNbTerritories(); // this breaks
+        cout << "Hello5";
+        Player *pArr[P];
+        cout << "Hello4";
+        for (int j = 0; j < G; j++)
+        {
+            for (int k = 0; k < P; k++)
+            {
+                cout << "Hello3";
+                pArr[k] = new Player(k, territories, nbTerritories, adjacencyMatrix, maps[i], 0, 0, nullptr);
+                pArr[k]->setStrategy(players[k]);
+                cout << "Hello2";
+                Engine->divideTerritories(nbTerritories, P, pArr, territories);
+            }
+            for (int w = 0; w < P; w++)
+            {
+                cout << "Hello1";
+                pArr[w]->printToAttToDef(pArr[w]->toDefArr);
+            }
+            exit(0);
+        }
+    }
+
+    // end of game, deleting all objects
     Engine->~GameEngine();
     start_state->~StartState();
-    map_loaded_state->~MapLoadedState();
-    map_validated_state->~MapValidatedState();
-    players_added_state->~PlayersAddedState();
-    assign_reinforcement_state->~AssignReinforcementState();
-    issue_order_state->~IssueOrderState();
-    execute_order_state->~ExecuteOrderState();
-    win_state->~WinState();
+
+    // todo: add a if nullprt skip
+
+    //  map_loaded_state->~MapLoadedState();
+    //  map_validated_state->~MapValidatedState();
+    //  players_added_state->~PlayersAddedState();
+    //  assign_reinforcement_state->~AssignReinforcementState();
+    //  issue_order_state->~IssueOrderState();
+    //  execute_order_state->~ExecuteOrderState();
+    //  win_state->~WinState();
+    exit(0);
+}
+
+// Helper function to seperate territories
+void GameEngine::divideTerritories(int nbTerritories, int P, Player **pArr, Territory *territories)
+{
+    int minTerritoriesPerPlayer = std::floor(nbTerritories / P);
+    int remainingTerritories = nbTerritories - (minTerritoriesPerPlayer * P);
+    int j = 0;
+
+    for (int i = 1; i <= P; i++)
+    {
+        int numTerritoriesForPlayer = minTerritoriesPerPlayer;
+        if (remainingTerritories > 0)
+        {
+            numTerritoriesForPlayer++;
+            remainingTerritories--;
+        }
+        // std::cout << "Player " << i << " gets " << numTerritoriesForPlayer << " territories." << std::endl;
+        for (int s = j; s < (j + numTerritoriesForPlayer); s++)
+        {
+            territories[s].setPosessor(*pArr[i]->getPlayerID());
+            territories[s].setNumberOfSoldiers(0);
+        }
+        j = j + numTerritoriesForPlayer;
+    }
 }
 
 // Getter for the private attribute state
@@ -743,6 +873,7 @@ void GameEngine::Commands()
     if (*current_state == 0)
     {
         std::cout << "\n1. loadmap" << std::endl;
+        std::cout << "2. tournament" << std::endl;
     }
     else if (*current_state == 1)
     {
@@ -790,6 +921,11 @@ bool StartState::StartInput(const std::string &input)
                   << std::endl;
         engine->TransitionTo(1);
         *engine->cp->state = 1;
+    }
+    else if (input == "tournament")
+    {
+        engine->TransitionTo(-1);
+        *engine->cp->state = -1;
     }
     else
     {
@@ -961,9 +1097,9 @@ bool WinState::WinInput(const std::string &input)
         *engine->cp->state = 8;
         std::cout << "\nThank you for playing!" << std::endl;
 
-        //Printing all commands stored by the Command Processor - FOR DEMO
+        // Printing all commands stored by the Command Processor - FOR DEMO
         cout << *engine->cp << endl;
-       
+
         exit(0);
     }
     else if (input == "play")
@@ -1002,7 +1138,7 @@ MainGameState::~MainGameState()
     engine = nullptr;
 }
 
-void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map)
+void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int D)
 {
     GameEngine *engine = new GameEngine();
     AssignReinforcementState *rein = new AssignReinforcementState(engine);
@@ -1012,7 +1148,8 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map)
     int nbTerritories = *map->getNbTerritories();
     bool isRunning = true;
     Deck *deck = new Deck();
-    while (isRunning)
+    int GameCounter = 0;
+    while (isRunning && GameCounter <= D)
     {
         int *num = new int(-1);
         for (int i = 0; i < nbOfPlayers; i++)
@@ -1063,5 +1200,6 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map)
         issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
         exec->executeOrderPhase(pArr, nbOfPlayers);
         delete num;
+        GameCounter++;
     }
 }

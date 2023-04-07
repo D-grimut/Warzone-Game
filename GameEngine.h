@@ -15,6 +15,7 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
+    void divideTerritories(int nbTerritories, int P, Player **pArr, Territory *territories);
 
     CommandProcessor *cp;
 
@@ -145,7 +146,7 @@ public:
     MainGameState(GameEngine *engine);
     ~MainGameState();
     MainGameState(const MainGameState &copy);
-    void mainGameLoop(Player *playerList[], int &nbOfPlayers, Map *map);
+    void mainGameLoop(Player *playerList[], int &nbOfPlayers, Map *map, int D);
 
 private:
     GameEngine *engine;

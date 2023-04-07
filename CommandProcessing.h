@@ -9,24 +9,24 @@ using namespace std;
 class Command
 {
 private:
-    string *commandType;        //Holds the command type
-    string *effect;             //Holds the command efect
+    string *commandType; // Holds the command type
+    string *effect;      // Holds the command efect
 
 public:
-    //Constructors and Destructor
+    // Constructors and Destructor
     Command();
     Command(string);
     Command(const Command &);
     ~Command();
 
-    //Setters and Getters for the commandType and effect
-    void setCommandType(string);    
+    // Setters and Getters for the commandType and effect
+    void setCommandType(string);
     string getCommandType();
 
     void saveEffect(string);
     string getEffect();
-   
-    //Assignment and insertion operators
+
+    // Assignment and insertion operators
     Command &operator=(const Command &);
     friend std::ostream &operator<<(std::ostream &strm, const Command &t);
 };
@@ -35,24 +35,24 @@ public:
 class CommandList
 {
 private:
-    Command **commands;     //Pointer array to store the commands
-    int *size;              //Size of the array
-    int *end;               //Pointer that holds the index of the cell ONE AFTER the last element in the array
-    void resize();          //Method to resize the array once we add an element beyond the size of the array
+    Command **commands; // Pointer array to store the commands
+    int *size;          // Size of the array
+    int *end;           // Pointer that holds the index of the cell ONE AFTER the last element in the array
+    void resize();      // Method to resize the array once we add an element beyond the size of the array
 
 public:
-    //Constructors
+    // Constructors
     CommandList();
     CommandList(int);
-    CommandList(CommandList*);
+    CommandList(CommandList *);
     ~CommandList();
 
-    void storeCommand(Command *);       //Adds a Command object into the array
-    int getSize();                      //Getter for size
-    int getEnd();                       //Getter to get the index of the end of the array    
-    Command *getAtIndex(int);           //Method to get the element at a given index, return null if out of bounds
+    void storeCommand(Command *); // Adds a Command object into the array
+    int getSize();                // Getter for size
+    int getEnd();                 // Getter to get the index of the end of the array
+    Command *getAtIndex(int);     // Method to get the element at a given index, return null if out of bounds
 
-    //Assignment and insertion operators
+    // Assignment and insertion operators
     CommandList &operator=(const CommandList &);
     friend std::ostream &operator<<(std::ostream &strm, const CommandList &cl);
 };
@@ -60,23 +60,25 @@ public:
 class CommandProcessor
 {
 protected:
-    CommandList *commandList;           //Dynimic array for Commands
-    virtual string readCommand();       //Method to read the command from the console
-    void saveCommand(string);           //Method that saves the command into the commandList array
+    CommandList *commandList;     // Dynimic array for Commands
+    virtual string readCommand(); // Method to read the command from the console
+    void saveCommand(string);     // Method that saves the command into the commandList array
 
 public:
-    int* state;                         //state of the game
-    //Constructors and Destructs
+    int *state; // state of the game
+    // Constructors and Destructs
     CommandProcessor();
     CommandProcessor(int);
-    CommandProcessor(CommandProcessor*);
+    CommandProcessor(CommandProcessor *);
     ~CommandProcessor();
 
-    string getCommand();                                                            //Method that reads a command from the console and saves it    
-    void validate(string, string, string, bool, function<bool(string)> func);       //Method that validates all user input that is passed by console
-    bool validate(Command &command, string effect);                      //Method to validate specific Command objects at specific states
+    string getCommand();                                                      // Method that reads a command from the console and saves it
+    void validate(string, string, string, bool, function<bool(string)> func); // Method that validates all user input that is passed by console
+    bool validate(Command &command, string effect);                           // Method to validate specific Command objects at specific states
+    bool tournamentValidation(int &M, int &P, int &G, int &D, string effect); // Method to validate tournament commands
+    bool validateRange(int L, int U, int i, string effect);                   // Method to validate the ranges of the tournament command
 
-    //Assignment and insertion operators
+    // Assignment and insertion operators
     CommandProcessor &operator=(const CommandProcessor &);
     friend std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cl);
 };

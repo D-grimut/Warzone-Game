@@ -76,17 +76,17 @@ CommandList::CommandList(int size)
     this->end = new int(0);
 }
 
-CommandList::CommandList(CommandList* cl)
+CommandList::CommandList(CommandList *cl)
 {
     this->size = new int(*cl->size);
     this->commands = new Command *[*this->size];
     this->end = new int(*cl->end);
 
-    for(int i = 0; i < *this->end; i++){
+    for (int i = 0; i < *this->end; i++)
+    {
         commands[i] = cl->commands[i];
     }
 }
-
 
 CommandList::~CommandList()
 {
@@ -149,26 +149,28 @@ Command *CommandList::getAtIndex(int index)
     }
 }
 
-CommandList& CommandList::operator=(const CommandList &c){
+CommandList &CommandList::operator=(const CommandList &c)
+{
     *this->size = *c.size;
     *this->end = *c.end;
 
-    for(int i = 0; i < *this->end; i++){
+    for (int i = 0; i < *this->end; i++)
+    {
         this->storeCommand(c.commands[i]);
-    }    
+    }
     return *this;
 }
 
 std::ostream &operator<<(std::ostream &strm, const CommandList &t)
 {
     string s = "";
-    for(int i = 0; i < *t.end; i++){
-       s +=  "Command Type: " + t.commands[i]->getCommandType() + ", Command Effect: " + t.commands[i]->getEffect() + "\n";
+    for (int i = 0; i < *t.end; i++)
+    {
+        s += "Command Type: " + t.commands[i]->getCommandType() + ", Command Effect: " + t.commands[i]->getEffect() + "\n";
     };
 
     return strm << s << endl;
 }
-
 
 /*---------CommandProcessor class---------*/
 CommandProcessor::CommandProcessor()
@@ -183,7 +185,7 @@ CommandProcessor::CommandProcessor(int size)
     this->state = new int(0);
 }
 
-CommandProcessor::CommandProcessor(CommandProcessor* cp)
+CommandProcessor::CommandProcessor(CommandProcessor *cp)
 {
     this->commandList = cp->commandList;
     this->state = new int(*cp->state);
@@ -195,7 +197,7 @@ CommandProcessor::~CommandProcessor()
     this->commandList = NULL;
 
     delete this->state;
-    this->state =NULL;
+    this->state = NULL;
 }
 
 string CommandProcessor::readCommand()
@@ -360,6 +362,51 @@ bool CommandProcessor::validate(Command &command, string effect)
     }
 }
 
+bool CommandProcessor::tournamentValidation(int &M, int &P, int &G, int &D, string effect)
+{
+    do
+    {
+        cout << "How many maps do you want: ";
+        cin >> M;
+
+    } while (!validateRange(1, 5, M, effect));
+
+    do
+    {
+        cout << "How many players do you want: ";
+        cin >> P;
+
+    } while (!validateRange(2, 4, P, effect));
+
+    do
+    {
+        cout << "How many games do you want: ";
+        cin >> G;
+
+    } while (!validateRange(1, 5, G, effect));
+
+    do
+    {
+        cout << "How many turns do you want: ";
+        cin >> D;
+
+    } while (!validateRange(10, 50, D, effect));
+
+    return true;
+}
+
+// helper function for the validation of the inputs for tournament
+bool CommandProcessor::validateRange(int L, int U, int i, string effect)
+{
+    if (i < L || i > U)
+    {
+        cout << effect << endl;
+        saveCommand(effect);
+        return false;
+    }
+    return true;
+}
+
 CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c)
 {
     this->commandList = c.commandList;
@@ -370,8 +417,9 @@ CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c)
 std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cp)
 {
     string s = "";
-    for(int i = 0; i < cp.commandList->getEnd(); i++){
-       s +=  "Command Type: " + cp.commandList->getAtIndex(i)->getCommandType() + ", Command Effect: " + cp.commandList->getAtIndex(i)->getEffect() + "\n";
+    for (int i = 0; i < cp.commandList->getEnd(); i++)
+    {
+        s += "Command Type: " + cp.commandList->getAtIndex(i)->getCommandType() + ", Command Effect: " + cp.commandList->getAtIndex(i)->getEffect() + "\n";
     };
 
     return strm << s << endl;

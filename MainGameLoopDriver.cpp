@@ -94,6 +94,6 @@ int main()
     // p4->initToAttack();
     // p4->initToDefend();
 
-    mgs->mainGameLoop(pArr, nbOfPlayers, map);
+    mgs->mainGameLoop(pArr, nbOfPlayers, map, 100);
     return 0;
 }
