@@ -1,5 +1,9 @@
+#pragma once
 #include <iostream>
 #include "Player.h"
+#include "CommandProcessing.h"
+
+class CommandProcessor;
 
 class GameEngine
 {
@@ -11,6 +15,8 @@ public:
     void Commands();                    // print the valid commands
     void TransitionTo(int state);       // transition function
     int *getState();                    // getter
+
+    CommandProcessor *cp;
 
 private:
     int *current_state; // current state : int or string?
@@ -32,7 +38,7 @@ public:
     StartState(GameEngine *engine);
     ~StartState();
     StartState(const StartState &copy);
-    void StartInput(const std::string &input);
+    bool StartInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -46,7 +52,7 @@ public:
     MapLoadedState(GameEngine *engine);
     ~MapLoadedState();
     MapLoadedState(const MapLoadedState &copy);
-    void MapLoadedInput(const std::string &input);
+    bool MapLoadedInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -59,7 +65,7 @@ public:
     MapValidatedState(GameEngine *engine);
     ~MapValidatedState();
     MapValidatedState(const MapValidatedState &copy);
-    void ValidateInput(const std::string &input);
+    bool ValidateInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -72,7 +78,7 @@ public:
     PlayersAddedState(GameEngine *engine);
     ~PlayersAddedState();
     PlayersAddedState(const PlayersAddedState &copy);
-    void PlayersAddedInput(const std::string &input);
+    bool PlayersAddedInput(const std::string &input);
 
 private:
     GameEngine *engine;
@@ -127,7 +133,7 @@ public:
     WinState(GameEngine *engine);
     ~WinState();
     WinState(const WinState &copy);
-    void WinInput(const std::string &input);
+    bool WinInput(const std::string &input);
 
 private:
     GameEngine *engine;

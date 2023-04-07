@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Orders.h"
 #include <cmath>
+#include "FileCommandProcessorAdapter.h"
 
 /*
 This section is for all the constructors used for each class
@@ -11,6 +12,7 @@ This section is for all the constructors used for each class
 // Constructor for game engine
 GameEngine::GameEngine()
 {
+    this->cp = new CommandProcessor();
     current_state = new int(0); // default: every user starts at current state 0 aka. "Start"
 }
 
@@ -19,12 +21,16 @@ GameEngine::~GameEngine()
 {
     delete current_state;
     current_state = nullptr;
+
+    delete cp;
+    cp = NULL;
 }
 
 // Copy constructor for game engine
 GameEngine::GameEngine(const GameEngine &copy)
 {
     current_state = new int(*(copy.current_state));
+    cp = copy.cp;
 }
 
 // Constructor for start state
@@ -624,44 +630,80 @@ void GameEngine::Play()
     ExecuteOrderState *execute_order_state = new ExecuteOrderState(Engine);
     WinState *win_state = new WinState(Engine);
 
+    string choice;
+    do
+    {
+        std::cout << "Would you like to read or write from file? (input should be the same as in question)" << std::endl;
+        choice = Engine->cp->getCommand();
+        if (choice == "read")
+        {
+            FileCommandProcessorAdapter *pc = new FileCommandProcessorAdapter("commands.txt");
+            string s = "";
+            while(s != "EOF"){
+                s = pc->readCommand();
+                cout << s << endl;
+            }
+            //Printing all commands stored by the Command Processor - FOR DEMO
+            cout << *pc << endl;
+
+            break;
+        }
+        else if (choice == "write")
+        {
+            break;
+        }
+        else
+        {
+            std::cout << "Incorrect Input" << std::endl;
+        }
+    } while (choice != "read" || choice != "write");
+
     // loop that keeps the game running, ends when the state is 8 aka. "End"
     while (*Engine->getState() != 8)
     {
         Engine->Commands();
-        std::cout << "Your move: ";
-        std::string input;
-        std::cin >> input;
+        string input = Engine->cp->getCommand();
+
         if (*Engine->getState() == 0)
         {
-            start_state->StartInput(input);
+
+            Engine->cp->validate("CANNOT USE THE COMMAND. Start state does not support the command: ", input, "loadmap", false, [start_state](string input)
+                                 { return start_state->StartInput(input); });
         }
         else if (*Engine->getState() == 1)
         {
-            map_loaded_state->MapLoadedInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Map Load state does not support the command: ", input, "validatemap", true, [map_loaded_state](string input)
+                                 { return map_loaded_state->MapLoadedInput(input); });
         }
         else if (*Engine->getState() == 2)
         {
-            map_validated_state->ValidateInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Validate Map state does not support the command: ", input, "addplayer", false, [map_validated_state](string input)
+                                 { return map_validated_state->ValidateInput(input); });
         }
         else if (*Engine->getState() == 3)
         {
-            players_added_state->PlayersAddedInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Add Player state does not support the command: ", input, "assigncountries", true, [players_added_state](string input)
+                                 { return players_added_state->PlayersAddedInput(input); });
         }
         else if (*Engine->getState() == 4)
         {
-            assign_reinforcement_state->AssignReinforcementsInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Assign Reinforcements state does not support the command: ", input, "issueorder", false, [assign_reinforcement_state](string input)
+                                 { return assign_reinforcement_state->AssignReinforcementsInput(input); });
         }
         else if (*Engine->getState() == 5)
         {
-            issue_order_state->IssueOrderInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Issue Order state does not support the command: ", input, "endissueorders", true, [issue_order_state](string input)
+                                 { return issue_order_state->IssueOrderInput(input); });
         }
         else if (*Engine->getState() == 6)
         {
-            execute_order_state->ExecuteOrderInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Execute Order state does not support the command: ", input, "win endexecorders", true, [execute_order_state](string input)
+                                 { return execute_order_state->ExecuteOrderInput(input); });
         }
         else if (*Engine->getState() == 7)
         {
-            win_state->WinInput(input);
+            Engine->cp->validate("CANNOT USE THE COMMAND. Win state does not support the command: ", input, "play", false, [win_state](string input)
+                                 { return win_state->WinInput(input); });
         }
     }
 
@@ -691,7 +733,7 @@ int *GameEngine::getState()
 // Function that will change the state of the game
 void GameEngine::TransitionTo(int state)
 {
-    current_state = new int(state);
+    *current_state = state;
 }
 
 //  shows valid game engine commands for each state
@@ -739,176 +781,160 @@ void GameEngine::Commands()
 }
 
 // Checks for the input in start state
-void StartState::StartInput(const std::string &input)
+bool StartState::StartInput(const std::string &input)
 {
+
     if (input == "loadmap")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(1);
+        *engine->cp->state = 1;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        StartInput(temp);
+        return false;
     }
+    return true;
 }
 
 // Checks for the input in Map load state
-void MapLoadedState::MapLoadedInput(const std::string &input)
+bool MapLoadedState::MapLoadedInput(const std::string &input)
 {
     if (input == "validatemap")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(2);
+        *engine->cp->state = 2;
     }
     else if (input == "loadmap")
     {
         std::cout << "\nMap loaded\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        MapLoadedInput(temp);
+        return true;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        MapLoadedInput(temp);
+        return false;
     }
+    return true;
 }
 
 // Checks for the input in Map validate state
-void MapValidatedState::ValidateInput(const std::string &input)
+bool MapValidatedState::ValidateInput(const std::string &input)
 {
     if (input == "addplayer")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(3);
+        *engine->cp->state = 3;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        ValidateInput(temp);
+        return false;
     }
+    return true;
 }
 
 // Checks for the input in Player Added state
-void PlayersAddedState::PlayersAddedInput(const std::string &input)
+bool PlayersAddedState::PlayersAddedInput(const std::string &input)
 {
     if (input == "assigncountries")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(4);
+        *engine->cp->state = 4;
     }
     else if (input == "addplayer")
     {
         std::cout << "\nPlayer added\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        PlayersAddedInput(temp);
+        return true;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        PlayersAddedInput(temp);
+        return false;
     }
+    return true;
 }
 
-void AssignReinforcementState::AssignReinforcementsInput(const std::string &input)
+bool AssignReinforcementState::AssignReinforcementsInput(const std::string &input)
 {
     if (input == "issueorder")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(5);
+        *engine->cp->state = 5;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        AssignReinforcementsInput(temp);
+        return false;
     }
+    return true;
 }
 
-void IssueOrderState::IssueOrderInput(const std::string &input)
+bool IssueOrderState::IssueOrderInput(const std::string &input)
 {
     if (input == "endissueorders")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(6);
+        *engine->cp->state = 6;
     }
     else if (input == "issueorder")
     {
         std::cout << "\nOrder issued\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        IssueOrderInput(temp);
+        return true;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        IssueOrderInput(temp);
+        return false;
     }
+    return true;
 }
 
-void ExecuteOrderState::ExecuteOrderInput(const std::string &input)
+bool ExecuteOrderState::ExecuteOrderInput(const std::string &input)
 {
     if (input == "win")
     {
         std::cout << "\nSuccess!\n"
                   << std::endl;
         engine->TransitionTo(7);
+        *engine->cp->state = 7;
     }
     else if (input == "execorder")
     {
         std::cout << "\nOrder executed\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        ExecuteOrderInput(temp);
+        return true;
     }
     else if (input == "endexecorders")
     {
@@ -921,37 +947,40 @@ void ExecuteOrderState::ExecuteOrderInput(const std::string &input)
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        ExecuteOrderInput(temp);
+        return false;
     }
+    return true;
 }
 
 // TODO: finish the win input
-void WinState::WinInput(const std::string &input)
+bool WinState::WinInput(const std::string &input)
 {
     if (input == "end")
     {
         engine->TransitionTo(8);
+        *engine->cp->state = 8;
         std::cout << "\nThank you for playing!" << std::endl;
+
+        //Printing all commands stored by the Command Processor - FOR DEMO
+        cout << *engine->cp << endl;
+       
         exit(0);
     }
     else if (input == "play")
     {
         engine->TransitionTo(0);
+        *engine->cp->state = 0;
         std::cout << "\n Back to the start." << std::endl;
+        return true;
     }
     else
     {
         std::cout << "\nInvalid command\n"
                   << std::endl;
         engine->Commands();
-        std::cout << "Your move: ";
-        std::string temp;
-        std::cin >> temp;
-        WinInput(temp);
+        return false;
     }
+    return true;
 }
 
 // Constructor for issue order state

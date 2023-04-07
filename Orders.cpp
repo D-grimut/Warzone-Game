@@ -987,17 +987,15 @@ void OrdersList::addOrder(Order *newOrder, int position)
     *this->end = *this->end + 1;
 }
 
-void OrdersList::resize()
-{
-    int *newSize = new int(*getSize() * 2);
-    Order **newArr = new Order *[*newSize];
-    for (int i = 0; i <= *getSize(); i++)
-    {
+void OrdersList::resize(){
+    int newSize = *getSize() * 2;
+    Order** newArr = new Order*[newSize];
+    for(int i = 0; i < *getSize(); i++){
         newArr[i] = orders[i];
     }
 
-    setSize(newSize);
-    delete[] orders;
+    setSize(&newSize);
+    delete [] orders;
     orders = newArr;
 }
 
