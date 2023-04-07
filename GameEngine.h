@@ -91,7 +91,7 @@ public:
     AssignReinforcementState(GameEngine *engine);
     ~AssignReinforcementState();
     AssignReinforcementState(const AssignReinforcementState &copy);
-    void AssignReinforcementsInput(const std::string &input);
+    bool AssignReinforcementsInput(const std::string &input);
     void reinforcementPhase(Player *playerList[], int nbOfPlayers);
 
 private:
@@ -105,7 +105,7 @@ public:
     IssueOrderState(GameEngine *engine);
     ~IssueOrderState();
     IssueOrderState(const IssueOrderState &copy);
-    void IssueOrderInput(const std::string &input);
+    bool IssueOrderInput(const std::string &input);
     void issueOrdersPhase(Player *playerList[], int nbOfPlayers, Deck *&deck);
 
 private:
@@ -119,7 +119,7 @@ public:
     ExecuteOrderState(GameEngine *engine);
     ~ExecuteOrderState();
     ExecuteOrderState(const ExecuteOrderState &copy);
-    void ExecuteOrderInput(const std::string &input);
+    bool ExecuteOrderInput(const std::string &input);
     void executeOrderPhase(Player *playerList[], int nbOfPlayers);
 
 private:

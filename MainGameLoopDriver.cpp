@@ -32,7 +32,7 @@ int main()
     // Player *p4 = new Player(3, territories, nbTerritories, adjacencyMatrix, map, 0, 0, &gotCard);
 
     PlayerStrategy *ps1 = new AggressivePlayerStrategy();
-    PlayerStrategy *ps2 = new NeutralPlayerStrategy();
+    PlayerStrategy *ps2 = new BenevolentPlayerStrategy();
     // PlayerStrategy *ps3 = new CheaterPlayerStrategy();
     // PlayerStrategy *ps4 = new BenevolentPlayerStrategy();
 
