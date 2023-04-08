@@ -723,7 +723,15 @@ void GameEngine::Play()
     }
 
     Map **maps = new Map *[M];
+    for (int i = 0; i < M; i++)
+    {
+        maps[i] = nullptr;
+    }
     PlayerStrategy **players = new PlayerStrategy *[P];
+    for (int i = 0; i < P; i++)
+    {
+        players[i] = nullptr;
+    }
 
     cout << "Select your maps: " << endl;
     for (int i = 0; i < M; i++)
@@ -742,7 +750,7 @@ void GameEngine::Play()
         }
         else
         {
-            maps[i] = ml.getMap();
+            maps[i] = new Map(*ml.getMap()); // fixed problem
         }
     }
 
@@ -778,32 +786,28 @@ void GameEngine::Play()
         }
     }
 
-    // to fix
+    // to fix and we found out that it breaks when you enter an incorrect map name
     for (int i = 0; i < M; i++)
     {
         // load the map
         Territory *territories = maps[i]->getCountries();
         Territory ***adjacencyMatrix = maps[i]->getAdjacencyMatrix();
-        int nbTerritories = *maps[i]->getNbTerritories(); // this breaks
-        cout << "Hello5";
+        int nbTerritories = *maps[i]->getNbTerritories();
         Player *pArr[P];
-        cout << "Hello4";
+
+        // this logic is iffy to me
         for (int j = 0; j < G; j++)
         {
             for (int k = 0; k < P; k++)
             {
-                cout << "Hello3";
                 pArr[k] = new Player(k, territories, nbTerritories, adjacencyMatrix, maps[i], 0, 0, nullptr);
                 pArr[k]->setStrategy(players[k]);
-                cout << "Hello2";
-                Engine->divideTerritories(nbTerritories, P, pArr, territories);
             }
+            Engine->divideTerritories(nbTerritories, P, pArr, territories);
             for (int w = 0; w < P; w++)
             {
-                cout << "Hello1";
-                pArr[w]->printToAttToDef(pArr[w]->toDefArr);
+                pArr[w]->printToAttToDef(pArr[w]->toDefArr); // does not print anything
             }
-            exit(0);
         }
     }
 
@@ -830,7 +834,7 @@ void GameEngine::divideTerritories(int nbTerritories, int P, Player **pArr, Terr
     int remainingTerritories = nbTerritories - (minTerritoriesPerPlayer * P);
     int j = 0;
 
-    for (int i = 1; i <= P; i++)
+    for (int i = 0; i < P; i++)
     {
         int numTerritoriesForPlayer = minTerritoriesPerPlayer;
         if (remainingTerritories > 0)
@@ -838,7 +842,6 @@ void GameEngine::divideTerritories(int nbTerritories, int P, Player **pArr, Terr
             numTerritoriesForPlayer++;
             remainingTerritories--;
         }
-        // std::cout << "Player " << i << " gets " << numTerritoriesForPlayer << " territories." << std::endl;
         for (int s = j; s < (j + numTerritoriesForPlayer); s++)
         {
             territories[s].setPosessor(*pArr[i]->getPlayerID());
