@@ -15,7 +15,7 @@ class Order
 {
 public:
     Order();
-    ~Order();
+    virtual ~Order();
     Order(const Order &e);            // copy constructor
     Order &operator=(const Order &e); // asignmnet operator
     virtual bool validate();          // Validate boolean, (virtual for polymorphism)

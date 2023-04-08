@@ -424,3 +424,28 @@ std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cp)
 
     return strm << s << endl;
 }
+
+bool CommandProcessor::playerValidate(string playertype)
+{
+    if (playertype != "neutral" && playertype != "cheater" && playertype != "aggressive" && playertype != "benevolent")
+    {
+        cout << "Invalid Player" << endl;
+        return false;
+    }
+    return true;
+}
+
+bool CommandProcessor::mapValidate(MapLoader &ml, string filename)
+{
+    ifstream file(filename);
+
+    if (!file.good())
+    {
+        return false;
+    }
+    else if (!ml.getMap()->validate())
+    {
+        return false;
+    }
+    return true;
+}

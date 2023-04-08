@@ -29,7 +29,8 @@ Order::Order(const Order &e)
 /*Destructor*/
 Order::~Order()
 {
-    delete this;
+    delete name;
+    name = nullptr;
 }
 
 /*Assignment Operator*/
@@ -86,7 +87,11 @@ Deploy::Deploy(const Deploy &e) : Order(e)
 /*Destructor*/
 Deploy::~Deploy()
 {
-    delete this;
+    delete target;
+    target = nullptr;
+    delete armies;
+    armies = nullptr;
+    player = nullptr;
 }
 
 /* Getters */
@@ -202,7 +207,15 @@ Advance::Advance(const Advance &e) : Order(e)
 /*Destructor*/
 Advance::~Advance()
 {
-    delete this;
+    delete source;
+    source = nullptr;
+    delete target;
+    target = nullptr;
+    delete armies;
+    armies = nullptr;
+    player = nullptr;
+    delete enemy;
+    enemy = nullptr;
 }
 
 /* Getters */
@@ -430,7 +443,11 @@ Bomb::Bomb(const Bomb &e) : Order(e)
 /*Destructor*/
 Bomb::~Bomb()
 {
-    delete this;
+    delete target;
+    target = nullptr;
+    delete source;
+    source = nullptr;
+    player = nullptr;
 }
 
 /* Getters */
@@ -563,7 +580,9 @@ Blockade::Blockade(const Blockade &e) : Order(e)
 /*Destructor*/
 Blockade::~Blockade()
 {
-    delete this;
+    delete target;
+    target = nullptr;
+    player = nullptr;
 }
 
 /* Getters */
@@ -677,7 +696,13 @@ Airlift::Airlift(const Airlift &e) : Order(e)
 /*Destructor*/
 Airlift::~Airlift()
 {
-    delete this;
+    delete source;
+    source = nullptr;
+    delete target;
+    target = nullptr;
+    delete armies;
+    armies = nullptr;
+    player = nullptr;
 }
 
 /* Getters */
@@ -816,7 +841,11 @@ Negotiate::Negotiate(const Negotiate &e) : Order(e)
 /*Destructor*/
 Negotiate::~Negotiate()
 {
-    delete this;
+    delete target;
+    target = nullptr;
+    delete enemy;
+    enemy = nullptr;
+    player = nullptr;
 }
 
 /* Getters */
@@ -953,6 +982,11 @@ OrdersList::OrdersList(const OrdersList &e)
 /*Destructor*/
 OrdersList::~OrdersList()
 {
+    for (int i = 0; i < *this->end; i++)
+    {
+        delete orders[i];
+        orders[i] = nullptr;
+    }
     delete[] orders;
     orders = nullptr;
 }
@@ -987,15 +1021,17 @@ void OrdersList::addOrder(Order *newOrder, int position)
     *this->end = *this->end + 1;
 }
 
-void OrdersList::resize(){
+void OrdersList::resize()
+{
     int newSize = *getSize() * 2;
-    Order** newArr = new Order*[newSize];
-    for(int i = 0; i < *getSize(); i++){
+    Order **newArr = new Order *[newSize];
+    for (int i = 0; i < *getSize(); i++)
+    {
         newArr[i] = orders[i];
     }
 
     setSize(&newSize);
-    delete [] orders;
+    delete[] orders;
     orders = newArr;
 }
 

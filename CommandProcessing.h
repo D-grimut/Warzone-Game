@@ -77,6 +77,8 @@ public:
     bool validate(Command &command, string effect);                           // Method to validate specific Command objects at specific states
     bool tournamentValidation(int &M, int &P, int &G, int &D, string effect); // Method to validate tournament commands
     bool validateRange(int L, int U, int i, string effect);                   // Method to validate the ranges of the tournament command
+    bool playerValidate(string playertype);
+    bool mapValidate(MapLoader &ml, string filename);
 
     // Assignment and insertion operators
     CommandProcessor &operator=(const CommandProcessor &);

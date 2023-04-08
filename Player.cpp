@@ -82,37 +82,34 @@ Player::Player(const Player &p)
 Player::~Player()
 {
     delete this->playerID;
-    this->playerID = NULL;
+    this->playerID = nullptr;
 
     delete this->territories;
-    this->territories = NULL;
+    this->territories = nullptr;
 
     delete this->ol;
-    this->ol = NULL;
+    this->ol = nullptr;
 
     delete this->nbOfTerritories;
-    this->nbOfTerritories = NULL;
+    this->nbOfTerritories = nullptr;
 
     delete this->ordersIndex;
-    this->ordersIndex = NULL;
+    this->ordersIndex = nullptr;
 
     delete this->toDefArr;
-    this->toDefArr = NULL;
+    this->toDefArr = nullptr;
 
     delete this->toAttArr;
-    this->toAttArr = NULL;
-
-    delete this->adjacencyMatrix;
-    this->adjacencyMatrix = NULL;
+    this->toAttArr = nullptr;
 
     delete this->map;
-    this->map = NULL;
+    this->map = nullptr;
 
     delete this->cards;
-    this->cards = NULL;
+    this->cards = nullptr;
 
     delete this->reinforcementPool;
-    this->reinforcementPool = NULL;
+    this->reinforcementPool = nullptr;
 }
 
 // Method to show owned Territories that the player owns

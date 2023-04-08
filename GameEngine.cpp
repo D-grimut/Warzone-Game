@@ -297,15 +297,32 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck *&d
 
                 bool foundEnemy = false;
 
+                // for (int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++)
+                // {
+                //     if (pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0]))
+                //     {
+
+                //         pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);
+                //         foundEnemy = true;
+                //         break;
+                //     }
+                // }
+
                 for (int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++)
                 {
-                    if (pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0]))
+                    // should we increase the toDefend?
+                    for (int k = 0; k < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefend()); k++)
                     {
-
-                        pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);
-                        foundEnemy = true;
-                        break;
+                        if (pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[k]))
+                        {
+                            cout << k << " " << j << endl;
+                            pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[k].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[k], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);
+                            foundEnemy = true;
+                            break;
+                        }
                     }
+                    if (foundEnemy == true)
+                        break;
                 }
 
                 if (!foundEnemy)
@@ -744,15 +761,15 @@ void GameEngine::Play()
         MapLoader ml(name);
 
         // this should be in command processing
-        if (!ml.getMap()->validate())
+        if (!Engine->cp->mapValidate(ml, name))
         {
-            cout << "Your map is invalid" << endl;
             i--;
         }
         else
         {
-            maps[i] = new Map(*ml.getMap()); // fixed problem
+            maps[i] = new Map(*ml.getMap());
         }
+        cout << i;
     }
 
     cout << "Select your players: " << endl;
@@ -764,10 +781,8 @@ void GameEngine::Play()
         std::transform(playertype.begin(), playertype.end(), playertype.begin(), [](unsigned char c)
                        { return std::tolower(c); });
 
-        // this part needs to be in command processing
-        if (playertype != "neutral" && playertype != "cheater" && playertype != "aggressive" && playertype != "benevolent")
+        if (!Engine->cp->playerValidate(playertype))
         {
-            cout << "Invalid Player" << endl;
             i--;
         }
         else if (playertype == "neutral")
@@ -800,25 +815,30 @@ void GameEngine::Play()
 
         for (int j = 0; j < G; j++)
         {
-            cout << "GAME " << j << " HAS STARTED" << endl;
+            cout << "GAME " << j + 1 << " HAS STARTED" << endl;
             for (int k = 0; k < P; k++)
             {
                 pArr[k] = new Player(k, territories, nbTerritories, adjacencyMatrix, maps[i], 0, 0, nullptr);
                 pArr[k]->setStrategy(players[k]);
             }
             Engine->divideTerritories(nbTerritories, P, pArr, territories);
-            for (int w = 0; w < P; w++)
-            {
-                pArr[w]->printToAttToDef(pArr[w]->toDefArr); // does not print anything
-            }
             for (int s = 0; s < P; s++)
             {
                 pArr[s]->initToAttack();
                 pArr[s]->initToDefend();
             }
             mgs->mainGameLoop(pArr, P, maps[i], D);
-            cout << "GAME " << j << " HAS ENDED" << endl;
-        } // code breaks after the first game plays
+            cout << "GAME " << j + 1 << " HAS ENDED" << endl;
+            for (int y = 0; y < nbTerritories; y++)
+            {
+                territories[y].setPosessor(-1);
+            }
+            // for (int w = 0; w < P; w++)
+            // {
+            //     delete pArr[w];
+            //     pArr[w] = nullptr;
+            // }
+        }
     }
 
     // end of game, deleting all objects
@@ -1164,32 +1184,46 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
     int GameCounter = 0;
     while (isRunning && GameCounter <= D)
     {
+        cout << "Hello 1" << endl;
         int *num = new int(-1);
         for (int i = 0; i < nbOfPlayers; i++)
         {
+            cout << i << endl;
+            cout << "Hello 2" << endl;
             if (*pArr[i]->getPlayerID() < 0)
             {
+                cout << "Hello 3.1" << endl;
                 continue;
             }
+            cout << "Hello 3.7" << endl;
             Territory *toDef = pArr[i]->toDefend();
+            cout << "Hello 3.9" << endl;
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
+            cout << "Hello 3.2" << endl;
             if (nbOfToDef == nbTerritories)
             {
+                cout << "Hello 3.3" << endl;
                 cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                 isRunning = false;
-                engine->TransitionTo(8);
-                exit(0);
+                // engine->TransitionTo(8);
+                //  exit(0);
+                return;
             }
             else if (*pArr[i]->getPlayerID() < 0)
             {
+                cout << "Hello 3.4" << endl;
                 continue;
             }
             else if (nbOfToDef == 0)
             {
+                cout << "Hello 3.5" << endl;
                 cout << "Player " << *pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
                 pArr[i]->setPlayerID(num);
+                cout << "Hello 3.6" << endl;
             }
+            cout << "Hello 3" << endl;
         }
+        cout << "Hello 4" << endl;
         int counter = 0;
         for (int i = 0; i < nbOfPlayers; i++)
         {
@@ -1198,6 +1232,7 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
                 counter++;
             }
         }
+        cout << "Hello 5" << endl;
         if (counter == nbOfPlayers - 1)
         {
             for (int i = 0; i < nbOfPlayers; i++)
@@ -1207,7 +1242,8 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
                     cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                 }
             }
-            exit(0);
+            // exit(0);
+            return;
         }
         rein->reinforcementPhase(pArr, nbOfPlayers);
         issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
