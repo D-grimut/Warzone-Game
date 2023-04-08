@@ -743,6 +743,7 @@ void GameEngine::Play()
 
         MapLoader ml(name);
 
+        // this should be in command processing
         if (!ml.getMap()->validate())
         {
             cout << "Your map is invalid" << endl;
@@ -763,6 +764,7 @@ void GameEngine::Play()
         std::transform(playertype.begin(), playertype.end(), playertype.begin(), [](unsigned char c)
                        { return std::tolower(c); });
 
+        // this part needs to be in command processing
         if (playertype != "neutral" && playertype != "cheater" && playertype != "aggressive" && playertype != "benevolent")
         {
             cout << "Invalid Player" << endl;
@@ -787,6 +789,7 @@ void GameEngine::Play()
     }
 
     // to fix and we found out that it breaks when you enter an incorrect map name
+    MainGameState *mgs = new MainGameState(Engine);
     for (int i = 0; i < M; i++)
     {
         // load the map
@@ -795,9 +798,9 @@ void GameEngine::Play()
         int nbTerritories = *maps[i]->getNbTerritories();
         Player *pArr[P];
 
-        // this logic is iffy to me
         for (int j = 0; j < G; j++)
         {
+            cout << "GAME " << j << " HAS STARTED" << endl;
             for (int k = 0; k < P; k++)
             {
                 pArr[k] = new Player(k, territories, nbTerritories, adjacencyMatrix, maps[i], 0, 0, nullptr);
@@ -808,7 +811,14 @@ void GameEngine::Play()
             {
                 pArr[w]->printToAttToDef(pArr[w]->toDefArr); // does not print anything
             }
-        }
+            for (int s = 0; s < P; s++)
+            {
+                pArr[s]->initToAttack();
+                pArr[s]->initToDefend();
+            }
+            mgs->mainGameLoop(pArr, P, maps[i], D);
+            cout << "GAME " << j << " HAS ENDED" << endl;
+        } // code breaks after the first game plays
     }
 
     // end of game, deleting all objects
