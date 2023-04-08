@@ -40,7 +40,6 @@ Map::Map(const Map &og)
     this->nbContinents = new int(*og.nbContinents);
     this->adjacencyMatrix = new Territory **[*nbTeritories];
     this->countries = new Territory[*nbTeritories];
-
     // Creating new adjacency matrix
     for (int i = 0; i < *nbTeritories; i++)
     {
@@ -328,14 +327,21 @@ MapLoader::MapLoader(string fileName)
 // Map Loader destructor
 MapLoader::~MapLoader()
 {
-    delete this->nbContinents;
-    this->nbContinents = NULL;
+    if (*this->nbTeritories <= 0 || *this->nbContinents <= 0)
+    {
+    }
+    else
+    {
 
-    delete this->nbTeritories;
-    this->nbTeritories = NULL;
+        delete this->nbContinents;
+        this->nbContinents = NULL;
 
-    delete this->map;
-    this->map = NULL;
+        delete this->nbTeritories;
+        this->nbTeritories = NULL;
+
+        delete this->map;
+        this->map = NULL;
+    }
 }
 
 // Helper method to count a certain type of entities in the .map file

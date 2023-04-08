@@ -758,18 +758,19 @@ void GameEngine::Play()
         cin >> name;
         name = name + ".map";
 
+        // MapLoader *ml = new MapLoader(name);
         MapLoader ml(name);
 
         // this should be in command processing
         if (!Engine->cp->mapValidate(ml, name))
         {
             i--;
+            // delete ml;
         }
         else
         {
             maps[i] = new Map(*ml.getMap());
         }
-        cout << i;
     }
 
     cout << "Select your players: " << endl;
