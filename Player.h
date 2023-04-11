@@ -15,82 +15,84 @@ class Hand;
 class Deck;
 class Orders;
 
-class Player{
-    private:        
-        int* playerID;                  // The player's ID       
-        OrdersList* ol;                 // List of Orders       
-        int* ordersIndex;               // Index of Orders 
-        int* sizeOfHand;
-        Hand* cards;                    // List Of Cards
-        int* reinforcementPool;
-        int* negotiateId;
-        bool* gotCard;
-        // int* tInNa, tInSa, tInEu, tInAf, tInAs, tInOc;
-        friend std::ostream& operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
+class Player
+{
+private:
+    int *playerID;    // The player's ID
+    OrdersList *ol;   // List of Orders
+    int *ordersIndex; // Index of Orders
+    int *sizeOfHand;
+    Hand *cards; // List Of Cards
+    int *reinforcementPool;
+    int *negotiateId;
+    bool *gotCard;
+    // int* tInNa, tInSa, tInEu, tInAf, tInAs, tInOc;
+    friend std::ostream &operator<<(std::ostream &strm, const Player &p); // Stream insertion operator
 
-    public:
-        // Constructor with parameters, default constructor, and destructor
-        Player(int playerID, Territory* territories, int nbTerritories, Territory*** adjacencyMatrix, Map* map, int reinforcementPool, int negotiateId, bool* gotCard);
-        Player();
-        Player(const Player&);
-        ~Player();
+public:
+    // Constructor with parameters, default constructor, and destructor
+    Player(int playerID, Territory *territories, int nbTerritories, Territory ***adjacencyMatrix, Map *map, int reinforcementPool, int negotiateId, bool *gotCard);
+    Player();
+    Player(const Player &);
+    ~Player();
 
-        // Methods
-        void ownedTerritories();                     // Show all owned territories
-        void issueOrder(string orderName, int* nbOfArmies, Territory* targetTerr, Territory* sourceTerr, Player* enemy, Player* thisPlayer, Deck *&deck);           // Create order and add it to array of orders
-        Territory* toDefend();                       // Show territories to defend
-        Territory* initToDefend();
-        Territory* toAttack();  
-        Territory* initToAttack();                      // Show territories to attack
-        Territory* toDefArr;                            // Array of Territories to defend
-        Territory* toAttArr;                            // Array of Territories to attack
-        int* nbOfTerritories;                           // Number of Territories
-        Territory* territories;                         // Array of Territories
-        Territory*** adjacencyMatrix;                   // 2D-array of territories
-        Map* map;                                       // Map object
-        PlayerStrategy* strat;                          //Player Strategy
-        void printCards();
-        int nbTerritories();
-        void printToAttToDef(Territory* arrOfDefOrAtt);
-        int nbOfTerToAttToDef(Territory* arrOfDefOrAtt);
+    // Methods
+    void ownedTerritories();                                                                                                                          // Show all owned territories
+    void issueOrder(string orderName, int *nbOfArmies, Territory *targetTerr, Territory *sourceTerr, Player *enemy, Player *thisPlayer, Deck *&deck); // Create order and add it to array of orders
+    Territory *toDefend();                                                                                                                            // Show territories to defend
+    Territory *initToDefend();
+    Territory *toAttack();
+    Territory *initToAttack();    // Show territories to attack
+    Territory *toDefArr;          // Array of Territories to defend
+    Territory *toAttArr;          // Array of Territories to attack
+    int *nbOfTerritories;         // Number of Territories
+    Territory *territories;       // Array of Territories
+    Territory ***adjacencyMatrix; // 2D-array of territories
+    Map *map;                     // Map object
+    PlayerStrategy *strat;        // Player Strategy
+    void printCards();
+    int nbTerritories();
+    void printToAttToDef(Territory *arrOfDefOrAtt);
+    int nbOfTerToAttToDef(Territory *arrOfDefOrAtt);
 
-        // Setters
-        void setPlayerID(int* playerID);
-        void setTerritories(Territory territories);
-        void setOl(OrdersList ol);
-        void setNbOfTerritories(int nbOfTerritories);
-        void setOrdersIndex(int ordersIndex);
-        void setToDefArr(Territory* toDefArr);
-        void setToAttArr(Territory* toAttArr);
-        void setAdjacencyMatrix(Territory** adjacencyMatrix);
-        void setMap(Map map);
-        void setCards(Hand cards);
-        void setReinforcementPool(int reinforcementPool);
-        void setNegotiateID(int* negotiateId);
-        void setGotCard(bool gotCard);
-        void setStrategy(PlayerStrategy* ps);
+    // Setters
+    void setPlayerID(int *playerID);
+    void setTerritories(Territory territories);
+    void setOl(OrdersList ol);
+    void setNbOfTerritories(int nbOfTerritories);
+    void setOrdersIndex(int ordersIndex);
+    void setToDefArr(Territory *toDefArr);
+    void setToAttArr(Territory *toAttArr);
+    void setAdjacencyMatrix(Territory **adjacencyMatrix);
+    void setMap(Map map);
+    void setCards(Hand cards);
+    void setReinforcementPool(int reinforcementPool);
+    void setNegotiateID(int *negotiateId);
+    void setGotCard(bool gotCard);
+    void setStrategy(PlayerStrategy *ps);
 
-        // Getters
-        int* getPlayerID();
-        OrdersList* getOrdersList();
-        Hand* getCards();
-        int getSizeOfHand();
-        int getReinforcementPool();
-        int getOrdersIndex();
-        int* getNegotiateID();
-        bool getGotCard();
-        Map* getMap();
-        Player& operator=(const Player& p);
+    // Getters
+    int *getPlayerID();
+    OrdersList *getOrdersList();
+    Hand *getCards();
+    int getSizeOfHand();
+    int getReinforcementPool();
+    int getOrdersIndex();
+    int *getNegotiateID();
+    bool getGotCard();
+    Map *getMap();
+    Player &operator=(const Player &p);
 };
 
-class PlayerDriver{
-    private:
-        Player* player;         // Player object
-        Territory* territories; // Array of territories
+class PlayerDriver
+{
+private:
+    Player *player;         // Player object
+    Territory *territories; // Array of territories
 
-    public:
-        // Constructor with parameters, default constructor, and destructor
-        PlayerDriver(Player player);
-        PlayerDriver();
-        ~PlayerDriver();
+public:
+    // Constructor with parameters, default constructor, and destructor
+    PlayerDriver(Player player);
+    PlayerDriver();
+    ~PlayerDriver();
 };

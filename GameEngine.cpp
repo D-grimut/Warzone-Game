@@ -310,12 +310,10 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck *&d
 
                 for (int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++)
                 {
-                    // should we increase the toDefend?
                     for (int k = 0; k < pArr[i]->nbOfTerToAttToDef(pArr[i]->toDefend()); k++)
                     {
                         if (pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[k]))
                         {
-                            cout << k << " " << j << endl;
                             pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[k].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[k], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);
                             foundEnemy = true;
                             break;
@@ -806,6 +804,7 @@ void GameEngine::Play()
 
     // to fix and we found out that it breaks when you enter an incorrect map name
     MainGameState *mgs = new MainGameState(Engine);
+    Player *pArr[P];
     string output[M][G];
     int pos = 0;
     for (int i = 0; i < M; i++)
@@ -814,7 +813,6 @@ void GameEngine::Play()
         Territory *territories = maps[i]->getCountries();
         Territory ***adjacencyMatrix = maps[i]->getAdjacencyMatrix();
         int nbTerritories = *maps[i]->getNbTerritories();
-        Player *pArr[P];
 
         for (int j = 0; j < G; j++)
         {
@@ -822,7 +820,22 @@ void GameEngine::Play()
             for (int k = 0; k < P; k++)
             {
                 pArr[k] = new Player(k, territories, nbTerritories, adjacencyMatrix, maps[i], 0, 0, nullptr);
-                pArr[k]->setStrategy(players[k]);
+                if (*players[k]->type == "Neutral")
+                {
+                    pArr[k]->setStrategy(new NeutralPlayerStrategy());
+                }
+                else if (*players[k]->type == "Cheater")
+                {
+                    pArr[k]->setStrategy(new CheaterPlayerStrategy());
+                }
+                else if (*players[k]->type == "Benevolent")
+                {
+                    pArr[k]->setStrategy(new BenevolentPlayerStrategy());
+                }
+                else if (*players[k]->type == "Aggresive")
+                {
+                    pArr[k]->setStrategy(new AggressivePlayerStrategy());
+                }
             }
             Engine->divideTerritories(nbTerritories, P, pArr, territories);
             for (int s = 0; s < P; s++)
@@ -837,13 +850,6 @@ void GameEngine::Play()
             {
                 territories[y].setPosessor(-1);
             }
-            // for (int w = 0; w < P; w++)
-            // {
-            //     delete pArr[w];
-            //     pArr[w] = nullptr;
-            // }
-
-            // whenever neutral gets attacked
         }
 
         cout << "\nTHE OUTPUT OF THE TOURNAMENT IS: " << endl;
@@ -860,40 +866,35 @@ void GameEngine::Play()
     // end of game, deleting all objects
     Engine->~GameEngine();
     start_state->~StartState();
-
-    // todo: add a if nullprt skip
-
-    //  map_loaded_state->~MapLoadedState();
-    //  map_validated_state->~MapValidatedState();
-    //  players_added_state->~PlayersAddedState();
-    //  assign_reinforcement_state->~AssignReinforcementState();
-    //  issue_order_state->~IssueOrderState();
-    //  execute_order_state->~ExecuteOrderState();
-    //  win_state->~WinState();
     exit(0);
 }
 
 // Helper function to seperate territories
 void GameEngine::divideTerritories(int nbTerritories, int P, Player **pArr, Territory *territories)
 {
-    int minTerritoriesPerPlayer = std::floor(nbTerritories / P);
-    int remainingTerritories = nbTerritories - (minTerritoriesPerPlayer * P);
-    int j = 0;
+    // int minTerritoriesPerPlayer = std::floor(nbTerritories / P);
+    // int remainingTerritories = nbTerritories - (minTerritoriesPerPlayer * P);
+    // int j = 0;
 
+    // for (int i = 0; i < P; i++)
+    // {
+    //     int numTerritoriesForPlayer = minTerritoriesPerPlayer;
+    //     if (remainingTerritories > 0)
+    //     {
+    //         numTerritoriesForPlayer++;
+    //         remainingTerritories--;
+    //     }
+    //     for (int s = j; s < (j + numTerritoriesForPlayer); s++)
+    //     {
+    //         territories[s].setPosessor(*pArr[i]->getPlayerID());
+    //         territories[s].setNumberOfSoldiers(0);
+    //     }
+    //     j = j + numTerritoriesForPlayer;
+    // }
     for (int i = 0; i < P; i++)
     {
-        int numTerritoriesForPlayer = minTerritoriesPerPlayer;
-        if (remainingTerritories > 0)
-        {
-            numTerritoriesForPlayer++;
-            remainingTerritories--;
-        }
-        for (int s = j; s < (j + numTerritoriesForPlayer); s++)
-        {
-            territories[s].setPosessor(*pArr[i]->getPlayerID());
-            territories[s].setNumberOfSoldiers(0);
-        }
-        j = j + numTerritoriesForPlayer;
+        territories[i].setPosessor(*pArr[i]->getPlayerID());
+        territories[i].setNumberOfSoldiers(0);
     }
 }
 
@@ -1203,19 +1204,19 @@ string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, in
         int *num = new int(-1);
         for (int i = 0; i < nbOfPlayers; i++)
         {
-            cout << i << endl;
             if (*pArr[i]->getPlayerID() < 0)
             {
                 continue;
             }
+            cout << *pArr[i]->strat->type << endl;
             Territory *toDef = pArr[i]->toDefend();
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
             if (nbOfToDef == nbTerritories)
             {
                 cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                 isRunning = false;
-                // endPhase[pos] = *pArr[i]->strat->type;
-                return *pArr[i]->strat->type;
+                string temp = *pArr[i]->strat->type + " - " + std::to_string(*pArr[i]->getPlayerID());
+                return temp;
             }
             else if (*pArr[i]->getPlayerID() < 0)
             {
@@ -1242,8 +1243,8 @@ string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, in
                 if (*pArr[i]->getPlayerID() != -1)
                 {
                     cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
-                    // endPhase[pos] = *pArr[i]->strat->type;
-                    return *pArr[i]->strat->type;
+                    string temp = *pArr[i]->strat->type + " - " + std::to_string(*pArr[i]->getPlayerID());
+                    return temp;
                 }
             }
             // return;
