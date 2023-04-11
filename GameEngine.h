@@ -146,7 +146,7 @@ public:
     MainGameState(GameEngine *engine);
     ~MainGameState();
     MainGameState(const MainGameState &copy);
-    void mainGameLoop(Player *playerList[], int &nbOfPlayers, Map *map, int D);
+    string mainGameLoop(Player *playerList[], int &nbOfPlayers, Map *map, int D);
 
 private:
     GameEngine *engine;

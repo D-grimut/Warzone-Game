@@ -806,6 +806,8 @@ void GameEngine::Play()
 
     // to fix and we found out that it breaks when you enter an incorrect map name
     MainGameState *mgs = new MainGameState(Engine);
+    string output[M][G];
+    int pos = 0;
     for (int i = 0; i < M; i++)
     {
         // load the map
@@ -828,7 +830,8 @@ void GameEngine::Play()
                 pArr[s]->initToAttack();
                 pArr[s]->initToDefend();
             }
-            mgs->mainGameLoop(pArr, P, maps[i], D);
+            output[i][j] = mgs->mainGameLoop(pArr, P, maps[i], D);
+            pos++;
             cout << "GAME " << j + 1 << " HAS ENDED" << endl;
             for (int y = 0; y < nbTerritories; y++)
             {
@@ -839,6 +842,18 @@ void GameEngine::Play()
             //     delete pArr[w];
             //     pArr[w] = nullptr;
             // }
+
+            // whenever neutral gets attacked
+        }
+
+        cout << "\nTHE OUTPUT OF THE TOURNAMENT IS: " << endl;
+        for (int i = 0; i < M; i++)
+        {
+            for (int j = 0; j < G; j++)
+            {
+                std::cout << output[i][j] << "\t";
+            }
+            std::cout << std::endl;
         }
     }
 
@@ -1172,7 +1187,7 @@ MainGameState::~MainGameState()
     engine = nullptr;
 }
 
-void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int D)
+string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int D)
 {
     GameEngine *engine = new GameEngine();
     AssignReinforcementState *rein = new AssignReinforcementState(engine);
@@ -1185,46 +1200,33 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
     int GameCounter = 0;
     while (isRunning && GameCounter <= D)
     {
-        cout << "Hello 1" << endl;
         int *num = new int(-1);
         for (int i = 0; i < nbOfPlayers; i++)
         {
             cout << i << endl;
-            cout << "Hello 2" << endl;
             if (*pArr[i]->getPlayerID() < 0)
             {
-                cout << "Hello 3.1" << endl;
                 continue;
             }
-            cout << "Hello 3.7" << endl;
             Territory *toDef = pArr[i]->toDefend();
-            cout << "Hello 3.9" << endl;
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
-            cout << "Hello 3.2" << endl;
             if (nbOfToDef == nbTerritories)
             {
-                cout << "Hello 3.3" << endl;
                 cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                 isRunning = false;
-                // engine->TransitionTo(8);
-                //  exit(0);
-                return;
+                // endPhase[pos] = *pArr[i]->strat->type;
+                return *pArr[i]->strat->type;
             }
             else if (*pArr[i]->getPlayerID() < 0)
             {
-                cout << "Hello 3.4" << endl;
                 continue;
             }
             else if (nbOfToDef == 0)
             {
-                cout << "Hello 3.5" << endl;
                 cout << "Player " << *pArr[i]->getPlayerID() << " does not have any more territories. Kicking player out." << endl;
                 pArr[i]->setPlayerID(num);
-                cout << "Hello 3.6" << endl;
             }
-            cout << "Hello 3" << endl;
         }
-        cout << "Hello 4" << endl;
         int counter = 0;
         for (int i = 0; i < nbOfPlayers; i++)
         {
@@ -1233,7 +1235,6 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
                 counter++;
             }
         }
-        cout << "Hello 5" << endl;
         if (counter == nbOfPlayers - 1)
         {
             for (int i = 0; i < nbOfPlayers; i++)
@@ -1241,10 +1242,12 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
                 if (*pArr[i]->getPlayerID() != -1)
                 {
                     cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
+                    // endPhase[pos] = *pArr[i]->strat->type;
+                    return *pArr[i]->strat->type;
                 }
             }
-            // exit(0);
-            return;
+            // return;
+            //  exit(0);
         }
         rein->reinforcementPhase(pArr, nbOfPlayers);
         issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
@@ -1252,4 +1255,5 @@ void MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, int 
         delete num;
         GameCounter++;
     }
+    return "Draw";
 }
