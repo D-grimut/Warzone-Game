@@ -395,6 +395,15 @@ bool CommandProcessor::tournamentValidation(int &M, int &P, int &G, int &D, stri
     return true;
 }
 
+bool CommandProcessor::fileValidation(int &M, int &P, int &G, int &D, string effect)
+{
+    if (!validateRange(1, 5, M, effect) || !validateRange(2, 4, P, effect) || !validateRange(1, 5, G, effect) || !validateRange(10, 50, D, effect))
+    {
+        return false;
+    }
+    return true;
+}
+
 // helper function for the validation of the inputs for tournament
 bool CommandProcessor::validateRange(int L, int U, int i, string effect)
 {

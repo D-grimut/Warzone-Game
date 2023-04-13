@@ -647,6 +647,9 @@ void GameEngine::Play()
     ExecuteOrderState *execute_order_state = new ExecuteOrderState(Engine);
     WinState *win_state = new WinState(Engine);
 
+    int M = 0, P = 0, G = 0, D = 0;
+    Map **maps;
+    PlayerStrategy **players;
     string choice;
     do
     {
@@ -659,10 +662,83 @@ void GameEngine::Play()
             while (s != "EOF")
             {
                 s = pc->readCommand();
-                cout << s << endl;
+                if (s == "tournament")
+                {
+                    s = pc->readCommand();
+                    M = std::stoi(s);
+                    maps = new Map *[M];
+                    for (int i = 0; i < M; i++)
+                    {
+                        maps[i] = nullptr;
+                    }
+                    for (int i = 0; i < M; i++)
+                    {
+                        s = pc->readCommand();
+                        MapLoader ml(s);
+                        if (!Engine->cp->mapValidate(ml, s))
+                        {
+                            cout << "Incorrect map, rejected" << endl;
+                            exit(0);
+                        }
+                        else
+                        {
+                            maps[i] = new Map(*ml.getMap());
+                        }
+                    }
+
+                    s = pc->readCommand();
+                    P = std::stoi(s);
+                    players = new PlayerStrategy *[P];
+                    for (int i = 0; i < P; i++)
+                    {
+                        players[i] = nullptr;
+                    }
+                    for (int i = 0; i < P; i++)
+                    {
+                        s = pc->readCommand();
+
+                        if (!Engine->cp->playerValidate(s))
+                        {
+                            cout << "Incorrect player, rejected" << endl;
+                            exit(0);
+                        }
+                        else if (s == "neutral")
+                        {
+                            players[i] = new NeutralPlayerStrategy();
+                        }
+                        else if (s == "cheater")
+                        {
+                            players[i] = new CheaterPlayerStrategy();
+                        }
+                        else if (s == "aggressive")
+                        {
+                            players[i] = new AggressivePlayerStrategy();
+                        }
+                        else if (s == "benevolent")
+                        {
+                            players[i] = new BenevolentPlayerStrategy();
+                        }
+                    }
+
+                    s = pc->readCommand();
+                    G = std::stoi(s);
+                    s = pc->readCommand();
+                    D = std::stoi(s);
+
+                    if (Engine->cp->fileValidation(M, P, G, D, "Your input is out of bounds"))
+                    {
+                        cout << "Tournament approved" << endl;
+                    }
+                    else
+                    {
+                        cout << "Tournament declined, inputs out of bounds" << endl;
+                        exit(0);
+                    }
+
+                    *Engine->current_state = -1;
+                    break;
+                }
             }
-            // Printing all commands stored by the Command Processor - FOR DEMO
-            cout << *pc << endl;
 
             break;
         }
@@ -730,75 +806,74 @@ void GameEngine::Play()
         }
     }
 
-    cout << "Lets process your inputs" << endl;
-    int M = 0, P = 0, G = 0, D = 0;
-    if (Engine->cp->tournamentValidation(M, P, G, D, "Your input is out of bounds"))
+    if (M == 0 && P == 0)
     {
-        cout << "Tournament approved" << endl;
-    }
-
-    Map **maps = new Map *[M];
-    for (int i = 0; i < M; i++)
-    {
-        maps[i] = nullptr;
-    }
-    PlayerStrategy **players = new PlayerStrategy *[P];
-    for (int i = 0; i < P; i++)
-    {
-        players[i] = nullptr;
-    }
-
-    cout << "Select your maps: " << endl;
-    for (int i = 0; i < M; i++)
-    {
-        string name;
-        cout << "Map " << i << " is: ";
-        cin >> name;
-        name = name + ".map";
-
-        // MapLoader *ml = new MapLoader(name);
-        MapLoader ml(name);
-
-        // this should be in command processing
-        if (!Engine->cp->mapValidate(ml, name))
+        cout << "Lets process your inputs" << endl;
+        if (Engine->cp->tournamentValidation(M, P, G, D, "Your input is out of bounds"))
         {
-            i--;
-            // delete ml;
+            cout << "Tournament approved" << endl;
         }
-        else
-        {
-            maps[i] = new Map(*ml.getMap());
-        }
-    }
 
-    cout << "Select your players: " << endl;
-    for (int i = 0; i < P; i++)
-    {
-        string playertype;
-        cout << "Player " << i << " is: ";
-        cin >> playertype;
-        std::transform(playertype.begin(), playertype.end(), playertype.begin(), [](unsigned char c)
-                       { return std::tolower(c); });
+        maps = new Map *[M];
+        for (int i = 0; i < M; i++)
+        {
+            maps[i] = nullptr;
+        }
+        players = new PlayerStrategy *[P];
+        for (int i = 0; i < P; i++)
+        {
+            players[i] = nullptr;
+        }
+        cout << "Select your maps: " << endl;
+        for (int i = 0; i < M; i++)
+        {
+            string name;
+            cout << "Map " << i << " is: ";
+            cin >> name;
+            name = name + ".map";
 
-        if (!Engine->cp->playerValidate(playertype))
-        {
-            i--;
+            MapLoader ml(name);
+
+            // this should be in command processing
+            if (!Engine->cp->mapValidate(ml, name))
+            {
+                i--;
+            }
+            else
+            {
+                maps[i] = new Map(*ml.getMap());
+            }
         }
-        else if (playertype == "neutral")
+
+        cout << "Select your players: " << endl;
+        for (int i = 0; i < P; i++)
         {
-            players[i] = new NeutralPlayerStrategy();
-        }
-        else if (playertype == "cheater")
-        {
-            players[i] = new CheaterPlayerStrategy();
-        }
-        else if (playertype == "aggressive")
-        {
-            players[i] = new AggressivePlayerStrategy();
-        }
-        else if (playertype == "benevolent")
-        {
-            players[i] = new BenevolentPlayerStrategy();
+            string playertype;
+            cout << "Player " << i << " is: ";
+            cin >> playertype;
+            std::transform(playertype.begin(), playertype.end(), playertype.begin(), [](unsigned char c)
+                           { return std::tolower(c); });
+
+            if (!Engine->cp->playerValidate(playertype))
+            {
+                i--;
+            }
+            else if (playertype == "neutral")
+            {
+                players[i] = new NeutralPlayerStrategy();
+            }
+            else if (playertype == "cheater")
+            {
+                players[i] = new CheaterPlayerStrategy();
+            }
+            else if (playertype == "aggressive")
+            {
+                players[i] = new AggressivePlayerStrategy();
+            }
+            else if (playertype == "benevolent")
+            {
+                players[i] = new BenevolentPlayerStrategy();
+            }
         }
     }
 
@@ -872,25 +947,6 @@ void GameEngine::Play()
 // Helper function to seperate territories
 void GameEngine::divideTerritories(int nbTerritories, int P, Player **pArr, Territory *territories)
 {
-    // int minTerritoriesPerPlayer = std::floor(nbTerritories / P);
-    // int remainingTerritories = nbTerritories - (minTerritoriesPerPlayer * P);
-    // int j = 0;
-
-    // for (int i = 0; i < P; i++)
-    // {
-    //     int numTerritoriesForPlayer = minTerritoriesPerPlayer;
-    //     if (remainingTerritories > 0)
-    //     {
-    //         numTerritoriesForPlayer++;
-    //         remainingTerritories--;
-    //     }
-    //     for (int s = j; s < (j + numTerritoriesForPlayer); s++)
-    //     {
-    //         territories[s].setPosessor(*pArr[i]->getPlayerID());
-    //         territories[s].setNumberOfSoldiers(0);
-    //     }
-    //     j = j + numTerritoriesForPlayer;
-    // }
     for (int i = 0; i < P; i++)
     {
         territories[i].setPosessor(*pArr[i]->getPlayerID());
@@ -1240,7 +1296,7 @@ string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, in
         {
             for (int i = 0; i < nbOfPlayers; i++)
             {
-                if (*pArr[i]->getPlayerID() != -1)
+                if (*pArr[i]->getPlayerID() > -1)
                 {
                     cout << "Player " << *pArr[i]->getPlayerID() << " has won the game!" << endl;
                     string temp = *pArr[i]->strat->type + " - " + std::to_string(*pArr[i]->getPlayerID());

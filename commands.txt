@@ -1,3 +1,14 @@
-command1
-command2
-command3
+tournament
+5
+brasil.map
+GTA_SAN_AN.map
+WoW.map
+europe.map
+solar.map
+4
+aggressive
+benevolent
+cheater
+neutral
+5
+50

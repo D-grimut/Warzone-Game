@@ -79,8 +79,10 @@ public:
     bool validateRange(int L, int U, int i, string effect);                   // Method to validate the ranges of the tournament command
     bool playerValidate(string playertype);
     bool mapValidate(MapLoader &ml, string filename);
+    bool fileValidation(int &M, int &P, int &G, int &D, string effect);
 
     // Assignment and insertion operators
-    CommandProcessor &operator=(const CommandProcessor &);
+    CommandProcessor &
+    operator=(const CommandProcessor &);
     friend std::ostream &operator<<(std::ostream &strm, const CommandProcessor &cl);
 };
