@@ -192,7 +192,7 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck *&d
             continue;
         }
         cout << "----------------------------------------------------- " << endl;
-        cout << "PLAYER " << (i) << " TURN" << endl;
+        cout << "PLAYER " << (i) << " TYPE - " << *pArr[i]->strat->type << " TURN" << endl;
         Territory *toAtt = pArr[i]->toAttack();
         int nbOfToAtt = pArr[i]->nbOfTerToAttToDef(toAtt);
 
@@ -296,17 +296,6 @@ void IssueOrderState::issueOrdersPhase(Player *pArr[], int nbOfPlayers, Deck *&d
             {
 
                 bool foundEnemy = false;
-
-                // for (int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++)
-                // {
-                //     if (pArr[i]->map->isAdjacent(&pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0]))
-                //     {
-
-                //         pArr[i]->issueOrder("Advance", pArr[i]->toDefend()[0].getNumberOfSoldiers(), &pArr[i]->toAttArr[j], &pArr[i]->toDefend()[0], pArr[*pArr[i]->toAttArr[j].getPosessor()], pArr[i], deck);
-                //         foundEnemy = true;
-                //         break;
-                //     }
-                // }
 
                 for (int j = 0; j < pArr[i]->nbOfTerToAttToDef(pArr[i]->toAttack()); j++)
                 {
@@ -584,7 +573,7 @@ void ExecuteOrderState::executeOrderPhase(Player *pArr[], int nbOfPlayers)
         {
             continue;
         }
-        cout << "PLAYER " << i << " EXECUTION:" << endl;
+        cout << "PLAYER " << i << " TYPE - " << *pArr[i]->strat->type <<  " EXECUTION:" << endl;
         pArr[i]->getOrdersList()->showList(pArr[i]->getOrdersIndex());
         pArr[i]->getOrdersList()->execute();
 
@@ -1263,8 +1252,7 @@ string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, in
             if (*pArr[i]->getPlayerID() < 0)
             {
                 continue;
-            }
-            cout << *pArr[i]->strat->type << endl;
+            }            
             Territory *toDef = pArr[i]->toDefend();
             int nbOfToDef = pArr[i]->nbOfTerToAttToDef(toDef);
             if (nbOfToDef == nbTerritories)
@@ -1303,8 +1291,6 @@ string MainGameState::mainGameLoop(Player **pArr, int &nbOfPlayers, Map *map, in
                     return temp;
                 }
             }
-            // return;
-            //  exit(0);
         }
         rein->reinforcementPhase(pArr, nbOfPlayers);
         issu->issueOrdersPhase(pArr, nbOfPlayers, deck);
